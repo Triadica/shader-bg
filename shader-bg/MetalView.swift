@@ -36,32 +36,42 @@ struct MetalView: NSViewRepresentable {
     // 每个 MetalView 都有自己的效果实例，而不是共享
     private var currentEffect: VisualEffect?
     private var device: MTLDevice?
+    private var isActive = true
 
     init(_ parent: MetalView) {
       self.parent = parent
       super.init()
     }
-    
+
+    deinit {
+      isActive = false
+      currentEffect = nil
+      print("Coordinator 被释放")
+    }
+
     func initializeEffect(device: MTLDevice, size: CGSize) {
       guard currentEffect == nil, size.width > 0, size.height > 0 else { return }
-      
+
       self.device = device
-      
+
       // 根据全局 EffectManager 的当前索引创建对应的效果
       let effectIndex = EffectManager.shared.currentEffectIndex
       switchToEffect(at: effectIndex, size: size)
-      
+
       print("效果已初始化: \(currentEffect?.displayName ?? "unknown"), size: \(size)")
     }
-    
+
     func switchToEffect(at index: Int, size: CGSize) {
       guard let device = self.device, size.width > 0, size.height > 0 else { return }
-      
+
       let availableEffects = EffectManager.shared.availableEffects
       guard index < availableEffects.count else { return }
-      
+
       let effectType = availableEffects[index]
-      
+
+      // 清理旧效果
+      currentEffect = nil
+
       // 创建新的效果实例
       let newEffect: VisualEffect
       switch effectType.name {
@@ -72,13 +82,13 @@ struct MetalView: NSViewRepresentable {
       default:
         newEffect = ParticlesInGravityEffect()
       }
-      
+
       newEffect.setup(device: device, size: size)
       currentEffect = newEffect
-      
+
       print("切换到效果: \(newEffect.displayName), size: \(size)")
     }
-    
+
     func setUpdateRate(_ rate: Double) {
       currentEffect?.setUpdateRate(rate)
     }
@@ -92,6 +102,8 @@ struct MetalView: NSViewRepresentable {
     }
 
     func draw(in view: MTKView) {
+      guard isActive else { return }
+
       // 确保效果已初始化
       if currentEffect == nil, let device = view.device, view.drawableSize.width > 0 {
         initializeEffect(device: device, size: view.drawableSize)

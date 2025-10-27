@@ -28,7 +28,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func setupWallpaperWindows() {
-    wallpaperWindows.forEach { $0.close() }
+    // 先清理旧窗口
+    wallpaperWindows.forEach { window in
+      // 清理 MTKView delegate
+      if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
+        let mtkView = findMTKView(in: hostingView)
+      {
+        mtkView.delegate = nil
+        mtkView.device = nil
+      }
+      window.contentView = nil
+      window.close()
+    }
     wallpaperWindows.removeAll()
 
     let screens = NSScreen.screens
@@ -131,9 +142,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // 为所有窗口切换效果
     wallpaperWindows.forEach { window in
+      guard window.isVisible else { return }
+
       if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
         let mtkView = findMTKView(in: hostingView),
-        let delegate = mtkView.delegate as? MetalView.Coordinator
+        let delegate = mtkView.delegate as? MetalView.Coordinator,
+        mtkView.drawableSize.width > 0
       {
         delegate.switchToEffect(at: index, size: mtkView.drawableSize)
       }
@@ -185,9 +199,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       print("性能模式已变化，更新频率: \(rate) FPS")
 
       // 更新所有窗口的效果更新频率
-      self?.wallpaperWindows.forEach { window in
+      guard let self = self else { return }
+
+      for window in self.wallpaperWindows {
+        guard window.isVisible else { continue }
+
         if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
-          let mtkView = self?.findMTKView(in: hostingView),
+          let mtkView = self.findMTKView(in: hostingView),
           let coordinator = mtkView.delegate as? MetalView.Coordinator
         {
           coordinator.setUpdateRate(rate)

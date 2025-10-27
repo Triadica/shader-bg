@@ -20,11 +20,11 @@ class ParticlesInGravityRenderer {
   var gravityParamsBuffer: MTLBuffer?
 
   var particles: [Particle] = []
-  let particleCount = 5000  // 粒子数量
+  let particleCount = 3000  // 减少粒子数量以优化性能（从 5000 降低到 3000）
 
   var viewportSize: CGSize = .zero
   var lastUpdateTime: CFTimeInterval = 0
-  var updateInterval: CFTimeInterval = 1.0 / 5.0  // 可变更新间隔，默认每秒更新 5 次
+  var updateInterval: CFTimeInterval = 1.0 / 15.0  // 可变更新间隔，默认每秒更新 15 次
 
   init(device: MTLDevice, size: CGSize) {
     self.device = device

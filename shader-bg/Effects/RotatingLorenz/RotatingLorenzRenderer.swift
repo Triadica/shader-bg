@@ -20,11 +20,11 @@ class RotatingLorenzRenderer {
   var lorenzParamsBuffer: MTLBuffer?
 
   var particles: [LorenzParticle] = []
-  let particleCount = 3000  // 粒子数量（降低以提高性能）
+  let particleCount = 2000  // 减少粒子数量以优化性能（从 3000 降低到 2000）
 
   var viewportSize: CGSize = .zero
   var lastUpdateTime: CFTimeInterval = 0
-  var updateInterval: CFTimeInterval = 1.0 / 5.0  // 可变更新间隔，默认每秒更新 5 次
+  var updateInterval: CFTimeInterval = 1.0 / 15.0  // 可变更新间隔，默认每秒更新 15 次
 
   var rotation: Float = 0.0
 
@@ -129,8 +129,8 @@ class RotatingLorenzRenderer {
       return
     }
 
-    // 更新旋转角度
-    rotation += 0.01
+    // 更新旋转角度（稍微加快旋转速度）
+    rotation += 0.015
 
     // 更新 Lorenz 参数
     var lorenzParams = LorenzParams(

@@ -13,9 +13,9 @@ class PerformanceManager {
   static let shared = PerformanceManager()
 
   // 更新频率（每秒帧数）
-  private(set) var currentUpdateRate: Double = 5.0  // 默认每秒 5 次
-  let highPerformanceRate: Double = 10.0  // 高性能：每秒 10 次
-  let lowPerformanceRate: Double = 3.0  // 低性能：每秒 3 次
+  private(set) var currentUpdateRate: Double = 15.0  // 默认每秒 15 次
+  let highPerformanceRate: Double = 30.0  // 高性能：每秒 30 次
+  let lowPerformanceRate: Double = 10.0  // 低性能：每秒 10 次
 
   private(set) var isDesktopVisible: Bool = true
   private var checkTimer: Timer?
