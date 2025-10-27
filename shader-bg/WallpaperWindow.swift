@@ -9,7 +9,7 @@ import Cocoa
 
 class WallpaperWindow: NSWindow {
   private var targetScreen: NSScreen?
-  
+
   convenience init(
     contentRect: NSRect, styleMask style: NSWindow.StyleMask,
     backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool,
@@ -20,7 +20,7 @@ class WallpaperWindow: NSWindow {
     self.targetScreen = screen
     self.setFrame(screen.frame, display: true)
   }
-  
+
   override init(
     contentRect: NSRect, styleMask style: NSWindow.StyleMask,
     backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool

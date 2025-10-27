@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import MetalKit
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -16,7 +17,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     NSApp.setActivationPolicy(.accessory)
     setupWallpaperWindows()
     setupMenuBar()
-    
+    setupPerformanceMonitoring()
+
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(screenDidChange),
@@ -66,8 +68,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         systemSymbolName: "sparkles", accessibilityDescription: "Shader Background")
     }
 
+    updateMenu()
+  }
+
+  func updateMenu() {
     let menu = NSMenu()
 
+    // 显示/隐藏选项
     let toggleItem = NSMenuItem(
       title: "隐藏背景",
       action: #selector(toggleWallpaper),
@@ -78,6 +85,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     menu.addItem(NSMenuItem.separator())
 
+    // 效果选择子菜单
+    let effectsMenu = NSMenu()
+    let effectManager = EffectManager.shared
+
+    for (index, effect) in effectManager.availableEffects.enumerated() {
+      let effectItem = NSMenuItem(
+        title: effect.displayName,
+        action: #selector(switchEffect(_:)),
+        keyEquivalent: ""
+      )
+      effectItem.target = self
+      effectItem.tag = index
+      effectItem.state = index == effectManager.currentEffectIndex ? .on : .off
+      effectsMenu.addItem(effectItem)
+    }
+
+    let effectsMenuItem = NSMenuItem(
+      title: "选择效果",
+      action: nil,
+      keyEquivalent: ""
+    )
+    effectsMenuItem.submenu = effectsMenu
+    menu.addItem(effectsMenuItem)
+
+    menu.addItem(NSMenuItem.separator())
+
+    // 退出选项
     let quitItem = NSMenuItem(
       title: "退出",
       action: #selector(quitApp),
@@ -87,6 +121,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     menu.addItem(quitItem)
 
     statusItem?.menu = menu
+  }
+
+  @objc func switchEffect(_ sender: NSMenuItem) {
+    let index = sender.tag
+
+    // 更新全局效果索引
+    EffectManager.shared.currentEffectIndex = index
+
+    // 为所有窗口切换效果
+    wallpaperWindows.forEach { window in
+      if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
+        let mtkView = findMTKView(in: hostingView),
+        let delegate = mtkView.delegate as? MetalView.Coordinator
+      {
+        delegate.switchToEffect(at: index, size: mtkView.drawableSize)
+      }
+    }
+
+    // 更新菜单选中状态
+    updateMenu()
+  }
+
+  // 辅助函数：在视图层级中查找 MTKView
+  func findMTKView(in view: NSView) -> MTKView? {
+    if let mtkView = view as? MTKView {
+      return mtkView
+    }
+    for subview in view.subviews {
+      if let found = findMTKView(in: subview) {
+        return found
+      }
+    }
+    return nil
   }
 
   @objc func toggleWallpaper() {
@@ -111,6 +178,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @objc func screenDidChange() {
     print("屏幕配置已变化，重新设置壁纸窗口...")
     setupWallpaperWindows()
+  }
+
+  func setupPerformanceMonitoring() {
+    PerformanceManager.shared.onPerformanceModeChanged = { [weak self] rate in
+      print("性能模式已变化，更新频率: \(rate) FPS")
+
+      // 更新所有窗口的效果更新频率
+      self?.wallpaperWindows.forEach { window in
+        if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
+          let mtkView = self?.findMTKView(in: hostingView),
+          let coordinator = mtkView.delegate as? MetalView.Coordinator
+        {
+          coordinator.setUpdateRate(rate)
+        }
+      }
+    }
+
+    PerformanceManager.shared.startMonitoring()
   }
 
   func applicationShouldHandleReopen(

@@ -33,22 +33,75 @@ struct MetalView: NSViewRepresentable {
 
   class Coordinator: NSObject, MTKViewDelegate {
     var parent: MetalView
-    var renderer: Renderer?
+    // 每个 MetalView 都有自己的效果实例，而不是共享
+    private var currentEffect: VisualEffect?
+    private var device: MTLDevice?
 
     init(_ parent: MetalView) {
       self.parent = parent
       super.init()
     }
+    
+    func initializeEffect(device: MTLDevice, size: CGSize) {
+      guard currentEffect == nil, size.width > 0, size.height > 0 else { return }
+      
+      self.device = device
+      
+      // 根据全局 EffectManager 的当前索引创建对应的效果
+      let effectIndex = EffectManager.shared.currentEffectIndex
+      switchToEffect(at: effectIndex, size: size)
+      
+      print("效果已初始化: \(currentEffect?.displayName ?? "unknown"), size: \(size)")
+    }
+    
+    func switchToEffect(at index: Int, size: CGSize) {
+      guard let device = self.device, size.width > 0, size.height > 0 else { return }
+      
+      let availableEffects = EffectManager.shared.availableEffects
+      guard index < availableEffects.count else { return }
+      
+      let effectType = availableEffects[index]
+      
+      // 创建新的效果实例
+      let newEffect: VisualEffect
+      switch effectType.name {
+      case "particles_in_gravity":
+        newEffect = ParticlesInGravityEffect()
+      case "rotating_lorenz":
+        newEffect = RotatingLorenzEffect()
+      default:
+        newEffect = ParticlesInGravityEffect()
+      }
+      
+      newEffect.setup(device: device, size: size)
+      currentEffect = newEffect
+      
+      print("切换到效果: \(newEffect.displayName), size: \(size)")
+    }
+    
+    func setUpdateRate(_ rate: Double) {
+      currentEffect?.setUpdateRate(rate)
+    }
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-      renderer?.updateViewportSize(size)
+      if currentEffect == nil, let device = view.device {
+        initializeEffect(device: device, size: size)
+      } else {
+        currentEffect?.updateViewportSize(size)
+      }
     }
 
     func draw(in view: MTKView) {
-      if renderer == nil {
-        renderer = Renderer(device: view.device!, size: view.drawableSize)
+      // 确保效果已初始化
+      if currentEffect == nil, let device = view.device, view.drawableSize.width > 0 {
+        initializeEffect(device: device, size: view.drawableSize)
       }
-      renderer?.draw(in: view)
+
+      guard currentEffect != nil else { return }
+
+      let currentTime = CACurrentMediaTime()
+      currentEffect?.update(currentTime: currentTime)
+      currentEffect?.draw(in: view)
     }
   }
 }

@@ -1,5 +1,5 @@
 //
-//  Renderer.swift
+//  ParticlesInGravityRenderer.swift
 //  shader-bg
 //
 //  Created by chen on 2025/10/28.
@@ -9,7 +9,7 @@ import Metal
 import MetalKit
 import simd
 
-class Renderer {
+class ParticlesInGravityRenderer {
   let device: MTLDevice
   let commandQueue: MTLCommandQueue
 
@@ -24,7 +24,7 @@ class Renderer {
 
   var viewportSize: CGSize = .zero
   var lastUpdateTime: CFTimeInterval = 0
-  let updateInterval: CFTimeInterval = 1.0 / 10.0  // 每秒更新 10 次
+  var updateInterval: CFTimeInterval = 1.0 / 5.0  // 可变更新间隔，默认每秒更新 5 次
 
   init(device: MTLDevice, size: CGSize) {
     self.device = device

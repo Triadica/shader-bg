@@ -91,8 +91,10 @@ vertex VertexOut vertexShader(uint vertexID [[vertex_id]],
   out.position = float4(normalizedPosition, 0.0, 1.0);
   out.color = particle.color;
 
-  // 粒子大小根据质量调整
-  out.pointSize = particle.mass * 3.0;
+  // 粒子大小根据质量调整，同时考虑屏幕尺寸以保持一致的视觉效果
+  // 使用较小维度作为基准，确保在不同纵横比屏幕上显示一致
+  float minDimension = min(viewportSize.x, viewportSize.y);
+  out.pointSize = particle.mass * 3.0 * (minDimension / 1000.0);
 
   return out;
 }
