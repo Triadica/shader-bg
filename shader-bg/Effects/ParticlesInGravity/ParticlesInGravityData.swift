@@ -14,6 +14,8 @@ struct Particle {
   var velocity: SIMD2<Float>  // 速度
   var mass: Float  // 质量
   var color: SIMD4<Float>  // 颜色 (RGBA)
+  var groupId: UInt32  // 所属组 ID
+  var indexInGroup: UInt32  // 组内索引 (0 = 头部，跟随物理运动)
 }
 
 // 引力场参数
@@ -22,4 +24,6 @@ struct GravityParams {
   var gravityStrength: Float  // 引力强度
   var deltaTime: Float  // 时间步长
   var damping: Float  // 阻尼系数
+  var particlesPerGroup: UInt32  // 每组粒子数量
+  var padding: UInt32  // 对齐填充
 }

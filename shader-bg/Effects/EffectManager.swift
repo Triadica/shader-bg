@@ -31,10 +31,29 @@ class EffectManager {
       RotatingLorenzEffect(),
     ]
 
-    // 默认选择 Rotating Lorenz 效果
+    // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
+    // 可选值: "noise", "liquid", "gravity", "lorenz"
+    var defaultIndex = 3  // 默认为 Rotating Lorenz
+
+    if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
+      switch effectEnv.lowercased() {
+      case "noise":
+        defaultIndex = 0
+      case "liquid":
+        defaultIndex = 1
+      case "gravity":
+        defaultIndex = 2
+      case "lorenz":
+        defaultIndex = 3
+      default:
+        print("Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
+      }
+    }
+
+    // 设置默认效果
     if !availableEffects.isEmpty {
-      currentEffect = availableEffects[3]  // RotatingLorenzEffect
-      currentEffectIndex = 3
+      currentEffect = availableEffects[defaultIndex]
+      currentEffectIndex = defaultIndex
     }
   }
 

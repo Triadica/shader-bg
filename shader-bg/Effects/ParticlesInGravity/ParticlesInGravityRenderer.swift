@@ -20,7 +20,9 @@ class ParticlesInGravityRenderer {
   var gravityParamsBuffer: MTLBuffer?
 
   var particles: [Particle] = []
-  let particleCount = 3000  // 减少粒子数量以优化性能（从 5000 降低到 3000）
+  let particleCount = 192000  // 总粒子数（400组 × 480粒子/组，再增加4倍）
+  let particlesPerGroup = 480  // 每组粒子数量（从120增加到480，4倍长度）
+  var groupCount: Int { particleCount / particlesPerGroup }  // 组数 = 400
 
   var viewportSize: CGSize = .zero
   var lastUpdateTime: CFTimeInterval = 0
@@ -82,33 +84,59 @@ class ParticlesInGravityRenderer {
     let centerX = Float(viewportSize.width / 2)
     let centerY = Float(viewportSize.height / 2)
 
-    // 生成随机分布的粒子
-    for _ in 0..<particleCount {
-      // 随机位置（在屏幕范围内）
+    // 创建粒子组，每组 120 个粒子
+    for groupId in 0..<groupCount {
+      // 为每组的头部粒子随机生成初始状态
+      // 更随意的位置分布
       let angle = Float.random(in: 0...(2 * .pi))
-      let radius = Float.random(in: 100...500)
+      let radius = Float.random(in: 200...600)  // 距离中心的距离
       let x = centerX + cos(angle) * radius
       let y = centerY + sin(angle) * radius
 
-      // 随机初始速度
-      let vx = Float.random(in: -20...20)
-      let vy = Float.random(in: -20...20)
+      // 计算从粒子指向中心的方向（引力方向）
+      let toCenter = SIMD2<Float>(centerX - x, centerY - y)
+      let toCenterNorm = normalize(toCenter)
+
+      // 垂直于引力方向的速度（切线方向）
+      // 逆时针旋转90度：(x, y) -> (-y, x)
+      let tangent = SIMD2<Float>(-toCenterNorm.y, toCenterNorm.x)
+
+      // 根据轨道力学计算合适的切线速度
+      // 对于稳定圆周轨道：v = sqrt(G/r)，其中 G = gravityStrength = 240000
+      // 逃逸速度：v_escape = sqrt(2*G/r)
+      let gravityStrength: Float = 240000.0
+      let orbitalSpeed = sqrt(gravityStrength / radius)  // 圆轨道速度
+      
+      // 使用略低于圆轨道速度，形成稳定的椭圆轨道
+      // 内圈粒子速度更快，外圈更慢，避免逃逸
+      // 添加 ±20% 的随机性，但保持在安全范围内（0.6-0.95倍圆轨道速度）
+      let speedFactor = Float.random(in: 0.6...0.95)
+      let tangentialSpeed = orbitalSpeed * speedFactor
+      let vx = tangent.x * tangentialSpeed
+      let vy = tangent.y * tangentialSpeed
 
       // 随机质量
-      let mass = Float.random(in: 0.5...2.0)
+      let mass = Float.random(in: 0.5...2.5)
 
-      // 随机颜色（蓝紫色调）
-      let hue = Float.random(in: 0.55...0.75)  // 蓝色到紫色
-      let color = hsbToRgb(h: hue, s: 0.7, b: 0.9, a: 0.8)
+      // 每组有自己的随机颜色
+      let hue = Float.random(in: 0.0...1.0)  // 全彩虹色
+      let saturation = Float.random(in: 0.6...0.9)
+      let brightness = Float.random(in: 0.7...1.0)
+      let baseColor = hsbToRgb(h: hue, s: saturation, b: brightness, a: 0.8)
 
-      let particle = Particle(
-        position: SIMD2<Float>(x, y),
-        velocity: SIMD2<Float>(vx, vy),
-        mass: mass,
-        color: color
-      )
+      // 创建该组的所有粒子
+      for indexInGroup in 0..<particlesPerGroup {
+        let particle = Particle(
+          position: SIMD2<Float>(x, y),  // 初始时所有粒子在同一位置
+          velocity: SIMD2<Float>(vx, vy),  // 初始速度相同（垂直于引力方向）
+          mass: mass,
+          color: baseColor,
+          groupId: UInt32(groupId),
+          indexInGroup: UInt32(indexInGroup)
+        )
 
-      particles.append(particle)
+        particles.append(particle)
+      }
     }
   }
 
@@ -119,9 +147,11 @@ class ParticlesInGravityRenderer {
 
     var gravityParams = GravityParams(
       centerPosition: SIMD2<Float>(Float(viewportSize.width / 2), Float(viewportSize.height / 2)),
-      gravityStrength: 5000.0,
+      gravityStrength: 240000.0,  // 再增大引力4倍：60000 → 240000
       deltaTime: Float(updateInterval),
-      damping: 0.995
+      damping: 0.995,
+      particlesPerGroup: UInt32(particlesPerGroup),
+      padding: 0
     )
 
     let gravityParamsSize = MemoryLayout<GravityParams>.stride
@@ -152,9 +182,11 @@ class ParticlesInGravityRenderer {
     // 动态更新引力中心位置为当前窗口的正中心
     let gravityParams = GravityParams(
       centerPosition: SIMD2<Float>(Float(viewportSize.width / 2), Float(viewportSize.height / 2)),
-      gravityStrength: 5000.0,
+      gravityStrength: 240000.0,  // 再增大引力4倍：60000 → 240000
       deltaTime: Float(updateInterval),
-      damping: 0.995
+      damping: 0.995,
+      particlesPerGroup: UInt32(particlesPerGroup),
+      padding: 0
     )
 
     // 更新引力参数缓冲区
@@ -196,7 +228,8 @@ class ParticlesInGravityRenderer {
 
     guard let drawable = view.currentDrawable,
       let renderPipeline = renderPipelineState,
-      let particleBuffer = particleBuffer
+      let particleBuffer = particleBuffer,
+      let gravityParamsBuffer = gravityParamsBuffer
     else {
       return
     }
@@ -221,7 +254,15 @@ class ParticlesInGravityRenderer {
     renderEncoder.setVertexBytes(
       &viewportSizeVector, length: MemoryLayout<SIMD2<Float>>.size, index: 1)
 
-    renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particleCount)
+    renderEncoder.setVertexBuffer(gravityParamsBuffer, offset: 0, index: 2)
+
+    // 每组有 particlesPerGroup 个粒子，可以形成 (particlesPerGroup - 1) 个线段
+    // 每个线段用 6 个顶点（2个三角形）来渲染
+    let segmentsPerGroup = particlesPerGroup - 1
+    let totalSegments = groupCount * segmentsPerGroup
+    let vertexCount = totalSegments * 6
+
+    renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount)
 
     renderEncoder.endEncoding()
     commandBuffer.present(drawable)
