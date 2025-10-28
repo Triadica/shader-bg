@@ -31,10 +31,10 @@ class EffectManager {
       RotatingLorenzEffect(),
     ]
 
-    // 默认选择第一个效果（Noise Halo）
+    // 默认选择 Rotating Lorenz 效果
     if !availableEffects.isEmpty {
-      currentEffect = availableEffects[0]
-      currentEffectIndex = 0
+      currentEffect = availableEffects[3]  // RotatingLorenzEffect
+      currentEffectIndex = 3
     }
   }
 

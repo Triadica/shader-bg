@@ -20,7 +20,9 @@ class RotatingLorenzRenderer {
   var lorenzParamsBuffer: MTLBuffer?
 
   var particles: [LorenzParticle] = []
-  let particleCount = 2000  // 减少粒子数量以优化性能（从 3000 降低到 2000）
+  let particleCount = 32000  // 总粒子数（400组 × 80粒子/组）
+  let particlesPerGroup = 80  // 每组粒子数量（20 × 4）
+  var groupCount: Int { particleCount / particlesPerGroup }  // 组数 = 400
 
   var viewportSize: CGSize = .zero
   var lastUpdateTime: CFTimeInterval = 0
@@ -81,18 +83,26 @@ class RotatingLorenzRenderer {
   func setupParticles() {
     particles.removeAll()
 
-    // 在 Lorenz 吸引子附近随机初始化粒子
-    for _ in 0..<particleCount {
-      let x = Float.random(in: -5...5)
-      let y = Float.random(in: -5...5)
-      let z = Float.random(in: 0...10)
+    // 创建粒子组，每组 80 个粒子
+    for groupId in 0..<groupCount {
+      // 为每组的头部粒子在 Lorenz 吸引子附近随机初始化位置
+      // 扩大随机范围，使起始点更分散
+      let x = Float.random(in: -15...15)  // 扩大：-5...5 → -15...15
+      let y = Float.random(in: -15...15)  // 扩大：-5...5 → -15...15
+      let z = Float.random(in: 0...40)  // 扩大：0...10 → 0...40
+      let startPosition = SIMD3<Float>(x, y, z)
 
-      let particle = LorenzParticle(
-        position: SIMD3<Float>(x, y, z),
-        color: SIMD4<Float>(1, 1, 1, 0.7)
-      )
+      // 创建该组的所有粒子
+      for indexInGroup in 0..<particlesPerGroup {
+        let particle = LorenzParticle(
+          position: startPosition,  // 初始时所有粒子在同一位置
+          color: SIMD4<Float>(1, 1, 1, 0.7),
+          groupId: UInt32(groupId),
+          indexInGroup: UInt32(indexInGroup)
+        )
 
-      particles.append(particle)
+        particles.append(particle)
+      }
     }
   }
 
@@ -105,9 +115,11 @@ class RotatingLorenzRenderer {
       sigma: 10.0,
       rho: 28.0,
       beta: 8.0 / 3.0,
-      deltaTime: 0.005,
+      deltaTime: 0.00125,  // 再减半：0.0025 → 0.00125
       rotation: 0.0,
-      scale: 15.0  // 增大缩放比例，使效果更明显
+      scale: 30.0,  // 放大2倍：15.0 → 30.0
+      particlesPerGroup: UInt32(particlesPerGroup),
+      padding: 0
     )
 
     let lorenzParamsSize = MemoryLayout<LorenzParams>.stride
@@ -129,17 +141,19 @@ class RotatingLorenzRenderer {
       return
     }
 
-    // 更新旋转角度（稍微加快旋转速度）
-    rotation += 0.015
+    // 更新旋转角度（减慢旋转速度）
+    rotation += 0.007  // 减慢：0.015 → 0.007
 
     // 更新 Lorenz 参数
-    var lorenzParams = LorenzParams(
+    let lorenzParams = LorenzParams(
       sigma: 10.0,
       rho: 28.0,
       beta: 8.0 / 3.0,
-      deltaTime: 0.005,
+      deltaTime: 0.00125,  // 再减半：0.0025 → 0.00125
       rotation: rotation,
-      scale: 15.0  // 增大缩放比例，使效果更明显
+      scale: 30.0,  // 放大2倍：15.0 → 30.0
+      particlesPerGroup: UInt32(particlesPerGroup),
+      padding: 0
     )
 
     let lorenzParamsPointer = lorenzParamsBuffer.contents().assumingMemoryBound(
@@ -204,7 +218,13 @@ class RotatingLorenzRenderer {
     renderEncoder.setVertexBytes(
       &viewportSizeVector, length: MemoryLayout<SIMD2<Float>>.size, index: 2)
 
-    renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particleCount)
+    // 每组有 particlesPerGroup 个粒子，可以形成 (particlesPerGroup - 1) 个线段
+    // 每个线段用 6 个顶点（2个三角形）来渲染
+    let segmentsPerGroup = particlesPerGroup - 1
+    let totalSegments = groupCount * segmentsPerGroup
+    let vertexCount = totalSegments * 6
+
+    renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount)
 
     renderEncoder.endEncoding()
     commandBuffer.present(drawable)
