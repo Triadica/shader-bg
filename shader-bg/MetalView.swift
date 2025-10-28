@@ -79,6 +79,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = ParticlesInGravityEffect()
       case "rotating_lorenz":
         newEffect = RotatingLorenzEffect()
+      case "liquid_tunnel":
+        newEffect = LiquidTunnelEffect()
       default:
         newEffect = ParticlesInGravityEffect()
       }

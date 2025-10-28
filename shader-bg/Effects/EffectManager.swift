@@ -25,11 +25,12 @@ class EffectManager {
 
   private func registerEffects() {
     availableEffects = [
+      LiquidTunnelEffect(),
       ParticlesInGravityEffect(),
       RotatingLorenzEffect(),
     ]
 
-    // 默认选择第一个效果
+    // 默认选择第一个效果（Liquid Tunnel）
     if !availableEffects.isEmpty {
       currentEffect = availableEffects[0]
       currentEffectIndex = 0
