@@ -83,6 +83,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = RotatingLorenzEffect()
       case "liquid_tunnel":
         newEffect = LiquidTunnelEffect()
+      case "rhombus":
+        newEffect = RhombusEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

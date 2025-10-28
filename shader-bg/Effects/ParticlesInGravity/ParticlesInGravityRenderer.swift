@@ -106,7 +106,7 @@ class ParticlesInGravityRenderer {
       // 逃逸速度：v_escape = sqrt(2*G/r)
       let gravityStrength: Float = 240000.0
       let orbitalSpeed = sqrt(gravityStrength / radius)  // 圆轨道速度
-      
+
       // 使用略低于圆轨道速度，形成稳定的椭圆轨道
       // 内圈粒子速度更快，外圈更慢，避免逃逸
       // 添加 ±20% 的随机性，但保持在安全范围内（0.6-0.95倍圆轨道速度）
