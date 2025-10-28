@@ -75,6 +75,8 @@ struct MetalView: NSViewRepresentable {
       // 创建新的效果实例
       let newEffect: VisualEffect
       switch effectType.name {
+      case "noise_halo":
+        newEffect = NoiseHaloEffect()
       case "particles_in_gravity":
         newEffect = ParticlesInGravityEffect()
       case "rotating_lorenz":
@@ -82,7 +84,7 @@ struct MetalView: NSViewRepresentable {
       case "liquid_tunnel":
         newEffect = LiquidTunnelEffect()
       default:
-        newEffect = ParticlesInGravityEffect()
+        newEffect = NoiseHaloEffect()
       }
 
       newEffect.setup(device: device, size: size)

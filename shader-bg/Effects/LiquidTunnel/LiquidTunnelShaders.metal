@@ -62,9 +62,9 @@ fragment float4 liquidTunnelFragmentShader(VertexOut in [[stage_in]],
   float4 p;               // 沿光线的当前 3D 位置
   float4 O;               // 保存位置用于光照计算
 
-  // Raymarching 循环 - 减少到 20 次迭代以优化性能
-  // 牺牲一些细节以换取流畅体验
-  for (float iter = 0.0; iter < 20.0; iter += 1.0) {
+  // Raymarching 循环 - 40 次迭代平衡性能和视觉质量
+  // 足够保持画面连续性，同时比原始 77 次快约 48%
+  for (float iter = 0.0; iter < 40.0; iter += 1.0) {
     i = iter;
 
     // 将 2D 像素转换为 3D 光线方向
@@ -101,11 +101,11 @@ fragment float4 liquidTunnelFragmentShader(VertexOut in [[stage_in]],
     // 添加光照贡献（越靠近表面越亮）
     o += O.w / d * O;
 
-    // 向前步进 - 增加步长以更快穿越空间
-    z += 1.2 * d;
+    // 向前步进 - 适中的步长保持细节
+    z += 0.9 * d;
   }
 
   // tanh() 将累积亮度压缩到 0-1 范围
-  // 调整缩放因子以补偿更少的迭代次数
-  return tanh(o / 5e3);
+  // 调整缩放因子以配合 40 次迭代
+  return tanh(o / 1.2e4);
 }

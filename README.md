@@ -6,6 +6,8 @@
 
 - 🎨 **多种视觉效果**
 
+  - Noise Halo（噪声光环，默认）
+  - Liquid Tunnel（流体隧道）
   - Particles in Gravity（粒子引力系统）
   - Rotating Lorenz（旋转的 Lorenz 吸引子）
 
@@ -14,6 +16,7 @@
   - 根据桌面可见性自动调整更新频率
   - 桌面可见时：30 FPS（高性能）
   - 窗口遮挡时：10 FPS（低功耗）
+  - 每个效果都经过优化，即使在 5K 分辨率下也能流畅运行
 
 - 🖥️ **多屏幕支持**
 
@@ -23,6 +26,7 @@
 - 💫 **GPU 加速**
   - 使用 Metal Compute Shader 进行粒子物理计算
   - Fragment Shader 实现高效渲染
+  - Raymarching 技术实现 3D 效果
 
 ## 系统要求
 

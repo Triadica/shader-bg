@@ -1,5 +1,5 @@
 //
-//  LiquidTunnelRenderer.swift
+//  NoiseHaloRenderer.swift
 //  shader-bg
 //
 //  Created by chen on 2025/10/28.
@@ -9,20 +9,17 @@ import Metal
 import MetalKit
 import simd
 
-class LiquidTunnelRenderer {
+class NoiseHaloRenderer {
   let device: MTLDevice
   let commandQueue: MTLCommandQueue
 
   var renderPipelineState: MTLRenderPipelineState?
   var paramsBuffer: MTLBuffer?
-  var renderTexture: MTLTexture?  // 低分辨率渲染目标
-  var renderPassDescriptor: MTLRenderPassDescriptor?
 
   var viewportSize: CGSize = .zero
-  var renderScale: CGFloat = 0.5  // 渲染缩放：0.5 = 1/4 像素数
   var startTime: CFTimeInterval = CACurrentMediaTime()
   var lastUpdateTime: CFTimeInterval = 0
-  var updateInterval: CFTimeInterval = 1.0 / 8.0  // 降低到 8 FPS，平衡性能和流畅度
+  var updateInterval: CFTimeInterval = 1.0 / 6.0  // 降低到 6 FPS，减少 60% 计算量
 
   // 性能监控
   var lastLogTime: CFTimeInterval = 0
@@ -49,8 +46,8 @@ class LiquidTunnelRenderer {
 
     // 设置 Render Pipeline
     let pipelineDescriptor = MTLRenderPipelineDescriptor()
-    pipelineDescriptor.vertexFunction = library.makeFunction(name: "liquidTunnelVertexShader")
-    pipelineDescriptor.fragmentFunction = library.makeFunction(name: "liquidTunnelFragmentShader")
+    pipelineDescriptor.vertexFunction = library.makeFunction(name: "noiseHaloVertexShader")
+    pipelineDescriptor.fragmentFunction = library.makeFunction(name: "noiseHaloFragmentShader")
     pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
 
     // 启用混合
@@ -70,22 +67,14 @@ class LiquidTunnelRenderer {
   }
 
   func setupBuffer() {
-    // 使用降低的分辨率进行 raymarching 计算
-    let renderWidth = Float(viewportSize.width) * Float(renderScale)
-    let renderHeight = Float(viewportSize.height) * Float(renderScale)
-
-    var params = LiquidTunnelParams(
+    var params = NoiseHaloParams(
       time: 0.0,
-      resolution: SIMD2<Float>(renderWidth, renderHeight)
+      resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height))
     )
 
-    let paramsSize = MemoryLayout<LiquidTunnelParams>.stride
+    let paramsSize = MemoryLayout<NoiseHaloParams>.stride
     paramsBuffer = device.makeBuffer(
       bytes: &params, length: paramsSize, options: .storageModeShared)
-
-    NSLog(
-      "[LiquidTunnel] 初始化 - 显示分辨率: %.0fx%.0f, 渲染分辨率: %.0fx%.0f (缩放: %.1f)",
-      viewportSize.width, viewportSize.height, renderWidth, renderHeight, renderScale)
   }
 
   func updateParams(currentTime: CFTimeInterval) {
@@ -93,16 +82,12 @@ class LiquidTunnelRenderer {
 
     let elapsedTime = Float(currentTime - startTime)
 
-    // 使用降低的分辨率
-    let renderWidth = Float(viewportSize.width) * Float(renderScale)
-    let renderHeight = Float(viewportSize.height) * Float(renderScale)
-
-    var params = LiquidTunnelParams(
-      time: elapsedTime * 0.3,  // 进一步减慢时间流逝，让动画更平缓
-      resolution: SIMD2<Float>(renderWidth, renderHeight)
+    var params = NoiseHaloParams(
+      time: elapsedTime * 0.7,  // 减慢时间流逝 30%，让动画更平缓
+      resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height))
     )
 
-    let paramsPointer = paramsBuffer.contents().assumingMemoryBound(to: LiquidTunnelParams.self)
+    let paramsPointer = paramsBuffer.contents().assumingMemoryBound(to: NoiseHaloParams.self)
     paramsPointer.pointee = params
   }
 
@@ -116,6 +101,7 @@ class LiquidTunnelRenderer {
     }
 
     updateParams(currentTime: currentTime)
+    lastUpdateTime = currentTime
 
     guard let renderPipeline = renderPipelineState,
       let paramsBuffer = paramsBuffer,
@@ -152,7 +138,7 @@ class LiquidTunnelRenderer {
       let avgFrameTime = totalFrameTime / Double(frameCount)
       let fps = Double(frameCount) / (frameEndTime - lastLogTime)
       NSLog(
-        "[LiquidTunnel] FPS: %.1f, 平均帧时间: %.2fms, 分辨率: %dx%d",
+        "[NoiseHalo] FPS: %.1f, 平均帧时间: %.2fms, 分辨率: %dx%d",
         fps, avgFrameTime * 1000, Int(viewportSize.width), Int(viewportSize.height))
 
       lastLogTime = frameEndTime

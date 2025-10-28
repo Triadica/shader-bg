@@ -25,12 +25,13 @@ class EffectManager {
 
   private func registerEffects() {
     availableEffects = [
+      NoiseHaloEffect(),
       LiquidTunnelEffect(),
       ParticlesInGravityEffect(),
       RotatingLorenzEffect(),
     ]
 
-    // 默认选择第一个效果（Liquid Tunnel）
+    // 默认选择第一个效果（Noise Halo）
     if !availableEffects.isEmpty {
       currentEffect = availableEffects[0]
       currentEffectIndex = 0
