@@ -169,6 +169,12 @@ class RotatingLorenzRenderer {
   }
 
   func draw(in view: MTKView) {
+    // 使用当前 drawable 的尺寸，确保在不同分辨率/缩放下投影居中
+    let currentDrawableSize = view.drawableSize
+    if currentDrawableSize.width > 0 && currentDrawableSize.height > 0 {
+      viewportSize = currentDrawableSize
+    }
+
     guard let drawable = view.currentDrawable,
       let renderPipeline = renderPipelineState,
       let particleBuffer = particleBuffer,

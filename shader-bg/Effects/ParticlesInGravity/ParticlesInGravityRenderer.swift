@@ -185,6 +185,12 @@ class ParticlesInGravityRenderer {
   }
 
   func draw(in view: MTKView) {
+    // 同步使用当前 drawable 的尺寸，避免在多显示器/缩放变化时出现中心偏移
+    let currentDrawableSize = view.drawableSize
+    if currentDrawableSize.width > 0 && currentDrawableSize.height > 0 {
+      viewportSize = currentDrawableSize
+    }
+
     let currentTime = CACurrentMediaTime()
     updateParticles(currentTime: currentTime)
 
