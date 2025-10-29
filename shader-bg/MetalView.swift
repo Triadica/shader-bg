@@ -17,6 +17,7 @@ struct MetalView: NSViewRepresentable {
     mtkView.preferredFramesPerSecond = 60
     mtkView.enableSetNeedsDisplay = false
     mtkView.isPaused = false
+    mtkView.autoResizeDrawable = true
 
     // 启用混合以支持透明度
     mtkView.framebufferOnly = false
@@ -37,6 +38,7 @@ struct MetalView: NSViewRepresentable {
     private var currentEffect: VisualEffect?
     private var device: MTLDevice?
     private var isActive = true
+    private var lastDrawableSize: CGSize = .zero
 
     init(_ parent: MetalView) {
       self.parent = parent
@@ -102,9 +104,25 @@ struct MetalView: NSViewRepresentable {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
       if currentEffect == nil, let device = view.device {
         initializeEffect(device: device, size: size)
+        lastDrawableSize = size
+        return
+      }
+
+      // 判断是否为“显著尺寸变化”：尺寸变化超过 2pt 或者宽高比明显变化
+      let wDelta = abs(size.width - lastDrawableSize.width)
+      let hDelta = abs(size.height - lastDrawableSize.height)
+      let ratioOld = (lastDrawableSize.width > 0 && lastDrawableSize.height > 0)
+        ? (lastDrawableSize.width / lastDrawableSize.height) : 0
+      let ratioNew = (size.width > 0 && size.height > 0) ? (size.width / size.height) : 0
+      let ratioDelta = abs(ratioNew - ratioOld)
+
+      if (wDelta > 2 || hDelta > 2) || ratioDelta > 0.01 {
+        currentEffect?.handleSignificantResize(to: size)
       } else {
         currentEffect?.updateViewportSize(size)
       }
+
+      lastDrawableSize = size
     }
 
     func draw(in view: MTKView) {

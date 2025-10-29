@@ -22,6 +22,15 @@ class ParticlesInGravityEffect: VisualEffect {
     renderer?.viewportSize = size
   }
 
+  // 在首次真正获得外接屏的有效 drawableSize 或缩放变化时，
+  // 需要以新中心重置粒子分布并重建相关缓冲区，避免初始中心偏移。
+  func handleSignificantResize(to size: CGSize) {
+    guard let renderer = renderer else { return }
+    renderer.viewportSize = size
+    renderer.setupParticles()
+    renderer.setupBuffers()
+  }
+
   func update(currentTime: CFTimeInterval) {
     renderer?.updateParticles(currentTime: currentTime)
   }
