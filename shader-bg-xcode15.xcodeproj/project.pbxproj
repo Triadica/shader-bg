@@ -24,6 +24,18 @@
 		B0000001200000010000000F /* RotatingLorenzEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000200000010000000F /* RotatingLorenzEffect.swift */; };
 		B00000012000000100000010 /* RotatingLorenzRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000010 /* RotatingLorenzRenderer.swift */; };
 		B00000012000000100000011 /* RotatingLorenzShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000011 /* RotatingLorenzShaders.metal */; };
+		C00000012000000100000001 /* LiquidTunnelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000001 /* LiquidTunnelData.swift */; };
+		C00000012000000100000002 /* LiquidTunnelEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000002 /* LiquidTunnelEffect.swift */; };
+		C00000012000000100000003 /* LiquidTunnelRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000003 /* LiquidTunnelRenderer.swift */; };
+		C00000012000000100000004 /* LiquidTunnelShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000004 /* LiquidTunnelShaders.metal */; };
+		C00000012000000100000005 /* NoiseHaloData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000005 /* NoiseHaloData.swift */; };
+		C00000012000000100000006 /* NoiseHaloEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000006 /* NoiseHaloEffect.swift */; };
+		C00000012000000100000007 /* NoiseHaloRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000007 /* NoiseHaloRenderer.swift */; };
+		C00000012000000100000008 /* NoiseHaloShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000008 /* NoiseHaloShaders.metal */; };
+		C00000012000000100000009 /* RhombusData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000009 /* RhombusData.swift */; };
+		C0000001200000010000000A /* RhombusEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0000000200000010000000A /* RhombusEffect.swift */; };
+		C0000001200000010000000B /* RhombusRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0000000200000010000000B /* RhombusRenderer.swift */; };
+		C0000001200000010000000C /* RhombusShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0000000200000010000000C /* RhombusShaders.metal */; };
 		B00000013000000100000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000003000000100000001 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +57,18 @@
 		B0000000200000010000000F /* RotatingLorenzEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingLorenzEffect.swift; sourceTree = "<group>"; };
 		B00000002000000100000010 /* RotatingLorenzRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingLorenzRenderer.swift; sourceTree = "<group>"; };
 		B00000002000000100000011 /* RotatingLorenzShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = RotatingLorenzShaders.metal; sourceTree = "<group>"; };
+		C00000002000000100000001 /* LiquidTunnelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidTunnelData.swift; sourceTree = "<group>"; };
+		C00000002000000100000002 /* LiquidTunnelEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidTunnelEffect.swift; sourceTree = "<group>"; };
+		C00000002000000100000003 /* LiquidTunnelRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidTunnelRenderer.swift; sourceTree = "<group>"; };
+		C00000002000000100000004 /* LiquidTunnelShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = LiquidTunnelShaders.metal; sourceTree = "<group>"; };
+		C00000002000000100000005 /* NoiseHaloData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseHaloData.swift; sourceTree = "<group>"; };
+		C00000002000000100000006 /* NoiseHaloEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseHaloEffect.swift; sourceTree = "<group>"; };
+		C00000002000000100000007 /* NoiseHaloRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseHaloRenderer.swift; sourceTree = "<group>"; };
+		C00000002000000100000008 /* NoiseHaloShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = NoiseHaloShaders.metal; sourceTree = "<group>"; };
+		C00000002000000100000009 /* RhombusData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhombusData.swift; sourceTree = "<group>"; };
+		C0000000200000010000000A /* RhombusEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhombusEffect.swift; sourceTree = "<group>"; };
+		C0000000200000010000000B /* RhombusRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhombusRenderer.swift; sourceTree = "<group>"; };
+		C0000000200000010000000C /* RhombusShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = RhombusShaders.metal; sourceTree = "<group>"; };
 		B00000003000000100000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B00000004000000100000001 /* shader-bg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "shader-bg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -91,8 +115,44 @@
 				B00000002000000100000008 /* EffectManager.swift */,
 				B0000000A000000100000001 /* ParticlesInGravity */,
 				B0000000B000000100000001 /* RotatingLorenz */,
+				C0000000A000000100000002 /* LiquidTunnel */,
+				C0000000A000000100000003 /* NoiseHalo */,
+				C0000000A000000100000004 /* Rhombus */,
 			);
 			path = Effects;
+			sourceTree = "<group>";
+		};
+		C0000000A000000100000002 /* LiquidTunnel */ = {
+			isa = PBXGroup;
+			children = (
+				C00000002000000100000001 /* LiquidTunnelData.swift */,
+				C00000002000000100000002 /* LiquidTunnelEffect.swift */,
+				C00000002000000100000003 /* LiquidTunnelRenderer.swift */,
+				C00000002000000100000004 /* LiquidTunnelShaders.metal */,
+			);
+			path = LiquidTunnel;
+			sourceTree = "<group>";
+		};
+		C0000000A000000100000003 /* NoiseHalo */ = {
+			isa = PBXGroup;
+			children = (
+				C00000002000000100000005 /* NoiseHaloData.swift */,
+				C00000002000000100000006 /* NoiseHaloEffect.swift */,
+				C00000002000000100000007 /* NoiseHaloRenderer.swift */,
+				C00000002000000100000008 /* NoiseHaloShaders.metal */,
+			);
+			path = NoiseHalo;
+			sourceTree = "<group>";
+		};
+		C0000000A000000100000004 /* Rhombus */ = {
+			isa = PBXGroup;
+			children = (
+				C00000002000000100000009 /* RhombusData.swift */,
+				C0000000200000010000000A /* RhombusEffect.swift */,
+				C0000000200000010000000B /* RhombusRenderer.swift */,
+				C0000000200000010000000C /* RhombusShaders.metal */,
+			);
+			path = Rhombus;
 			sourceTree = "<group>";
 		};
 		B0000000A000000100000001 /* ParticlesInGravity */ = {
@@ -207,6 +267,18 @@
 				B00000012000000100000010 /* RotatingLorenzRenderer.swift in Sources */,
 				B0000001200000010000000E /* RotatingLorenzData.swift in Sources */,
 				B00000012000000100000011 /* RotatingLorenzShaders.metal in Sources */,
+				C00000012000000100000001 /* LiquidTunnelData.swift in Sources */,
+				C00000012000000100000002 /* LiquidTunnelEffect.swift in Sources */,
+				C00000012000000100000003 /* LiquidTunnelRenderer.swift in Sources */,
+				C00000012000000100000004 /* LiquidTunnelShaders.metal in Sources */,
+				C00000012000000100000005 /* NoiseHaloData.swift in Sources */,
+				C00000012000000100000006 /* NoiseHaloEffect.swift in Sources */,
+				C00000012000000100000007 /* NoiseHaloRenderer.swift in Sources */,
+				C00000012000000100000008 /* NoiseHaloShaders.metal in Sources */,
+				C00000012000000100000009 /* RhombusData.swift in Sources */,
+				C0000001200000010000000A /* RhombusEffect.swift in Sources */,
+				C0000001200000010000000B /* RhombusRenderer.swift in Sources */,
+				C0000001200000010000000C /* RhombusShaders.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
