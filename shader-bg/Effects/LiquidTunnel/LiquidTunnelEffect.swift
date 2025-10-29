@@ -12,6 +12,10 @@ class LiquidTunnelEffect: VisualEffect {
   var name: String = "liquid_tunnel"
   var displayName: String = "Liquid Tunnel"
 
+  // 使用默认帧率：可见 60fps，遮挡 30fps
+  // var preferredFramesPerSecond: Int { 60 }
+  // var occludedFramesPerSecond: Int { 30 }
+
   private var renderer: LiquidTunnelRenderer?
 
   func setup(device: MTLDevice, size: CGSize) {
@@ -28,6 +32,10 @@ class LiquidTunnelEffect: VisualEffect {
   }
 
   func draw(in view: MTKView) {
+    // 应用帧率设置
+    if view.preferredFramesPerSecond != preferredFramesPerSecond {
+      view.preferredFramesPerSecond = preferredFramesPerSecond
+    }
     renderer?.draw(in: view)
   }
 

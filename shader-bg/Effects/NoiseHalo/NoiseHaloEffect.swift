@@ -12,6 +12,10 @@ class NoiseHaloEffect: VisualEffect {
   var name: String = "noise_halo"
   var displayName: String = "Noise Halo"
 
+  // 使用默认帧率：可见 60fps，遮挡 30fps
+  // var preferredFramesPerSecond: Int { 60 }
+  // var occludedFramesPerSecond: Int { 30 }
+
   private var renderer: NoiseHaloRenderer?
 
   func setup(device: MTLDevice, size: CGSize) {
@@ -28,6 +32,10 @@ class NoiseHaloEffect: VisualEffect {
   }
 
   func draw(in view: MTKView) {
+    // 应用帧率设置
+    if view.preferredFramesPerSecond != preferredFramesPerSecond {
+      view.preferredFramesPerSecond = preferredFramesPerSecond
+    }
     renderer?.draw(in: view)
   }
 

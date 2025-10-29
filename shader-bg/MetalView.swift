@@ -87,6 +87,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = LiquidTunnelEffect()
       case "rhombus":
         newEffect = RhombusEffect()
+      case "apollian_twist":
+        newEffect = ApollianTwistEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
@@ -111,7 +113,8 @@ struct MetalView: NSViewRepresentable {
       // 判断是否为“显著尺寸变化”：尺寸变化超过 2pt 或者宽高比明显变化
       let wDelta = abs(size.width - lastDrawableSize.width)
       let hDelta = abs(size.height - lastDrawableSize.height)
-      let ratioOld = (lastDrawableSize.width > 0 && lastDrawableSize.height > 0)
+      let ratioOld =
+        (lastDrawableSize.width > 0 && lastDrawableSize.height > 0)
         ? (lastDrawableSize.width / lastDrawableSize.height) : 0
       let ratioNew = (size.width > 0 && size.height > 0) ? (size.width / size.height) : 0
       let ratioDelta = abs(ratioNew - ratioOld)

@@ -13,6 +13,12 @@ protocol VisualEffect {
   var name: String { get }
   var displayName: String { get }
 
+  // 帧率配置：可见状态下的首选帧率（默认 60fps）
+  var preferredFramesPerSecond: Int { get }
+
+  // 帧率配置：被遮挡状态下的首选帧率（默认 30fps，节省资源）
+  var occludedFramesPerSecond: Int { get }
+
   func setup(device: MTLDevice, size: CGSize)
   func updateViewportSize(_ size: CGSize)
   // 当视口尺寸发生显著变化（例如首次窗口铺满屏幕或缩放切换）时调用，
@@ -29,4 +35,8 @@ extension VisualEffect {
   func handleSignificantResize(to size: CGSize) {
     updateViewportSize(size)
   }
+
+  // 默认帧率配置
+  var preferredFramesPerSecond: Int { 60 }
+  var occludedFramesPerSecond: Int { 30 }
 }

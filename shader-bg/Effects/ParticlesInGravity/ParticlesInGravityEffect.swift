@@ -12,6 +12,10 @@ class ParticlesInGravityEffect: VisualEffect {
   var name: String = "particles_in_gravity"
   var displayName: String = "Particles in Gravity"
 
+  // 使用默认帧率：可见 60fps，遮挡 30fps
+  // var preferredFramesPerSecond: Int { 60 }
+  // var occludedFramesPerSecond: Int { 30 }
+
   private var renderer: ParticlesInGravityRenderer?
 
   func setup(device: MTLDevice, size: CGSize) {
@@ -36,6 +40,10 @@ class ParticlesInGravityEffect: VisualEffect {
   }
 
   func draw(in view: MTKView) {
+    // 应用帧率设置
+    if view.preferredFramesPerSecond != preferredFramesPerSecond {
+      view.preferredFramesPerSecond = preferredFramesPerSecond
+    }
     renderer?.draw(in: view)
   }
 

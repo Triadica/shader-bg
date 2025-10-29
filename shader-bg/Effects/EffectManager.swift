@@ -30,10 +30,11 @@ class EffectManager {
       ParticlesInGravityEffect(),
       RotatingLorenzEffect(),
       RhombusEffect(),
+      ApollianTwistEffect(),
     ]
 
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
-    // 可选值: "noise", "liquid", "gravity", "lorenz", "rhombus"
+    // 可选值: "noise", "liquid", "gravity", "lorenz", "rhombus", "apollian"
     var defaultIndex = 3  // 默认为 Rotating Lorenz
 
     if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
@@ -48,6 +49,8 @@ class EffectManager {
         defaultIndex = 3
       case "rhombus":
         defaultIndex = 4
+      case "apollian":
+        defaultIndex = 5
       default:
         print("Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
       }

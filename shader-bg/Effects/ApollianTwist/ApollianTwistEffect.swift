@@ -1,26 +1,26 @@
 //
-//  RhombusEffect.swift
+//  ApollianTwistEffect.swift
 //  shader-bg
 //
-//  Created on 2025-10-29.
+//  Created on 2025-10-30.
 //
 
 import Foundation
 import MetalKit
 
-class RhombusEffect: VisualEffect {
-  var name: String = "rhombus"
-  var displayName: String = "Rhombus Pattern"
+class ApollianTwistEffect: VisualEffect {
+  var name: String = "apollian_twist"
+  var displayName: String = "Apollian Twist"
 
-  // 使用默认帧率：可见 60fps，遮挡 30fps
-  // var preferredFramesPerSecond: Int { 60 }
-  // var occludedFramesPerSecond: Int { 30 }
+  // 自定义帧率：由于动画速度已经很慢，使用 30fps 以节省性能
+  var preferredFramesPerSecond: Int { 20 }
+  var occludedFramesPerSecond: Int { 5 }  // 遮挡时进一步降低
 
-  var renderer: RhombusRenderer?
+  var renderer: ApollianTwistRenderer?
 
   func setup(device: MTLDevice, size: CGSize) {
-    let rhombusRenderer = RhombusRenderer(device: device, size: size)
-    self.renderer = rhombusRenderer
+    let apollianTwistRenderer = ApollianTwistRenderer(device: device, size: size)
+    self.renderer = apollianTwistRenderer
   }
 
   func updateViewportSize(_ size: CGSize) {
@@ -45,10 +45,7 @@ class RhombusEffect: VisualEffect {
       return
     }
 
-    // 设置清屏颜色为白色
     renderPassDescriptor.colorAttachments[0].texture = drawable.texture
-    renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(
-      red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     renderPassDescriptor.colorAttachments[0].loadAction = .clear
 
     renderer.draw(
@@ -59,6 +56,6 @@ class RhombusEffect: VisualEffect {
   }
 
   func setUpdateRate(_ rate: Double) {
-    // 可选：如果需要控制更新频率
+    // Apollian Twist 使用自定义的帧率控制（30fps 可见，15fps 遮挡）
   }
 }
