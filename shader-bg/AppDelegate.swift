@@ -6,18 +6,47 @@
 //
 
 import Cocoa
+import CoreGraphics
 import MetalKit
 import SwiftUI
+
+private func activeDisplayIDs() -> [CGDirectDisplayID] {
+  var displayCount: UInt32 = 0
+  var error = CGGetActiveDisplayList(0, nil, &displayCount)
+  guard error == .success, displayCount > 0 else {
+    NSLog("[SCREENSHOT] 无法获取显示器数量，错误码: \(error.rawValue)")
+    return []
+  }
+
+  var displayIDs = [CGDirectDisplayID](repeating: 0, count: Int(displayCount))
+  error = CGGetActiveDisplayList(displayCount, &displayIDs, &displayCount)
+  guard error == .success else {
+    NSLog("[SCREENSHOT] 无法获取显示器列表，错误码: \(error.rawValue)")
+    return []
+  }
+
+  return Array(displayIDs.prefix(Int(displayCount)))
+}
+
+private extension NSScreen {
+  var displayID: CGDirectDisplayID? {
+    deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID
+  }
+}
 
 class AppDelegate: NSObject, NSApplicationDelegate {
   var wallpaperWindows: [WallpaperWindow] = []
   var statusItem: NSStatusItem?
+  var screenshotTimer: Timer?
+  var screenshotDirectory: URL?
 
   func applicationDidFinishLaunching(_ notification: Notification) {
     NSApp.setActivationPolicy(.accessory)
+    setupScreenshotDirectory()
     setupWallpaperWindows()
     setupMenuBar()
     setupPerformanceMonitoring()
+    setupScreenshotTimer()
 
     NotificationCenter.default.addObserver(
       self,
@@ -27,6 +56,166 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     )
   }
 
+  func setupScreenshotDirectory() {
+    // 使用 ~/Pictures/shader-bg 目录
+    guard
+      let picturesURL = FileManager.default.urls(for: .picturesDirectory, in: .userDomainMask).first
+    else {
+      NSLog("[SCREENSHOT] 无法定位 Pictures 目录")
+      return
+    }
+
+    screenshotDirectory = picturesURL.appendingPathComponent("shader-bg")
+
+    do {
+      guard let screenshotDirectory else { return }
+      try FileManager.default.createDirectory(
+        at: screenshotDirectory, withIntermediateDirectories: true)
+      NSLog("[SCREENSHOT] 截图目录已创建: \(screenshotDirectory.path)")
+    } catch {
+      NSLog("[SCREENSHOT] 创建截图目录失败: \(error)")
+    }
+  }
+
+  func setupScreenshotTimer() {
+    NSLog("[SCREENSHOT] 设置截图定时器，每5秒执行一次")
+    // 每5秒截图一次
+    screenshotTimer = Timer.scheduledTimer(
+      withTimeInterval: 5.0,
+      repeats: true
+    ) { [weak self] _ in
+      NSLog("[SCREENSHOT] 定时器触发")
+      self?.captureAndSetWallpaper()
+    }
+  }
+
+  @objc func captureAndSetWallpaper() {
+    guard let screenshotDirectory = screenshotDirectory else {
+      NSLog("[SCREENSHOT] 错误：截图目录未初始化")
+      return
+    }
+
+    let screens = NSScreen.screens
+    guard !screens.isEmpty else {
+      NSLog("[SCREENSHOT] 当前没有可用屏幕")
+      return
+    }
+
+    let displayIDs = activeDisplayIDs()
+    guard !displayIDs.isEmpty else {
+      NSLog("[SCREENSHOT] 无法获取有效的显示器列表")
+      return
+    }
+
+    NSLog("[SCREENSHOT] 开始截图，屏幕数量: \(screens.count)")
+
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "mm-ss"
+    let timestamp = dateFormatter.string(from: Date())
+
+    let sortedScreens = screens.compactMap { screen -> (screen: NSScreen, displayIndex: Int)? in
+      guard let displayID = screen.displayID else {
+        NSLog("[SCREENSHOT] 未找到屏幕 displayID: \(screen)")
+        return nil
+      }
+      guard let index = displayIDs.firstIndex(of: displayID) else {
+        NSLog("[SCREENSHOT] 显示器 ID \(displayID) 不在当前活动显示器列表中")
+        return nil
+      }
+      return (screen, index)
+    }.sorted { $0.displayIndex < $1.displayIndex }
+
+    for entry in sortedScreens {
+      let displayNumber = entry.displayIndex + 1
+      let filename = "screen-\(entry.displayIndex)-\(timestamp).png"
+      let targetURL = screenshotDirectory.appendingPathComponent(filename)
+
+      if FileManager.default.fileExists(atPath: targetURL.path) {
+        do {
+          try FileManager.default.removeItem(at: targetURL)
+        } catch {
+          NSLog("[SCREENSHOT] 无法删除旧文件 \(targetURL.path): \(error)")
+        }
+      }
+
+      if captureScreen(to: targetURL, displayNumber: displayNumber) {
+        NSLog("[SCREENSHOT] ✅ 截图已保存: \(targetURL.path)")
+        setDesktopWallpaper(targetURL, for: entry.screen)
+      } else {
+        NSLog("[SCREENSHOT] ❌ 截取屏幕 \(displayNumber) 失败")
+      }
+    }
+
+    cleanupOldScreenshots()
+  }
+
+  func captureScreen(to destinationURL: URL, displayNumber: Int) -> Bool {
+    let process = Process()
+    process.launchPath = "/usr/sbin/screencapture"
+    process.arguments = ["-x", "-t", "png", "-D", String(displayNumber), destinationURL.path]
+
+    let pipe = Pipe()
+    process.standardError = pipe
+
+    do {
+      try process.run()
+      process.waitUntilExit()
+    } catch {
+      NSLog("[SCREENSHOT] screencapture 启动失败: \(error)")
+      return false
+    }
+
+    if process.terminationStatus != 0 {
+      let errorData = pipe.fileHandleForReading.readDataToEndOfFile()
+      if let errorString = String(data: errorData, encoding: .utf8), !errorString.isEmpty {
+        NSLog("[SCREENSHOT] screencapture 错误: \(errorString)")
+      }
+      return false
+    }
+
+    return true
+  }
+  
+  func setDesktopWallpaper(_ imageURL: URL, for screen: NSScreen) {
+    do {
+      try NSWorkspace.shared.setDesktopImageURL(imageURL, for: screen, options: [:])
+      NSLog("[SCREENSHOT] ✅ 已设置桌面壁纸: \(imageURL.lastPathComponent) for \(screen.localizedName)")
+    } catch {
+      NSLog("[SCREENSHOT] ❌ 设置桌面壁纸失败: \(error)")
+    }
+  }
+
+  func cleanupOldScreenshots() {
+    guard let screenshotDirectory = screenshotDirectory else { return }
+
+    do {
+      let fileURLs = try FileManager.default.contentsOfDirectory(
+        at: screenshotDirectory,
+        includingPropertiesForKeys: [.creationDateKey],
+        options: [.skipsHiddenFiles]
+      )
+
+      // 按创建时间排序
+      let sortedFiles = fileURLs.sorted { url1, url2 in
+        let date1 =
+          (try? url1.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
+        let date2 =
+          (try? url2.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
+        return date1 > date2
+      }
+
+      // 删除超过10个的旧文件
+      if sortedFiles.count > 10 {
+        for fileURL in sortedFiles.dropFirst(10) {
+          try FileManager.default.removeItem(at: fileURL)
+          NSLog("[SCREENSHOT] 已删除旧截图: \(fileURL.lastPathComponent)")
+        }
+      }
+    } catch {
+      NSLog("[SCREENSHOT] 清理旧截图失败: \(error)")
+    }
+  }
+  
   func setupWallpaperWindows() {
     // 先清理旧窗口
     wallpaperWindows.forEach { window in
@@ -87,7 +276,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // 效果选择项（展开到第一层菜单）
     let effectManager = EffectManager.shared
-    
+
     for (index, effect) in effectManager.availableEffects.enumerated() {
       let effectItem = NSMenuItem(
         title: effect.displayName,
@@ -217,5 +406,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
     }
     return true
+  }
+
+  func applicationWillTerminate(_ notification: Notification) {
+    // 清理定时器
+    screenshotTimer?.invalidate()
+    screenshotTimer = nil
   }
 }
