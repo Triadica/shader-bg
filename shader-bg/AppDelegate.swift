@@ -28,13 +28,33 @@ private func activeDisplayIDs() -> [CGDirectDisplayID] {
   return Array(displayIDs.prefix(Int(displayCount)))
 }
 
-private extension NSScreen {
-  var displayID: CGDirectDisplayID? {
+extension NSScreen {
+  fileprivate var displayID: CGDirectDisplayID? {
     deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID
   }
 }
 
+private struct CaptureTarget {
+  let displayID: CGDirectDisplayID
+  let fileURL: URL
+  let displayIndex: Int
+  let screenName: String
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
+  private let captureQueue = DispatchQueue(
+    label: "com.triadica.shader-bg.capture",
+    qos: .userInitiated
+  )
+  private var isCaptureInProgress = false
+  private static let timestampFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "mm-ss"
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = .current
+    return formatter
+  }()
+
   var wallpaperWindows: [WallpaperWindow] = []
   var statusItem: NSStatusItem?
   var screenshotTimer: Timer?
@@ -87,72 +107,140 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       NSLog("[SCREENSHOT] 定时器触发")
       self?.captureAndSetWallpaper()
     }
+    if let timer = screenshotTimer {
+      RunLoop.main.add(timer, forMode: .common)
+    }
   }
 
   @objc func captureAndSetWallpaper() {
+    captureQueue.async { [weak self] in
+      guard let self = self else { return }
+      if self.isCaptureInProgress {
+        NSLog("[SCREENSHOT] 上一次截图尚未完成，跳过本轮触发")
+        return
+      }
+
+      self.isCaptureInProgress = true
+      defer { self.isCaptureInProgress = false }
+
+      self.performCaptureCycle()
+    }
+  }
+
+  private func performCaptureCycle() {
     guard let screenshotDirectory = screenshotDirectory else {
       NSLog("[SCREENSHOT] 错误：截图目录未初始化")
       return
     }
 
+    let timestamp = Self.timestampFormatter.string(from: Date())
+    let targets = DispatchQueue.main.sync {
+      self.prepareCaptureTargets(in: screenshotDirectory, timestamp: timestamp)
+    }
+
+    guard !targets.isEmpty else {
+      NSLog("[SCREENSHOT] 没有可用的截图目标，跳过本轮")
+      return
+    }
+
+    NSLog("[SCREENSHOT] 开始截图，本轮屏幕数量: \(targets.count)")
+
+    var successfulTargets: [CaptureTarget] = []
+    let fileManager = FileManager.default
+
+    for target in targets {
+      do {
+        if fileManager.fileExists(atPath: target.fileURL.path) {
+          try fileManager.removeItem(at: target.fileURL)
+        }
+      } catch {
+        NSLog("[SCREENSHOT] 无法删除旧文件 \(target.fileURL.path): \(error)")
+      }
+
+      let displayNumber = target.displayIndex + 1
+
+      if captureDisplay(
+        to: target.fileURL,
+        displayNumber: displayNumber
+      ) {
+        NSLog("[SCREENSHOT] ✅ 截图已保存: \(target.fileURL.path)")
+        successfulTargets.append(target)
+      } else {
+        NSLog(
+          "[SCREENSHOT] ❌ 截取屏幕失败: display=\(displayNumber), name=\(target.screenName)"
+        )
+      }
+    }
+
+    cleanupOldScreenshots()
+
+    if successfulTargets.isEmpty {
+      NSLog("[SCREENSHOT] 本轮截图全部失败，跳过壁纸更新")
+      return
+    }
+
+    DispatchQueue.main.async { [weak self] in
+      guard let self = self else { return }
+      for target in successfulTargets {
+        guard
+          let screen = NSScreen.screens.first(where: { $0.displayID == target.displayID })
+        else {
+          NSLog("[SCREENSHOT] 未找到匹配的屏幕，跳过壁纸设置: \(target.screenName)")
+          continue
+        }
+        self.setDesktopWallpaper(target.fileURL, for: screen)
+      }
+    }
+  }
+
+  private func prepareCaptureTargets(in directory: URL, timestamp: String) -> [CaptureTarget] {
     let screens = NSScreen.screens
     guard !screens.isEmpty else {
       NSLog("[SCREENSHOT] 当前没有可用屏幕")
-      return
+      return []
     }
 
     let displayIDs = activeDisplayIDs()
     guard !displayIDs.isEmpty else {
       NSLog("[SCREENSHOT] 无法获取有效的显示器列表")
-      return
+      return []
     }
 
-    NSLog("[SCREENSHOT] 开始截图，屏幕数量: \(screens.count)")
-
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "mm-ss"
-    let timestamp = dateFormatter.string(from: Date())
-
-    let sortedScreens = screens.compactMap { screen -> (screen: NSScreen, displayIndex: Int)? in
+    let targets = screens.compactMap { screen -> CaptureTarget? in
       guard let displayID = screen.displayID else {
         NSLog("[SCREENSHOT] 未找到屏幕 displayID: \(screen)")
         return nil
       }
+
       guard let index = displayIDs.firstIndex(of: displayID) else {
         NSLog("[SCREENSHOT] 显示器 ID \(displayID) 不在当前活动显示器列表中")
         return nil
       }
-      return (screen, index)
+
+      let filename = "screen-\(index)-\(timestamp).png"
+      let fileURL = directory.appendingPathComponent(filename)
+      return CaptureTarget(
+        displayID: displayID,
+        fileURL: fileURL,
+        displayIndex: index,
+        screenName: screen.localizedName
+      )
     }.sorted { $0.displayIndex < $1.displayIndex }
 
-    for entry in sortedScreens {
-      let displayNumber = entry.displayIndex + 1
-      let filename = "screen-\(entry.displayIndex)-\(timestamp).png"
-      let targetURL = screenshotDirectory.appendingPathComponent(filename)
-
-      if FileManager.default.fileExists(atPath: targetURL.path) {
-        do {
-          try FileManager.default.removeItem(at: targetURL)
-        } catch {
-          NSLog("[SCREENSHOT] 无法删除旧文件 \(targetURL.path): \(error)")
-        }
-      }
-
-      if captureScreen(to: targetURL, displayNumber: displayNumber) {
-        NSLog("[SCREENSHOT] ✅ 截图已保存: \(targetURL.path)")
-        setDesktopWallpaper(targetURL, for: entry.screen)
-      } else {
-        NSLog("[SCREENSHOT] ❌ 截取屏幕 \(displayNumber) 失败")
-      }
-    }
-
-    cleanupOldScreenshots()
+    return targets
   }
 
-  func captureScreen(to destinationURL: URL, displayNumber: Int) -> Bool {
+  private func captureDisplay(to destinationURL: URL, displayNumber: Int) -> Bool {
     let process = Process()
     process.launchPath = "/usr/sbin/screencapture"
-    process.arguments = ["-x", "-t", "png", "-D", String(displayNumber), destinationURL.path]
+    process.arguments = [
+      "-x",
+      "-t",
+      "png",
+      "-D",
+      String(displayNumber),
+      destinationURL.path,
+    ]
 
     let pipe = Pipe()
     process.standardError = pipe
@@ -175,7 +263,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     return true
   }
-  
+
   func setDesktopWallpaper(_ imageURL: URL, for screen: NSScreen) {
     do {
       try NSWorkspace.shared.setDesktopImageURL(imageURL, for: screen, options: [:])
@@ -215,7 +303,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       NSLog("[SCREENSHOT] 清理旧截图失败: \(error)")
     }
   }
-  
+
   func setupWallpaperWindows() {
     // 先清理旧窗口
     wallpaperWindows.forEach { window in

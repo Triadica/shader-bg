@@ -31,10 +31,11 @@ class EffectManager {
       RotatingLorenzEffect(),
       RhombusEffect(),
       ApollianTwistEffect(),
+      ClockEffect(),
     ]
 
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
-    // 可选值: "noise", "liquid", "gravity", "lorenz", "rhombus", "apollian"
+    // 可选值: "noise", "liquid", "gravity", "lorenz", "rhombus", "apollian", "clock"
     var defaultIndex = 3  // 默认为 Rotating Lorenz
 
     if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
@@ -51,6 +52,8 @@ class EffectManager {
         defaultIndex = 4
       case "apollian":
         defaultIndex = 5
+      case "clock":
+        defaultIndex = 6
       default:
         print("Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
       }
@@ -58,8 +61,9 @@ class EffectManager {
 
     // 设置默认效果
     if !availableEffects.isEmpty {
-      currentEffect = availableEffects[defaultIndex]
-      currentEffectIndex = defaultIndex
+      let safeIndex = min(max(defaultIndex, 0), availableEffects.count - 1)
+      currentEffect = availableEffects[safeIndex]
+      currentEffectIndex = safeIndex
     }
   }
 

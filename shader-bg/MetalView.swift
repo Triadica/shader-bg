@@ -93,6 +93,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = RhombusEffect()
       case "apollian_twist":
         newEffect = ApollianTwistEffect()
+      case "clock":
+        newEffect = ClockEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
