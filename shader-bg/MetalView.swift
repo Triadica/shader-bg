@@ -39,16 +39,20 @@ struct MetalView: NSViewRepresentable {
     private var device: MTLDevice?
     private var isActive = true
     private var lastDrawableSize: CGSize = .zero
+    private let lock = NSLock()
 
     init(_ parent: MetalView) {
       self.parent = parent
       super.init()
+      print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 已创建")
     }
 
     deinit {
+      lock.lock()
       isActive = false
       currentEffect = nil
-      print("Coordinator 被释放")
+      lock.unlock()
+      print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 被释放")
     }
 
     func initializeEffect(device: MTLDevice, size: CGSize) {
@@ -129,6 +133,9 @@ struct MetalView: NSViewRepresentable {
     }
 
     func draw(in view: MTKView) {
+      lock.lock()
+      defer { lock.unlock() }
+
       guard isActive else { return }
 
       // 确保效果已初始化

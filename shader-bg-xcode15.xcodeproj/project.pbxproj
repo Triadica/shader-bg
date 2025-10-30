@@ -36,6 +36,10 @@
 		C0000001200000010000000A /* RhombusEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0000000200000010000000A /* RhombusEffect.swift */; };
 		C0000001200000010000000B /* RhombusRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0000000200000010000000B /* RhombusRenderer.swift */; };
 		C0000001200000010000000C /* RhombusShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0000000200000010000000C /* RhombusShaders.metal */; };
+		D00000012000000100000001 /* ApollianTwistData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000001 /* ApollianTwistData.swift */; };
+		D00000012000000100000002 /* ApollianTwistEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000002 /* ApollianTwistEffect.swift */; };
+		D00000012000000100000003 /* ApollianTwistRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000003 /* ApollianTwistRenderer.swift */; };
+		D00000012000000100000004 /* ApollianTwistShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000004 /* ApollianTwistShaders.metal */; };
 		B00000013000000100000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000003000000100000001 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +73,10 @@
 		C0000000200000010000000A /* RhombusEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhombusEffect.swift; sourceTree = "<group>"; };
 		C0000000200000010000000B /* RhombusRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhombusRenderer.swift; sourceTree = "<group>"; };
 		C0000000200000010000000C /* RhombusShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = RhombusShaders.metal; sourceTree = "<group>"; };
+		D00000002000000100000001 /* ApollianTwistData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApollianTwistData.swift; sourceTree = "<group>"; };
+		D00000002000000100000002 /* ApollianTwistEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApollianTwistEffect.swift; sourceTree = "<group>"; };
+		D00000002000000100000003 /* ApollianTwistRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApollianTwistRenderer.swift; sourceTree = "<group>"; };
+		D00000002000000100000004 /* ApollianTwistShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ApollianTwistShaders.metal; sourceTree = "<group>"; };
 		B00000003000000100000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B00000004000000100000001 /* shader-bg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "shader-bg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -118,8 +126,20 @@
 				C0000000A000000100000002 /* LiquidTunnel */,
 				C0000000A000000100000003 /* NoiseHalo */,
 				C0000000A000000100000004 /* Rhombus */,
+				D0000000A000000100000001 /* ApollianTwist */,
 			);
 			path = Effects;
+			sourceTree = "<group>";
+		};
+		D0000000A000000100000001 /* ApollianTwist */ = {
+			isa = PBXGroup;
+			children = (
+				D00000002000000100000001 /* ApollianTwistData.swift */,
+				D00000002000000100000002 /* ApollianTwistEffect.swift */,
+				D00000002000000100000003 /* ApollianTwistRenderer.swift */,
+				D00000002000000100000004 /* ApollianTwistShaders.metal */,
+			);
+			path = ApollianTwist;
 			sourceTree = "<group>";
 		};
 		C0000000A000000100000002 /* LiquidTunnel */ = {
@@ -279,6 +299,10 @@
 				C0000001200000010000000A /* RhombusEffect.swift in Sources */,
 				C0000001200000010000000B /* RhombusRenderer.swift in Sources */,
 				C0000001200000010000000C /* RhombusShaders.metal in Sources */,
+				D00000012000000100000001 /* ApollianTwistData.swift in Sources */,
+				D00000012000000100000002 /* ApollianTwistEffect.swift in Sources */,
+				D00000012000000100000003 /* ApollianTwistRenderer.swift in Sources */,
+				D00000012000000100000004 /* ApollianTwistShaders.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

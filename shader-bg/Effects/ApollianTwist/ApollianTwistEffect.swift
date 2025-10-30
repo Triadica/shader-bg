@@ -13,8 +13,8 @@ class ApollianTwistEffect: VisualEffect {
   var displayName: String = "Apollian Twist"
 
   // 自定义帧率：由于动画速度已经很慢，使用 30fps 以节省性能
-  var preferredFramesPerSecond: Int { 20 }
-  var occludedFramesPerSecond: Int { 5 }  // 遮挡时进一步降低
+  var preferredFramesPerSecond: Int { 10 }
+  var occludedFramesPerSecond: Int { 3 }  // 遮挡时进一步降低
 
   var renderer: ApollianTwistRenderer?
 
