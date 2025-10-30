@@ -85,21 +85,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func updateMenu() {
     let menu = NSMenu()
 
-    // 显示/隐藏选项
-    let toggleItem = NSMenuItem(
-      title: "隐藏背景",
-      action: #selector(toggleWallpaper),
-      keyEquivalent: "h"
-    )
-    toggleItem.target = self
-    menu.addItem(toggleItem)
-
-    menu.addItem(NSMenuItem.separator())
-
-    // 效果选择子菜单
-    let effectsMenu = NSMenu()
+    // 效果选择项（展开到第一层菜单）
     let effectManager = EffectManager.shared
-
+    
     for (index, effect) in effectManager.availableEffects.enumerated() {
       let effectItem = NSMenuItem(
         title: effect.displayName,
@@ -109,16 +97,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       effectItem.target = self
       effectItem.tag = index
       effectItem.state = index == effectManager.currentEffectIndex ? .on : .off
-      effectsMenu.addItem(effectItem)
+      menu.addItem(effectItem)
     }
 
-    let effectsMenuItem = NSMenuItem(
-      title: "选择效果",
-      action: nil,
-      keyEquivalent: ""
+    menu.addItem(NSMenuItem.separator())
+
+    // 显示/隐藏选项
+    let toggleItem = NSMenuItem(
+      title: "隐藏背景",
+      action: #selector(toggleWallpaper),
+      keyEquivalent: "h"
     )
-    effectsMenuItem.submenu = effectsMenu
-    menu.addItem(effectsMenuItem)
+    toggleItem.target = self
+    menu.addItem(toggleItem)
 
     menu.addItem(NSMenuItem.separator())
 
