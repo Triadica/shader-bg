@@ -59,6 +59,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   var statusItem: NSStatusItem?
   var screenshotTimer: Timer?
   var screenshotDirectory: URL?
+  private var hasLoggedScreenPermissionWarning = false
 
   func applicationDidFinishLaunching(_ notification: Notification) {
     NSApp.setActivationPolicy(.accessory)
@@ -133,6 +134,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       return
     }
 
+    guard checkScreenRecordingPermission() else {
+      return
+    }
+
     let timestamp = Self.timestampFormatter.string(from: Date())
     let targets = DispatchQueue.main.sync {
       self.prepareCaptureTargets(in: screenshotDirectory, timestamp: timestamp)
@@ -191,6 +196,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.setDesktopWallpaper(target.fileURL, for: screen)
       }
     }
+  }
+
+  @discardableResult
+  private func checkScreenRecordingPermission() -> Bool {
+    if #available(macOS 10.15, *) {
+      let granted = CGPreflightScreenCaptureAccess()
+      if granted {
+        hasLoggedScreenPermissionWarning = false
+        return true
+      }
+
+      if !hasLoggedScreenPermissionWarning {
+        hasLoggedScreenPermissionWarning = true
+        NSLog(
+          "[SCREENSHOT] ⚠️ 未检测到屏幕录制权限，已跳过自动截图。请前往 \"系统设置 > 隐私与安全性 > 屏幕录制\" 中勾选 shader-bg，并重新启动应用后再试。"
+        )
+      }
+      return false
+    }
+
+    return true
   }
 
   private func prepareCaptureTargets(in directory: URL, timestamp: String) -> [CaptureTarget] {

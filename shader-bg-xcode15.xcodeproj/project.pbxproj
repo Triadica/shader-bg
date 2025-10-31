@@ -40,6 +40,10 @@
 		D00000012000000100000002 /* ApollianTwistEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000002 /* ApollianTwistEffect.swift */; };
 		D00000012000000100000003 /* ApollianTwistRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000003 /* ApollianTwistRenderer.swift */; };
 		D00000012000000100000004 /* ApollianTwistShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000004 /* ApollianTwistShaders.metal */; };
+		E00000012000000100000001 /* ClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00000002000000100000001 /* ClockData.swift */; };
+		E00000012000000100000002 /* ClockEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00000002000000100000002 /* ClockEffect.swift */; };
+		E00000012000000100000003 /* ClockRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00000002000000100000003 /* ClockRenderer.swift */; };
+		E00000012000000100000004 /* ClockShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E00000002000000100000004 /* ClockShaders.metal */; };
 		B00000013000000100000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000003000000100000001 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +81,10 @@
 		D00000002000000100000002 /* ApollianTwistEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApollianTwistEffect.swift; sourceTree = "<group>"; };
 		D00000002000000100000003 /* ApollianTwistRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApollianTwistRenderer.swift; sourceTree = "<group>"; };
 		D00000002000000100000004 /* ApollianTwistShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ApollianTwistShaders.metal; sourceTree = "<group>"; };
+		E00000002000000100000001 /* ClockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockData.swift; sourceTree = "<group>"; };
+		E00000002000000100000002 /* ClockEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockEffect.swift; sourceTree = "<group>"; };
+		E00000002000000100000003 /* ClockRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockRenderer.swift; sourceTree = "<group>"; };
+		E00000002000000100000004 /* ClockShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ClockShaders.metal; sourceTree = "<group>"; };
 		B00000003000000100000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B00000004000000100000001 /* shader-bg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "shader-bg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -127,8 +135,20 @@
 				C0000000A000000100000003 /* NoiseHalo */,
 				C0000000A000000100000004 /* Rhombus */,
 				D0000000A000000100000001 /* ApollianTwist */,
+				E0000000A000000100000001 /* Clock */,
 			);
 			path = Effects;
+			sourceTree = "<group>";
+		};
+		E0000000A000000100000001 /* Clock */ = {
+			isa = PBXGroup;
+			children = (
+				E00000002000000100000002 /* ClockEffect.swift */,
+				E00000002000000100000003 /* ClockRenderer.swift */,
+				E00000002000000100000001 /* ClockData.swift */,
+				E00000002000000100000004 /* ClockShaders.metal */,
+			);
+			path = Clock;
 			sourceTree = "<group>";
 		};
 		D0000000A000000100000001 /* ApollianTwist */ = {
@@ -303,6 +323,10 @@
 				D00000012000000100000002 /* ApollianTwistEffect.swift in Sources */,
 				D00000012000000100000003 /* ApollianTwistRenderer.swift in Sources */,
 				D00000012000000100000004 /* ApollianTwistShaders.metal in Sources */,
+				E00000012000000100000002 /* ClockEffect.swift in Sources */,
+				E00000012000000100000003 /* ClockRenderer.swift in Sources */,
+				E00000012000000100000001 /* ClockData.swift in Sources */,
+				E00000012000000100000004 /* ClockShaders.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
