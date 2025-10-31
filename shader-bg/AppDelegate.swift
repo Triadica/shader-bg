@@ -60,6 +60,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   var screenshotTimer: Timer?
   var screenshotDirectory: URL?
   private var hasLoggedScreenPermissionWarning = false
+  private var cachedScreenRecordingPermission: Bool?
+  private var lastPermissionCheckDate: Date = .distantPast
+  private let permissionCheckInterval: TimeInterval = 60
+  private var isSessionActive = true
+  private var pendingSessionResumeWorkItem: DispatchWorkItem?
 
   func applicationDidFinishLaunching(_ notification: Notification) {
     NSApp.setActivationPolicy(.accessory)
@@ -73,6 +78,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       self,
       selector: #selector(screenDidChange),
       name: NSApplication.didChangeScreenParametersNotification,
+      object: nil
+    )
+
+    let workspaceCenter = NSWorkspace.shared.notificationCenter
+    workspaceCenter.addObserver(
+      self,
+      selector: #selector(sessionDidResignActive(_:)),
+      name: NSWorkspace.sessionDidResignActiveNotification,
+      object: nil
+    )
+    workspaceCenter.addObserver(
+      self,
+      selector: #selector(sessionDidBecomeActive(_:)),
+      name: NSWorkspace.sessionDidBecomeActiveNotification,
       object: nil
     )
   }
@@ -99,7 +118,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func setupScreenshotTimer() {
-    guard checkScreenRecordingPermission() else {
+    guard isSessionActive else {
+      NSLog("[SCREENSHOT] 会话不活跃，暂不启动截图定时器")
+      return
+    }
+
+    guard checkScreenRecordingPermission(force: true) else {
       NSLog("[SCREENSHOT] 未启用定时器：缺少屏幕录制权限")
       return
     }
@@ -121,6 +145,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @objc func captureAndSetWallpaper() {
     captureQueue.async { [weak self] in
       guard let self = self else { return }
+      guard self.isSessionActive else {
+        NSLog("[SCREENSHOT] 会话不活跃，跳过本轮截图")
+        return
+      }
       if self.isCaptureInProgress {
         NSLog("[SCREENSHOT] 上一次截图尚未完成，跳过本轮触发")
         return
@@ -134,20 +162,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   private func performCaptureCycle() {
+    guard isSessionActive else {
+      NSLog("[SCREENSHOT] 会话不活跃，跳过截图循环")
+      return
+    }
     guard let screenshotDirectory = screenshotDirectory else {
       NSLog("[SCREENSHOT] 错误：截图目录未初始化")
       return
     }
 
     guard checkScreenRecordingPermission() else {
-      DispatchQueue.main.async { [weak self] in
-        guard let self else { return }
-        if let timer = self.screenshotTimer {
-          timer.invalidate()
-          self.screenshotTimer = nil
-          NSLog("[SCREENSHOT] 已停止截图定时器：缺少屏幕录制权限")
-        }
-      }
+      stopScreenshotTimer(reason: "缺少屏幕录制权限")
       return
     }
 
@@ -212,9 +237,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   @discardableResult
-  private func checkScreenRecordingPermission() -> Bool {
+  private func checkScreenRecordingPermission(force: Bool = false) -> Bool {
     if #available(macOS 10.15, *) {
+      let now = Date()
+      if !force,
+        let cached = cachedScreenRecordingPermission,
+        now.timeIntervalSince(lastPermissionCheckDate) < permissionCheckInterval
+      {
+        return cached
+      }
+
       let granted = CGPreflightScreenCaptureAccess()
+      cachedScreenRecordingPermission = granted
+      lastPermissionCheckDate = now
       if granted {
         hasLoggedScreenPermissionWarning = false
         return true
@@ -233,6 +268,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   private func prepareCaptureTargets(in directory: URL, timestamp: String) -> [CaptureTarget] {
+    guard isSessionActive else {
+      NSLog("[SCREENSHOT] 会话不活跃，跳过截图目标准备")
+      return []
+    }
     let screens = NSScreen.screens
     guard !screens.isEmpty else {
       NSLog("[SCREENSHOT] 当前没有可用屏幕")
@@ -253,6 +292,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
       guard let index = displayIDs.firstIndex(of: displayID) else {
         NSLog("[SCREENSHOT] 显示器 ID \(displayID) 不在当前活动显示器列表中")
+        return nil
+      }
+
+      guard isDisplayUsable(displayID) else {
+        NSLog("[SCREENSHOT] 显示器 ID \(displayID) 当前不可用，跳过")
         return nil
       }
 
@@ -304,6 +348,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func setDesktopWallpaper(_ imageURL: URL, for screen: NSScreen) {
+    guard isSessionActive else {
+      NSLog("[SCREENSHOT] 会话不活跃，跳过壁纸更新")
+      return
+    }
+    guard let displayID = screen.displayID else {
+      NSLog("[SCREENSHOT] ❌ 设置桌面壁纸失败：屏幕缺少 displayID")
+      return
+    }
+
+    guard isDisplayUsable(displayID) else {
+      NSLog("[SCREENSHOT] SKIP 显示器 ID \(displayID) 已失效或离线，跳过壁纸更新")
+      return
+    }
+
     do {
       try NSWorkspace.shared.setDesktopImageURL(imageURL, for: screen, options: [:])
       NSLog("[SCREENSHOT] ✅ 已设置桌面壁纸: \(imageURL.lastPathComponent) for \(screen.localizedName)")
@@ -343,7 +401,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
 
+  private func stopScreenshotTimer(reason: String? = nil) {
+    DispatchQueue.main.async { [weak self] in
+      guard let self else { return }
+      if let timer = self.screenshotTimer {
+        timer.invalidate()
+        self.screenshotTimer = nil
+        if let reason {
+          NSLog("[SCREENSHOT] 已停止截图定时器：\(reason)")
+        } else {
+          NSLog("[SCREENSHOT] 已停止截图定时器")
+        }
+      }
+    }
+  }
+
+  private func isDisplayUsable(_ displayID: CGDirectDisplayID) -> Bool {
+    let isActive = CGDisplayIsActive(displayID) != 0
+    let isOnline = CGDisplayIsOnline(displayID) != 0
+    let isAsleep = CGDisplayIsAsleep(displayID) != 0
+    return isActive && isOnline && !isAsleep
+  }
+
   func setupWallpaperWindows() {
+    guard isSessionActive else {
+      NSLog("[SESSION] 会话不活跃，跳过壁纸窗口设置")
+      return
+    }
     // 先清理旧窗口
     wallpaperWindows.forEach { window in
       // 清理 MTKView delegate
@@ -497,6 +581,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   @objc func screenDidChange() {
+    guard isSessionActive else {
+      NSLog("[SESSION] 会话不活跃，忽略屏幕变化通知")
+      return
+    }
     print("屏幕配置已变化，重新设置壁纸窗口...")
     setupWallpaperWindows()
   }
@@ -539,5 +627,43 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // 清理定时器
     screenshotTimer?.invalidate()
     screenshotTimer = nil
+
+    NotificationCenter.default.removeObserver(
+      self,
+      name: NSApplication.didChangeScreenParametersNotification,
+      object: nil
+    )
+    NSWorkspace.shared.notificationCenter.removeObserver(self)
+  }
+
+  @objc private func sessionDidResignActive(_ notification: Notification) {
+    NSLog("[SESSION] 检测到会话锁屏，暂停壁纸更新")
+    isSessionActive = false
+    pendingSessionResumeWorkItem?.cancel()
+    pendingSessionResumeWorkItem = nil
+    stopScreenshotTimer(reason: "会话不活跃")
+    DispatchQueue.main.async { [weak self] in
+      guard let self else { return }
+      self.wallpaperWindows.forEach { $0.orderOut(nil) }
+    }
+  }
+
+  @objc private func sessionDidBecomeActive(_ notification: Notification) {
+    NSLog("[SESSION] 会话已恢复，准备恢复壁纸更新")
+    isSessionActive = true
+    pendingSessionResumeWorkItem?.cancel()
+
+    let workItem = DispatchWorkItem { [weak self] in
+      guard let self else { return }
+      NSLog("[SESSION] 会话恢复流程开始")
+      if self.screenshotTimer == nil {
+        self.setupScreenshotTimer()
+      }
+      self.setupWallpaperWindows()
+      self.pendingSessionResumeWorkItem = nil
+    }
+
+    pendingSessionResumeWorkItem = workItem
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: workItem)
   }
 }
