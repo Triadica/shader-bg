@@ -99,6 +99,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func setupScreenshotTimer() {
+    guard checkScreenRecordingPermission() else {
+      NSLog("[SCREENSHOT] 未启用定时器：缺少屏幕录制权限")
+      return
+    }
+
     NSLog("[SCREENSHOT] 设置截图定时器，每5秒执行一次")
     // 每5秒截图一次
     screenshotTimer = Timer.scheduledTimer(
@@ -135,6 +140,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     guard checkScreenRecordingPermission() else {
+      DispatchQueue.main.async { [weak self] in
+        guard let self else { return }
+        if let timer = self.screenshotTimer {
+          timer.invalidate()
+          self.screenshotTimer = nil
+          NSLog("[SCREENSHOT] 已停止截图定时器：缺少屏幕录制权限")
+        }
+      }
       return
     }
 
@@ -364,7 +377,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let hostingView = NSHostingView(rootView: contentView)
       window.contentView = hostingView
 
-      window.makeKeyAndOrderFront(nil)
+      window.orderFront(nil)
       window.orderBack(nil)
 
       wallpaperWindows.append(window)
@@ -472,7 +485,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       statusItem?.menu?.item(at: 0)?.title = "显示背景"
     } else {
       wallpaperWindows.forEach { window in
-        window.makeKeyAndOrderFront(nil)
+        window.orderFront(nil)
         window.orderBack(nil)
       }
       statusItem?.menu?.item(at: 0)?.title = "隐藏背景"
@@ -515,7 +528,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   ) -> Bool {
     if !flag {
       wallpaperWindows.forEach { window in
-        window.makeKeyAndOrderFront(nil)
+        window.orderFront(nil)
         window.orderBack(nil)
       }
     }
