@@ -48,10 +48,23 @@ struct MetalView: NSViewRepresentable {
     }
 
     deinit {
+      print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 开始释放...")
+
       lock.lock()
       isActive = false
+      print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 已标记为不活跃")
+
+      // 清理效果前先等待一小段时间，确保没有正在进行的绘制
+      let effect = currentEffect
       currentEffect = nil
       lock.unlock()
+
+      // 短暂等待，确保所有绘制操作完成
+      usleep(10000)  // 10ms
+
+      // 在锁外释放效果，避免死锁
+      _ = effect
+
       print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 被释放")
     }
 
@@ -101,6 +114,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = RainbowTwisterEffect()
       case "star_travelling":
         newEffect = StarTravellingEffect()
+      case "sonata":
+        newEffect = SonataEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
@@ -141,21 +156,41 @@ struct MetalView: NSViewRepresentable {
     }
 
     func draw(in view: MTKView) {
-      lock.lock()
+      // 尝试获取锁，如果无法获取则直接返回，避免阻塞
+      guard lock.try() else {
+        print("[DRAW] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 锁繁忙，跳过此帧")
+        return
+      }
       defer { lock.unlock() }
 
-      guard isActive else { return }
+      guard isActive else {
+        print("[DRAW] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 不活跃，跳过绘制")
+        return
+      }
 
       // 确保效果已初始化
       if currentEffect == nil, let device = view.device, view.drawableSize.width > 0 {
         initializeEffect(device: device, size: view.drawableSize)
       }
 
-      guard currentEffect != nil else { return }
+      // 安全检查：如果 coordinator 正在被释放，立即返回
+      guard currentEffect != nil, isActive else { return }
 
       let currentTime = CACurrentMediaTime()
       currentEffect?.update(currentTime: currentTime)
       currentEffect?.draw(in: view)
+    }
+
+    // 安全停止方法：在清理前调用
+    func safeStop() {
+      print("[STOP] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 开始安全停止...")
+      lock.lock()
+      isActive = false
+      lock.unlock()
+
+      // 等待可能正在进行的绘制完成
+      usleep(20000)  // 20ms
+      print("[STOP] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 已停止")
     }
   }
 }

@@ -437,20 +437,51 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       NSLog("[SESSION] 会话不活跃，跳过壁纸窗口设置")
       return
     }
-    // 先清理旧窗口
-    wallpaperWindows.forEach { window in
-      // 清理 MTKView delegate
+    // 先清理旧窗口，添加更安全的清理机制
+    print("[清理] 开始清理 \(wallpaperWindows.count) 个旧窗口...")
+
+    for (index, window) in wallpaperWindows.enumerated() {
+      print("[清理] 正在清理窗口 \(index + 1)...")
+
+      // 清理 MTKView delegate，先暂停渲染
       if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
         let mtkView = findMTKView(in: hostingView)
       {
+        print("[清理] 暂停窗口 \(index + 1) 的渲染...")
+        // 暂停渲染循环，防止在清理过程中继续绘制
+        mtkView.isPaused = true
+
+        // 安全停止 coordinator
+        if let coordinator = mtkView.delegate as? MetalView.Coordinator {
+          coordinator.safeStop()
+        }
+
+        // 等待当前帧完成
+        print("[清理] 等待窗口 \(index + 1) 完成当前帧...")
+        mtkView.draw()
+
+        // 等待更长时间确保渲染完全停止
+        usleep(30000)  // 30ms
+
+        // 清理 delegate 和 device
+        print("[清理] 清理窗口 \(index + 1) 的 delegate 和 device...")
         mtkView.delegate = nil
         mtkView.device = nil
       }
+
+      print("[清理] 关闭窗口 \(index + 1)...")
       window.contentView = nil
       window.close()
     }
+
     wallpaperWindows.removeAll()
     metalViews.removeAll()
+    print("[清理] 已清空窗口数组")
+
+    // 更长的延迟，确保所有资源完全释放，特别是 Coordinator
+    print("[清理] 等待资源释放...")
+    usleep(100000)  // 100ms
+    print("[清理] 清理完成")
 
     let screens = NSScreen.screens
     print("检测到 \(screens.count) 个屏幕")
