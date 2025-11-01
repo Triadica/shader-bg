@@ -34,6 +34,7 @@ class EffectManager {
       ClockEffect(),
       WaveformEffect(),
       VortexStreetEffect(),
+      RainbowTwisterEffect(),
     ]
 
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
@@ -60,6 +61,8 @@ class EffectManager {
         defaultIndex = 7
       case "vortex":
         defaultIndex = 8
+      case "rainbow":
+        defaultIndex = 9
       default:
         print("Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
       }

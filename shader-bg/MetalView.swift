@@ -99,6 +99,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = WaveformEffect()
       case "vortex_street":
         newEffect = VortexStreetEffect()
+      case "rainbow_twister":
+        newEffect = RainbowTwisterEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
