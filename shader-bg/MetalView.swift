@@ -95,6 +95,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = ApollianTwistEffect()
       case "clock":
         newEffect = ClockEffect()
+      case "waveform":
+        newEffect = WaveformEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
