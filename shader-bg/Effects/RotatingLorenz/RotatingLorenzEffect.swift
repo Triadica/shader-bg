@@ -12,6 +12,10 @@ class RotatingLorenzEffect: VisualEffect {
   var name: String = "rotating_lorenz"
   var displayName: String = "Rotating Lorenz"
 
+  // 使用默认帧率：可见 60fps，遮挡 30fps
+  // var preferredFramesPerSecond: Int { 60 }
+  // var occludedFramesPerSecond: Int { 30 }
+
   private var renderer: RotatingLorenzRenderer?
 
   func setup(device: MTLDevice, size: CGSize) {
@@ -27,6 +31,10 @@ class RotatingLorenzEffect: VisualEffect {
   }
 
   func draw(in view: MTKView) {
+    // 应用帧率设置
+    if view.preferredFramesPerSecond != preferredFramesPerSecond {
+      view.preferredFramesPerSecond = preferredFramesPerSecond
+    }
     renderer?.draw(in: view)
   }
 

@@ -12,6 +12,8 @@ import simd
 struct LorenzParticle {
   var position: SIMD3<Float>  // 3D 位置 (x, y, z)
   var color: SIMD4<Float>  // 颜色 (RGBA)
+  var groupId: UInt32  // 所属组 ID
+  var indexInGroup: UInt32  // 组内索引 (0 = 头部，跟随 Lorenz 方程)
 }
 
 // Lorenz 系统参数
@@ -22,4 +24,6 @@ struct LorenzParams {
   var deltaTime: Float  // 时间步长
   var rotation: Float  // 旋转角度
   var scale: Float  // 缩放系数
+  var particlesPerGroup: UInt32  // 每组粒子数量
+  var padding: UInt32  // 对齐填充
 }

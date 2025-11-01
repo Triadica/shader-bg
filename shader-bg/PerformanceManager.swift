@@ -63,7 +63,7 @@ class PerformanceManager {
 
   private func isDesktopCurrentlyVisible() -> Bool {
     // 方法1: 检查是否有全屏或大窗口覆盖桌面
-    guard let screens = NSScreen.screens as? [NSScreen] else { return true }
+    let screens = NSScreen.screens
 
     // 获取所有窗口信息
     let windowList =

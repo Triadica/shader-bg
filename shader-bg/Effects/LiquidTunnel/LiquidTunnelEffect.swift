@@ -1,5 +1,5 @@
 //
-//  ParticlesInGravityEffect.swift
+//  LiquidTunnelEffect.swift
 //  shader-bg
 //
 //  Created by chen on 2025/10/28.
@@ -8,35 +8,27 @@
 import MetalKit
 import simd
 
-class ParticlesInGravityEffect: VisualEffect {
-  var name: String = "particles_in_gravity"
-  var displayName: String = "Particles in Gravity"
+class LiquidTunnelEffect: VisualEffect {
+  var name: String = "liquid_tunnel"
+  var displayName: String = "Liquid Tunnel"
 
   // 使用默认帧率：可见 60fps，遮挡 30fps
   // var preferredFramesPerSecond: Int { 60 }
   // var occludedFramesPerSecond: Int { 30 }
 
-  private var renderer: ParticlesInGravityRenderer?
+  private var renderer: LiquidTunnelRenderer?
 
   func setup(device: MTLDevice, size: CGSize) {
-    renderer = ParticlesInGravityRenderer(device: device, size: size)
+    renderer = LiquidTunnelRenderer(device: device, size: size)
   }
 
   func updateViewportSize(_ size: CGSize) {
     renderer?.viewportSize = size
-  }
-
-  // 在首次真正获得外接屏的有效 drawableSize 或缩放变化时，
-  // 需要以新中心重置粒子分布并重建相关缓冲区，避免初始中心偏移。
-  func handleSignificantResize(to size: CGSize) {
-    guard let renderer = renderer else { return }
-    renderer.viewportSize = size
-    renderer.setupParticles()
-    renderer.setupBuffers()
+    renderer?.setupBuffer()
   }
 
   func update(currentTime: CFTimeInterval) {
-    renderer?.updateParticles(currentTime: currentTime)
+    // Renderer 会在 draw 中更新
   }
 
   func draw(in view: MTKView) {
