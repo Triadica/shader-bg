@@ -26,7 +26,6 @@ class EffectManager {
   private func registerEffects() {
     availableEffects = [
       NoiseHaloEffect(),
-      LiquidTunnelEffect(),
       ParticlesInGravityEffect(),
       RotatingLorenzEffect(),
       RhombusEffect(),
@@ -35,33 +34,34 @@ class EffectManager {
       WaveformEffect(),
       VortexStreetEffect(),
       RainbowTwisterEffect(),
+      StarTravellingEffect(),
     ]
 
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
-    // 可选值: "noise", "liquid", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex"
-    var defaultIndex = 3  // 默认为 Rotating Lorenz
+    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star"
+    var defaultIndex = 2  // 默认为 Rotating Lorenz
 
     if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
       switch effectEnv.lowercased() {
       case "noise":
         defaultIndex = 0
-      case "liquid":
-        defaultIndex = 1
       case "gravity":
-        defaultIndex = 2
+        defaultIndex = 1
       case "lorenz":
-        defaultIndex = 3
+        defaultIndex = 2
       case "rhombus":
-        defaultIndex = 4
+        defaultIndex = 3
       case "apollian":
-        defaultIndex = 5
+        defaultIndex = 4
       case "clock":
-        defaultIndex = 6
+        defaultIndex = 5
       case "waveform":
-        defaultIndex = 7
+        defaultIndex = 6
       case "vortex":
-        defaultIndex = 8
+        defaultIndex = 7
       case "rainbow":
+        defaultIndex = 8
+      case "star":
         defaultIndex = 9
       default:
         print("Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

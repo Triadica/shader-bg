@@ -87,8 +87,6 @@ struct MetalView: NSViewRepresentable {
         newEffect = ParticlesInGravityEffect()
       case "rotating_lorenz":
         newEffect = RotatingLorenzEffect()
-      case "liquid_tunnel":
-        newEffect = LiquidTunnelEffect()
       case "rhombus":
         newEffect = RhombusEffect()
       case "apollian_twist":
@@ -101,6 +99,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = VortexStreetEffect()
       case "rainbow_twister":
         newEffect = RainbowTwisterEffect()
+      case "star_travelling":
+        newEffect = StarTravellingEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
