@@ -9,6 +9,7 @@ import Cocoa
 import CoreGraphics
 import MetalKit
 import SwiftUI
+import UniformTypeIdentifiers
 
 private func activeDisplayIDs() -> [CGDirectDisplayID] {
   var displayCount: UInt32 = 0
@@ -56,6 +57,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }()
 
   var wallpaperWindows: [WallpaperWindow] = []
+  var metalViews: [MTKView] = []  // 保存 MTKView 的引用
   var statusItem: NSStatusItem?
   var screenshotTimer: Timer?
   var screenshotDirectory: URL?
@@ -314,14 +316,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   private func captureDisplay(to destinationURL: URL, displayNumber: Int) -> Bool {
+    // 使用窗口ID来截取特定窗口的内容,而不是整个显示器
+    guard displayNumber < wallpaperWindows.count else {
+      NSLog("[SCREENSHOT] 无效的显示器索引: \(displayNumber)")
+      return false
+    }
+
+    let window = wallpaperWindows[displayNumber]
+    let windowNumber = window.windowNumber
+
     let process = Process()
     process.launchPath = "/usr/sbin/screencapture"
     process.arguments = [
-      "-x",
-      "-t",
-      "png",
-      "-D",
-      String(displayNumber),
+      "-x",  // 不播放截图声音
+      "-t", "png",  // PNG 格式
+      "-l", String(windowNumber),  // 截取特定窗口
       destinationURL.path,
     ]
 
@@ -441,6 +450,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       window.close()
     }
     wallpaperWindows.removeAll()
+    metalViews.removeAll()
 
     let screens = NSScreen.screens
     print("检测到 \(screens.count) 个屏幕")
@@ -465,6 +475,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       window.orderBack(nil)
 
       wallpaperWindows.append(window)
+
+      // 保存 MTKView 的引用以便后续截图
+      if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
+        let mtkView = findMTKView(in: hostingView)
+      {
+        metalViews.append(mtkView)
+      }
 
       print("屏幕 \(index + 1) 壁纸窗口已创建并显示")
       print("窗口可见: \(window.isVisible)")

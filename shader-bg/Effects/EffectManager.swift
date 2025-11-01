@@ -33,10 +33,11 @@ class EffectManager {
       ApollianTwistEffect(),
       ClockEffect(),
       WaveformEffect(),
+      VortexStreetEffect(),
     ]
 
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
-    // 可选值: "noise", "liquid", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform"
+    // 可选值: "noise", "liquid", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex"
     var defaultIndex = 3  // 默认为 Rotating Lorenz
 
     if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
@@ -57,6 +58,8 @@ class EffectManager {
         defaultIndex = 6
       case "waveform":
         defaultIndex = 7
+      case "vortex":
+        defaultIndex = 8
       default:
         print("Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
       }

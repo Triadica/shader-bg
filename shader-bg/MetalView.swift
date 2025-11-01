@@ -97,6 +97,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = ClockEffect()
       case "waveform":
         newEffect = WaveformEffect()
+      case "vortex_street":
+        newEffect = VortexStreetEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
