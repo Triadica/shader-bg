@@ -9,9 +9,10 @@
 #include <metal_stdlib>
 using namespace metal;
 
-#define MAX_RAY_MARCH_STEPS 32
+// 降低迭代次数以提高性能
+#define MAX_RAY_MARCH_STEPS 20
 #define MAX_DISTANCE 4.0
-#define SURFACE_DISTANCE 0.002
+#define SURFACE_DISTANCE 0.005
 
 struct GlowyOrbParams {
   float time;

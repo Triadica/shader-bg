@@ -20,7 +20,7 @@ class GlowyOrbRenderer {
   var viewportSize: CGSize = .zero
   private var time: Float = 0.0
   private var lastUpdateTime: CFTimeInterval = 0.0
-  var updateInterval: Double = 1.0 / 30.0  // 默认 30 FPS
+  var updateInterval: Double = 1.0 / 20.0  // 降低到 20 FPS 以提高性能
 
   init(device: MTLDevice, size: CGSize) {
     self.device = device
@@ -78,9 +78,9 @@ class GlowyOrbRenderer {
       return
     }
     lastUpdateTime = currentTime
-    
-    // 更新时间
-    time += Float(updateInterval)
+
+    // 更新时间（步长更大以减少计算频率）
+    time += Float(updateInterval) * 0.5
   }
 
   func draw(in view: MTKView) {
@@ -91,8 +91,8 @@ class GlowyOrbRenderer {
       return
     }
 
-    // 每帧更新时间
-    time += 1.0 / 60.0
+    // 每帧更新时间（使用较大步长）
+    time += 1.0 / 20.0 * 0.5
 
     // 更新参数
     updateParams(viewportSize: view.drawableSize)

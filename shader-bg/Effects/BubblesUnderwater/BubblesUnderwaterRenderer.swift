@@ -20,7 +20,8 @@ class BubblesUnderwaterRenderer {
   var viewportSize: CGSize = .zero
   private var time: Float = 0.0
   private var lastUpdateTime: CFTimeInterval = 0.0
-  var updateInterval: Double = 1.0 / 30.0  // 默认 30 FPS
+  private var lastDrawTime: CFTimeInterval = 0.0
+  var updateInterval: Double = 1.0 / 13.3  // 提升到约 13.3 FPS (1.67 的 8 倍) 平衡性能和流畅度
 
   init(device: MTLDevice, size: CGSize) {
     self.device = device
@@ -79,11 +80,18 @@ class BubblesUnderwaterRenderer {
     }
     lastUpdateTime = currentTime
 
-    // 更新时间（速度减慢到 0.1 倍）
-    time += Float(updateInterval) * 0.1
+    // 更新时间（小步长让泡泡移动更慢）
+    time += Float(updateInterval) * 0.015
   }
 
   func draw(in view: MTKView) {
+    // 限制实际绘制频率以降低 GPU 负载
+    let currentTime = CACurrentMediaTime()
+    if currentTime - lastDrawTime < updateInterval {
+      return
+    }
+    lastDrawTime = currentTime
+
     guard let drawable = view.currentDrawable,
       let renderPipeline = renderPipelineState,
       let paramsBuffer = paramsBuffer
@@ -91,8 +99,8 @@ class BubblesUnderwaterRenderer {
       return
     }
 
-    // 每帧更新时间（速度减慢到 0.1 倍）
-    time += 1.0 / 60.0 * 0.1  // 假设60fps，速度为原来的 0.1 倍
+    // 每次绘制更新时间（13.3fps，小步长让泡泡移动更慢）
+    time += Float(updateInterval) * 0.015
 
     // 更新参数
     updateParams(viewportSize: view.drawableSize)
