@@ -116,6 +116,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = StarTravellingEffect()
       case "sonata":
         newEffect = SonataEffect()
+      case "mobius_flow":
+        newEffect = MobiusFlowEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
@@ -186,10 +188,13 @@ struct MetalView: NSViewRepresentable {
       print("[STOP] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 开始安全停止...")
       lock.lock()
       isActive = false
+
+      // 清理当前效果
+      currentEffect = nil
       lock.unlock()
 
       // 等待可能正在进行的绘制完成
-      usleep(20000)  // 20ms
+      usleep(50000)  // 50ms - 增加等待时间
       print("[STOP] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 已停止")
     }
   }

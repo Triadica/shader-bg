@@ -62,6 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   var screenshotTimer: Timer?
   var screenshotDirectory: URL?
   private var hasLoggedScreenPermissionWarning = false
+  private var hasRequestedScreenPermission = false  // 标记是否已请求过权限
   private var cachedScreenRecordingPermission: Bool?
   private var lastPermissionCheckDate: Date = .distantPast
   private let permissionCheckInterval: TimeInterval = 60
@@ -254,9 +255,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       lastPermissionCheckDate = now
       if granted {
         hasLoggedScreenPermissionWarning = false
+        hasRequestedScreenPermission = false  // 重置，以便下次失去权限时可以重新请求
         return true
       }
 
+      // 如果没有权限且还未请求过，则请求一次
+      if !hasRequestedScreenPermission {
+        hasRequestedScreenPermission = true
+        NSLog("[SCREENSHOT] 正在请求屏幕录制权限...")
+        let requested = CGRequestScreenCaptureAccess()
+        if requested {
+          NSLog("[SCREENSHOT] 屏幕录制权限请求已发送，请在系统设置中授权后重启应用")
+        } else {
+          NSLog("[SCREENSHOT] 屏幕录制权限请求失败或已被拒绝")
+        }
+      }
+
+      // 只在第一次失败时记录警告
       if !hasLoggedScreenPermissionWarning {
         hasLoggedScreenPermissionWarning = true
         NSLog(
@@ -451,17 +466,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // 暂停渲染循环，防止在清理过程中继续绘制
         mtkView.isPaused = true
 
+        // 等待渲染循环完全停止
+        usleep(50000)  // 50ms
+
         // 安全停止 coordinator
         if let coordinator = mtkView.delegate as? MetalView.Coordinator {
           coordinator.safeStop()
         }
 
-        // 等待当前帧完成
-        print("[清理] 等待窗口 \(index + 1) 完成当前帧...")
-        mtkView.draw()
-
-        // 等待更长时间确保渲染完全停止
-        usleep(30000)  // 30ms
+        // 再等待一段时间确保 coordinator 完全停止
+        print("[清理] 等待窗口 \(index + 1) coordinator 完全停止...")
+        usleep(50000)  // 50ms
 
         // 清理 delegate 和 device
         print("[清理] 清理窗口 \(index + 1) 的 delegate 和 device...")
