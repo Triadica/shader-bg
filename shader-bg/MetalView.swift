@@ -120,6 +120,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = MobiusFlowEffect()
       case "bubbles":
         newEffect = BubblesUnderwaterEffect()
+      case "glowy_orb":
+        newEffect = GlowyOrbEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
