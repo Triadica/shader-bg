@@ -118,6 +118,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = SonataEffect()
       case "mobius_flow":
         newEffect = MobiusFlowEffect()
+      case "bubbles":
+        newEffect = BubblesUnderwaterEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

@@ -43,7 +43,8 @@ class PerformanceManager {
     }
 
     // 每 5 秒检测一次 CPU 和 GPU 占用
-    resourceCheckTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+    resourceCheckTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) {
+      [weak self] _ in
       self?.checkResourceUsage()
     }
 
@@ -153,14 +154,14 @@ class PerformanceManager {
   }
 
   // MARK: - CPU 和 GPU 监控
-  
+
   private func checkResourceUsage() {
     let cpuUsage = getCPUUsage()
     let gpuUsage = getGPUUsage()
-    
+
     lastCPUUsage = cpuUsage
     lastGPUUsage = gpuUsage
-    
+
     // 检查 CPU 占用
     if cpuUsage > cpuThreshold {
       if !hasLoggedHighCPU {
@@ -170,7 +171,7 @@ class PerformanceManager {
     } else {
       hasLoggedHighCPU = false
     }
-    
+
     // 检查 GPU 占用
     if gpuUsage > gpuThreshold {
       if !hasLoggedHighGPU {
@@ -181,7 +182,7 @@ class PerformanceManager {
       hasLoggedHighGPU = false
     }
   }
-  
+
   private func getCPUUsage() -> Double {
     var totalUsageOfCPU: Double = 0.0
     var threadsList: thread_act_array_t?
@@ -191,65 +192,69 @@ class PerformanceManager {
         task_threads(mach_task_self_, $0, &threadsCount)
       }
     }
-    
+
     if threadsResult == KERN_SUCCESS, let threadsList = threadsList {
       for index in 0..<threadsCount {
         var threadInfo = thread_basic_info()
         var threadInfoCount = mach_msg_type_number_t(THREAD_INFO_MAX)
         let infoResult = withUnsafeMutablePointer(to: &threadInfo) {
           $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
-            thread_info(threadsList[Int(index)], thread_flavor_t(THREAD_BASIC_INFO), $0, &threadInfoCount)
+            thread_info(
+              threadsList[Int(index)], thread_flavor_t(THREAD_BASIC_INFO), $0, &threadInfoCount)
           }
         }
-        
+
         guard infoResult == KERN_SUCCESS else {
           break
         }
-        
+
         let threadBasicInfo = threadInfo as thread_basic_info
         if threadBasicInfo.flags & TH_FLAGS_IDLE == 0 {
           totalUsageOfCPU += (Double(threadBasicInfo.cpu_usage) / Double(TH_USAGE_SCALE)) * 100.0
         }
       }
-      
-      vm_deallocate(mach_task_self_, vm_address_t(UInt(bitPattern: threadsList)), vm_size_t(Int(threadsCount) * MemoryLayout<thread_t>.stride))
+
+      vm_deallocate(
+        mach_task_self_, vm_address_t(UInt(bitPattern: threadsList)),
+        vm_size_t(Int(threadsCount) * MemoryLayout<thread_t>.stride))
     }
-    
+
     return totalUsageOfCPU
   }
-  
+
   private func getGPUUsage() -> Double {
     // Metal GPU 占用率检测
     // 注意：精确的 GPU 占用率需要使用 IOKit 或其他系统 API
     // 这里提供一个简化版本，基于系统电源状态
-    
+
     // 尝试通过 IOKit 获取 GPU 信息
     let matching = IOServiceMatching("IOAccelerator")
     var iterator: io_iterator_t = 0
-    
+
     let result = IOServiceGetMatchingServices(kIOMainPortDefault, matching, &iterator)
     guard result == KERN_SUCCESS else {
       return 0.0
     }
-    
+
     defer {
       IOObjectRelease(iterator)
     }
-    
+
     var gpuUsage: Double = 0.0
     var service = IOIteratorNext(iterator)
-    
+
     while service != 0 {
       defer {
         IOObjectRelease(service)
         service = IOIteratorNext(iterator)
       }
-      
+
       // 尝试获取 GPU 性能状态
       var props: Unmanaged<CFMutableDictionary>?
       let propsResult = IORegistryEntryCreateCFProperties(service, &props, kCFAllocatorDefault, 0)
-      
-      if propsResult == KERN_SUCCESS, let properties = props?.takeRetainedValue() as? [String: Any] {
+
+      if propsResult == KERN_SUCCESS, let properties = props?.takeRetainedValue() as? [String: Any]
+      {
         // 查找 GPU 利用率相关属性
         if let perfStats = properties["PerformanceStatistics"] as? [String: Any] {
           if let deviceUtil = perfStats["Device Utilization %"] as? Double {
@@ -260,7 +265,7 @@ class PerformanceManager {
         }
       }
     }
-    
+
     return gpuUsage
   }
 
