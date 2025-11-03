@@ -59,7 +59,7 @@ fragment float4 warpedStringsFragment(VertexOut in [[stage_in]],
   // 自适应迭代次数：屏幕中心 120 次（高质量），边缘 60 次（降低负载）
   float distFromCenter = length(uv);
   float maxIterations = mix(120.0, 60.0, smoothstep(0.3, 0.8, distFromCenter));
-  
+
   for (float i = 0.0, z = 0.0, d; i < maxIterations; i++) {
     // Ray direction, modulated by time and camera
     p = z * normalize(float3(uv, 0.5));
@@ -69,7 +69,7 @@ fragment float4 warpedStringsFragment(VertexOut in [[stage_in]],
     // Rotating plane using a cos matrix
     float4 angle = float4(0.0, 11.0, 11.0, 1.0);
     float4 a = z * 0.65 + angle * sin(p.z * 0.1 + params.time * 1.0);
-    
+
     // 优化：提前计算 sin/cos 避免重复计算
     float sinA = sin(a.x);
     float cosA = cos(a.x);
