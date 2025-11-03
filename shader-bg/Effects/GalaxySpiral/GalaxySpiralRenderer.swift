@@ -36,6 +36,13 @@ class GalaxySpiralRenderer {
     setupBuffers()
   }
 
+  deinit {
+    // 清理 Metal 资源
+    renderPipelineState = nil
+    paramsBuffer = nil
+    print("GalaxySpiralRenderer 已释放")
+  }
+
   private func setupPipeline() {
     guard let library = device.makeDefaultLibrary() else {
       fatalError("Failed to create Metal library")
@@ -92,10 +99,15 @@ class GalaxySpiralRenderer {
     }
     lastDrawTime = currentTime
 
-    guard let drawable = view.currentDrawable,
-      let renderPipeline = renderPipelineState,
+    // 检查资源是否有效
+    guard let renderPipeline = renderPipelineState,
       let paramsBuffer = paramsBuffer
     else {
+      return
+    }
+
+    // 获取 drawable，如果失败则直接返回
+    guard let drawable = view.currentDrawable else {
       return
     }
 
@@ -125,7 +137,12 @@ class GalaxySpiralRenderer {
     renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
 
     renderEncoder.endEncoding()
-    commandBuffer.present(drawable)
+    
+    // 再次检查 drawable 是否仍然有效（防止屏幕断开）
+    if let finalDrawable = view.currentDrawable {
+      commandBuffer.present(finalDrawable)
+    }
+    
     commandBuffer.commit()
   }
 

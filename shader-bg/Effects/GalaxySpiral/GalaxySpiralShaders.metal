@@ -82,7 +82,8 @@ float fbmdisk(float2 p) {
     r += abs(noise(p * f)) / f;
     f += 1.0;
   }
-  return 1.0 / r;
+  // 防止除以零
+  return (r > 0.001) ? (1.0 / r) : 1000.0;
 }
 
 // FBM dust
@@ -90,10 +91,13 @@ float fbmdust(float2 p) {
   float f = 1.0;
   float r = 0.0;
   for (int i = 1; i < 7; i++) {
-    r += 1.0 / abs(noise(p * f)) / f;
+    float n = abs(noise(p * f));
+    // 防止除以零
+    r += (n > 0.001) ? (1.0 / n / f) : (1000.0 / f);
     f += 1.0;
   }
-  return pow(1.0 - 1.0 / r, 4.0);
+  // 防止除以零和负数
+  return (r > 1.0) ? pow(1.0 - 1.0 / r, 4.0) : 0.0;
 }
 
 // Theta function for spiral arm
@@ -105,6 +109,8 @@ float theta(float r, float wb, float wn) {
 float arm(float n, float aw, float wb, float wn, float2 p) {
   float t = atan2(p.y, p.x);
   float r = length(p);
+  // 防止 r 为零导致的问题
+  if (r < 0.001) return 0.0;
   return pow(1.0 - 0.15 * sin((theta(r, wb, wn) - t) * n), aw) * exp(-r * r) *
          exp(-0.07 / r);
 }
