@@ -130,6 +130,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = ToonedCloudEffect()
       case "simple_plasma":
         newEffect = SimplePlasmaEffect()
+      case "warped_strings":
+        newEffect = WarpedStringsEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

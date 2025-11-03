@@ -43,10 +43,11 @@ class EffectManager {
       StainedLightsEffect(),
       ToonedCloudEffect(),
       SimplePlasmaEffect(),
+      WarpedStringsEffect(),
     ]
 
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
-    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma"
+    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma", "warped"
     var defaultIndex = 2  // 默认为 Rotating Lorenz
 
     if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
@@ -87,6 +88,8 @@ class EffectManager {
         defaultIndex = 16
       case "plasma":
         defaultIndex = 17
+      case "warped":
+        defaultIndex = 18
       default:
         print("Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
       }
