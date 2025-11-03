@@ -124,6 +124,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = GlowyOrbEffect()
       case "city_of_kali":
         newEffect = CityOfKaliEffect()
+      case "stained_lights":
+        newEffect = StainedLightsEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
