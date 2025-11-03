@@ -128,6 +128,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = StainedLightsEffect()
       case "tooned_cloud":
         newEffect = ToonedCloudEffect()
+      case "simple_plasma":
+        newEffect = SimplePlasmaEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
