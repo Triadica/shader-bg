@@ -122,6 +122,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = BubblesUnderwaterEffect()
       case "glowy_orb":
         newEffect = GlowyOrbEffect()
+      case "city_of_kali":
+        newEffect = CityOfKaliEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
