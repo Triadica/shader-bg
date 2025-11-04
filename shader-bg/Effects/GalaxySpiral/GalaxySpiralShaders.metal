@@ -110,7 +110,8 @@ float arm(float n, float aw, float wb, float wn, float2 p) {
   float t = atan2(p.y, p.x);
   float r = length(p);
   // 防止 r 为零导致的问题
-  if (r < 0.001) return 0.0;
+  if (r < 0.001)
+    return 0.0;
   return pow(1.0 - 0.15 * sin((theta(r, wb, wn) - t) * n), aw) * exp(-r * r) *
          exp(-0.07 / r);
 }

@@ -134,6 +134,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = WarpedStringsEffect()
       case "galaxy_spiral":
         newEffect = GalaxySpiralEffect()
+      case "cosmic_fireworks":
+        newEffect = CosmicFireworksEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

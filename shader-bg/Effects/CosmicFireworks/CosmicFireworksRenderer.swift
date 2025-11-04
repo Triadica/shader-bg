@@ -1,15 +1,15 @@
 //
-//  GalaxySpiralRenderer.swift
+//  CosmicFireworksRenderer.swift
 //  shader-bg
 //
-//  Created on 2025-11-04.
+//  Created on 2025-11-05.
 //
 
 import Metal
 import MetalKit
 import simd
 
-class GalaxySpiralRenderer {
+class CosmicFireworksRenderer {
   let device: MTLDevice
   let commandQueue: MTLCommandQueue
 
@@ -21,7 +21,7 @@ class GalaxySpiralRenderer {
   private var time: Float = 0.0
   private var lastUpdateTime: CFTimeInterval = 0.0
   private var lastDrawTime: CFTimeInterval = 0.0
-  var updateInterval: Double = 1.0 / 30.0  // 30 FPS
+  var updateInterval: Double = 1.0 / 15.0  // 15 FPS (降低帧率减少 GPU 负载)
 
   init(device: MTLDevice, size: CGSize) {
     self.device = device
@@ -40,7 +40,7 @@ class GalaxySpiralRenderer {
     // 清理 Metal 资源
     renderPipelineState = nil
     paramsBuffer = nil
-    print("GalaxySpiralRenderer 已释放")
+    print("CosmicFireworksRenderer 已释放")
   }
 
   private func setupPipeline() {
@@ -48,8 +48,8 @@ class GalaxySpiralRenderer {
       fatalError("Failed to create Metal library")
     }
 
-    let vertexFunction = library.makeFunction(name: "galaxySpiralVertex")
-    let fragmentFunction = library.makeFunction(name: "galaxySpiralFragment")
+    let vertexFunction = library.makeFunction(name: "cosmicFireworksVertex")
+    let fragmentFunction = library.makeFunction(name: "cosmicFireworksFragment")
 
     let pipelineDescriptor = MTLRenderPipelineDescriptor()
     pipelineDescriptor.vertexFunction = vertexFunction
@@ -75,7 +75,7 @@ class GalaxySpiralRenderer {
   private func setupBuffers() {
     // 创建参数缓冲区
     paramsBuffer = device.makeBuffer(
-      length: MemoryLayout<GalaxySpiralParams>.stride,
+      length: MemoryLayout<CosmicFireworksParams>.stride,
       options: [.storageModeShared]
     )
   }
@@ -87,8 +87,8 @@ class GalaxySpiralRenderer {
     }
     lastUpdateTime = currentTime
 
-    // 更新时间（减慢到原始速度的 1/8）
-    time += 0.0025  // 30fps * 0.0025 = 每秒增加约 0.075（原速度的 1/8，原始是 0.02/frame）
+    // 更新时间（15fps，保持动画速度不变）
+    time += 0.0015625  // 15fps * 0.0015625 = 每秒增加约 0.0234375（保持原速度）
   }
 
   func draw(in view: MTKView) {
@@ -112,7 +112,7 @@ class GalaxySpiralRenderer {
     }
 
     // 每次绘制更新时间
-    time += 0.0025  // 30fps * 0.0025 = 每秒增加约 0.075（原速度的 1/8）
+    time += 0.0015625  // 15fps * 0.0015625 = 每秒增加约 0.0234375（保持原速度）
 
     // 更新参数
     updateParams(viewportSize: view.drawableSize)
@@ -149,13 +149,14 @@ class GalaxySpiralRenderer {
   private func updateParams(viewportSize: CGSize) {
     guard let paramsBuffer = paramsBuffer else { return }
 
-    var params = GalaxySpiralParams(
+    var params = CosmicFireworksParams(
       time: time,
       resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height)),
+      mouse: SIMD2<Float>(Float(viewportSize.width) * 0.5, Float(viewportSize.height) * 0.5),
       padding: 0
     )
 
     paramsBuffer.contents().copyMemory(
-      from: &params, byteCount: MemoryLayout<GalaxySpiralParams>.stride)
+      from: &params, byteCount: MemoryLayout<CosmicFireworksParams>.stride)
   }
 }
