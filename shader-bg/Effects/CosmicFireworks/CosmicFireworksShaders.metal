@@ -4,7 +4,7 @@
 //
 //  Created on 2025-11-05.
 //  Cosmic Fireworks fractal effect with particle bursts
-//
+//  Forked from https://www.shadertoy.com/view/w3yGWh
 
 #include <metal_stdlib>
 using namespace metal;
