@@ -76,6 +76,30 @@
 		F8B00012000000100000002 /* WaveformEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A00002000000100000002 /* WaveformEffect.swift */; };
 		F8B00012000000100000003 /* WaveformRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A00002000000100000003 /* WaveformRenderer.swift */; };
 		F8B00012000000100000004 /* WaveformShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F8A00002000000100000004 /* WaveformShaders.metal */; };
+		F9B00012000000100000001 /* CityOfKaliData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00002000000100000001 /* CityOfKaliData.swift */; };
+		F9B00012000000100000002 /* CityOfKaliEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00002000000100000002 /* CityOfKaliEffect.swift */; };
+		F9B00012000000100000003 /* CityOfKaliRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00002000000100000003 /* CityOfKaliRenderer.swift */; };
+		F9B00012000000100000004 /* CityOfKaliShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F9A00002000000100000004 /* CityOfKaliShaders.metal */; };
+		FAB00012000000100000001 /* GalaxySpiralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA00002000000100000001 /* GalaxySpiralData.swift */; };
+		FAB00012000000100000002 /* GalaxySpiralEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA00002000000100000002 /* GalaxySpiralEffect.swift */; };
+		FAB00012000000100000003 /* GalaxySpiralRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA00002000000100000003 /* GalaxySpiralRenderer.swift */; };
+		FAB00012000000100000004 /* GalaxySpiralShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FAA00002000000100000004 /* GalaxySpiralShaders.metal */; };
+		FBB00012000000100000001 /* SimplePlasmaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA00002000000100000001 /* SimplePlasmaData.swift */; };
+		FBB00012000000100000002 /* SimplePlasmaEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA00002000000100000002 /* SimplePlasmaEffect.swift */; };
+		FBB00012000000100000003 /* SimplePlasmaRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA00002000000100000003 /* SimplePlasmaRenderer.swift */; };
+		FBB00012000000100000004 /* SimplePlasmaShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FBA00002000000100000004 /* SimplePlasmaShaders.metal */; };
+		FCB00012000000100000001 /* StainedLightsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA00002000000100000001 /* StainedLightsData.swift */; };
+		FCB00012000000100000002 /* StainedLightsEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA00002000000100000002 /* StainedLightsEffect.swift */; };
+		FCB00012000000100000003 /* StainedLightsRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA00002000000100000003 /* StainedLightsRenderer.swift */; };
+		FCB00012000000100000004 /* StainedLightsShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FCA00002000000100000004 /* StainedLightsShaders.metal */; };
+		FDB00012000000100000001 /* ToonedCloudData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA00002000000100000001 /* ToonedCloudData.swift */; };
+		FDB00012000000100000002 /* ToonedCloudEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA00002000000100000002 /* ToonedCloudEffect.swift */; };
+		FDB00012000000100000003 /* ToonedCloudRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA00002000000100000003 /* ToonedCloudRenderer.swift */; };
+		FDB00012000000100000004 /* ToonedCloudShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FDA00002000000100000004 /* ToonedCloudShaders.metal */; };
+		FEB00012000000100000001 /* WarpedStringsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA00002000000100000001 /* WarpedStringsData.swift */; };
+		FEB00012000000100000002 /* WarpedStringsEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA00002000000100000002 /* WarpedStringsEffect.swift */; };
+		FEB00012000000100000003 /* WarpedStringsRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA00002000000100000003 /* WarpedStringsRenderer.swift */; };
+		FEB00012000000100000004 /* WarpedStringsShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FEA00002000000100000004 /* WarpedStringsShaders.metal */; };
 		B00000013000000100000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000003000000100000001 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -149,6 +173,30 @@
 		F8A00002000000100000002 /* WaveformEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformEffect.swift; sourceTree = "<group>"; };
 		F8A00002000000100000003 /* WaveformRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformRenderer.swift; sourceTree = "<group>"; };
 		F8A00002000000100000004 /* WaveformShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = WaveformShaders.metal; sourceTree = "<group>"; };
+		F9A00002000000100000001 /* CityOfKaliData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityOfKaliData.swift; sourceTree = "<group>"; };
+		F9A00002000000100000002 /* CityOfKaliEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityOfKaliEffect.swift; sourceTree = "<group>"; };
+		F9A00002000000100000003 /* CityOfKaliRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityOfKaliRenderer.swift; sourceTree = "<group>"; };
+		F9A00002000000100000004 /* CityOfKaliShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = CityOfKaliShaders.metal; sourceTree = "<group>"; };
+		FAA00002000000100000001 /* GalaxySpiralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxySpiralData.swift; sourceTree = "<group>"; };
+		FAA00002000000100000002 /* GalaxySpiralEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxySpiralEffect.swift; sourceTree = "<group>"; };
+		FAA00002000000100000003 /* GalaxySpiralRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxySpiralRenderer.swift; sourceTree = "<group>"; };
+		FAA00002000000100000004 /* GalaxySpiralShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GalaxySpiralShaders.metal; sourceTree = "<group>"; };
+		FBA00002000000100000001 /* SimplePlasmaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePlasmaData.swift; sourceTree = "<group>"; };
+		FBA00002000000100000002 /* SimplePlasmaEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePlasmaEffect.swift; sourceTree = "<group>"; };
+		FBA00002000000100000003 /* SimplePlasmaRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePlasmaRenderer.swift; sourceTree = "<group>"; };
+		FBA00002000000100000004 /* SimplePlasmaShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SimplePlasmaShaders.metal; sourceTree = "<group>"; };
+		FCA00002000000100000001 /* StainedLightsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StainedLightsData.swift; sourceTree = "<group>"; };
+		FCA00002000000100000002 /* StainedLightsEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StainedLightsEffect.swift; sourceTree = "<group>"; };
+		FCA00002000000100000003 /* StainedLightsRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StainedLightsRenderer.swift; sourceTree = "<group>"; };
+		FCA00002000000100000004 /* StainedLightsShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = StainedLightsShaders.metal; sourceTree = "<group>"; };
+		FDA00002000000100000001 /* ToonedCloudData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToonedCloudData.swift; sourceTree = "<group>"; };
+		FDA00002000000100000002 /* ToonedCloudEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToonedCloudEffect.swift; sourceTree = "<group>"; };
+		FDA00002000000100000003 /* ToonedCloudRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToonedCloudRenderer.swift; sourceTree = "<group>"; };
+		FDA00002000000100000004 /* ToonedCloudShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ToonedCloudShaders.metal; sourceTree = "<group>"; };
+		FEA00002000000100000001 /* WarpedStringsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarpedStringsData.swift; sourceTree = "<group>"; };
+		FEA00002000000100000002 /* WarpedStringsEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarpedStringsEffect.swift; sourceTree = "<group>"; };
+		FEA00002000000100000003 /* WarpedStringsRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarpedStringsRenderer.swift; sourceTree = "<group>"; };
+		FEA00002000000100000004 /* WarpedStringsShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = WarpedStringsShaders.metal; sourceTree = "<group>"; };
 		B00000003000000100000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B00000004000000100000001 /* shader-bg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "shader-bg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -208,6 +256,12 @@
 				F3C0000A000000100000001 /* MobiusFlow */,
 				F1C0000A000000100000001 /* BubblesUnderwater */,
 				F2C0000A000000100000001 /* GlowyOrb */,
+				F9C0000A000000100000001 /* CityOfKali */,
+				FAC0000A000000100000001 /* GalaxySpiral */,
+				FBC0000A000000100000001 /* SimplePlasma */,
+				FCC0000A000000100000001 /* StainedLights */,
+				FDC0000A000000100000001 /* ToonedCloud */,
+				FEC0000A000000100000001 /* WarpedStrings */,
 			);
 			path = Effects;
 			sourceTree = "<group>";
@@ -309,6 +363,72 @@
 				F2A00002000000100000004 /* GlowyOrbShaders.metal */,
 			);
 			path = GlowyOrb;
+			sourceTree = "<group>";
+		};
+		F9C0000A000000100000001 /* CityOfKali */ = {
+			isa = PBXGroup;
+			children = (
+				F9A00002000000100000002 /* CityOfKaliEffect.swift */,
+				F9A00002000000100000003 /* CityOfKaliRenderer.swift */,
+				F9A00002000000100000001 /* CityOfKaliData.swift */,
+				F9A00002000000100000004 /* CityOfKaliShaders.metal */,
+			);
+			path = CityOfKali;
+			sourceTree = "<group>";
+		};
+		FAC0000A000000100000001 /* GalaxySpiral */ = {
+			isa = PBXGroup;
+			children = (
+				FAA00002000000100000002 /* GalaxySpiralEffect.swift */,
+				FAA00002000000100000003 /* GalaxySpiralRenderer.swift */,
+				FAA00002000000100000001 /* GalaxySpiralData.swift */,
+				FAA00002000000100000004 /* GalaxySpiralShaders.metal */,
+			);
+			path = GalaxySpiral;
+			sourceTree = "<group>";
+		};
+		FBC0000A000000100000001 /* SimplePlasma */ = {
+			isa = PBXGroup;
+			children = (
+				FBA00002000000100000002 /* SimplePlasmaEffect.swift */,
+				FBA00002000000100000003 /* SimplePlasmaRenderer.swift */,
+				FBA00002000000100000001 /* SimplePlasmaData.swift */,
+				FBA00002000000100000004 /* SimplePlasmaShaders.metal */,
+			);
+			path = SimplePlasma;
+			sourceTree = "<group>";
+		};
+		FCC0000A000000100000001 /* StainedLights */ = {
+			isa = PBXGroup;
+			children = (
+				FCA00002000000100000002 /* StainedLightsEffect.swift */,
+				FCA00002000000100000003 /* StainedLightsRenderer.swift */,
+				FCA00002000000100000001 /* StainedLightsData.swift */,
+				FCA00002000000100000004 /* StainedLightsShaders.metal */,
+			);
+			path = StainedLights;
+			sourceTree = "<group>";
+		};
+		FDC0000A000000100000001 /* ToonedCloud */ = {
+			isa = PBXGroup;
+			children = (
+				FDA00002000000100000002 /* ToonedCloudEffect.swift */,
+				FDA00002000000100000003 /* ToonedCloudRenderer.swift */,
+				FDA00002000000100000001 /* ToonedCloudData.swift */,
+				FDA00002000000100000004 /* ToonedCloudShaders.metal */,
+			);
+			path = ToonedCloud;
+			sourceTree = "<group>";
+		};
+		FEC0000A000000100000001 /* WarpedStrings */ = {
+			isa = PBXGroup;
+			children = (
+				FEA00002000000100000002 /* WarpedStringsEffect.swift */,
+				FEA00002000000100000003 /* WarpedStringsRenderer.swift */,
+				FEA00002000000100000001 /* WarpedStringsData.swift */,
+				FEA00002000000100000004 /* WarpedStringsShaders.metal */,
+			);
+			path = WarpedStrings;
 			sourceTree = "<group>";
 		};
 		D0000000A000000100000001 /* ApollianTwist */ = {
@@ -519,6 +639,30 @@
 				F2B00012000000100000003 /* GlowyOrbRenderer.swift in Sources */,
 				F2B00012000000100000001 /* GlowyOrbData.swift in Sources */,
 				F2B00012000000100000004 /* GlowyOrbShaders.metal in Sources */,
+				F9B00012000000100000002 /* CityOfKaliEffect.swift in Sources */,
+				F9B00012000000100000003 /* CityOfKaliRenderer.swift in Sources */,
+				F9B00012000000100000001 /* CityOfKaliData.swift in Sources */,
+				F9B00012000000100000004 /* CityOfKaliShaders.metal in Sources */,
+				FAB00012000000100000002 /* GalaxySpiralEffect.swift in Sources */,
+				FAB00012000000100000003 /* GalaxySpiralRenderer.swift in Sources */,
+				FAB00012000000100000001 /* GalaxySpiralData.swift in Sources */,
+				FAB00012000000100000004 /* GalaxySpiralShaders.metal in Sources */,
+				FBB00012000000100000002 /* SimplePlasmaEffect.swift in Sources */,
+				FBB00012000000100000003 /* SimplePlasmaRenderer.swift in Sources */,
+				FBB00012000000100000001 /* SimplePlasmaData.swift in Sources */,
+				FBB00012000000100000004 /* SimplePlasmaShaders.metal in Sources */,
+				FCB00012000000100000002 /* StainedLightsEffect.swift in Sources */,
+				FCB00012000000100000003 /* StainedLightsRenderer.swift in Sources */,
+				FCB00012000000100000001 /* StainedLightsData.swift in Sources */,
+				FCB00012000000100000004 /* StainedLightsShaders.metal in Sources */,
+				FDB00012000000100000002 /* ToonedCloudEffect.swift in Sources */,
+				FDB00012000000100000003 /* ToonedCloudRenderer.swift in Sources */,
+				FDB00012000000100000001 /* ToonedCloudData.swift in Sources */,
+				FDB00012000000100000004 /* ToonedCloudShaders.metal in Sources */,
+				FEB00012000000100000002 /* WarpedStringsEffect.swift in Sources */,
+				FEB00012000000100000003 /* WarpedStringsRenderer.swift in Sources */,
+				FEB00012000000100000001 /* WarpedStringsData.swift in Sources */,
+				FEB00012000000100000004 /* WarpedStringsShaders.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
