@@ -1,15 +1,15 @@
 //
-//  RingRemixRenderer.swift
+//  RedBlueSwirlRenderer.swift
 //  shader-bg
 //
-//  Created on 2025-11-05.
+//  Created on 2025-11-06.
 //
 
 import Metal
 import MetalKit
 import simd
 
-class RingRemixRenderer {
+class RedBlueSwirlRenderer {
   let device: MTLDevice
   let commandQueue: MTLCommandQueue
 
@@ -21,7 +21,7 @@ class RingRemixRenderer {
   private var time: Float = 0.0
   private var lastUpdateTime: CFTimeInterval = 0.0
   private var lastDrawTime: CFTimeInterval = 0.0
-  var updateInterval: Double = 1.0 / 7.5  // 7.5 FPS (30 FPS 的 1/4)
+  var updateInterval: Double = 1.0 / 10.0  // 10 FPS（降低帧率减少 GPU 消耗）
 
   init(device: MTLDevice, size: CGSize) {
     self.device = device
@@ -40,7 +40,7 @@ class RingRemixRenderer {
     // 清理 Metal 资源
     renderPipelineState = nil
     paramsBuffer = nil
-    print("RingRemixRenderer 已释放")
+    print("RedBlueSwirlRenderer 已释放")
   }
 
   private func setupPipeline() {
@@ -48,8 +48,8 @@ class RingRemixRenderer {
       fatalError("Failed to create Metal library")
     }
 
-    let vertexFunction = library.makeFunction(name: "ringRemixVertex")
-    let fragmentFunction = library.makeFunction(name: "ringRemixFragment")
+    let vertexFunction = library.makeFunction(name: "redBlueSwirlVertex")
+    let fragmentFunction = library.makeFunction(name: "redBlueSwirlFragment")
 
     let pipelineDescriptor = MTLRenderPipelineDescriptor()
     pipelineDescriptor.vertexFunction = vertexFunction
@@ -75,7 +75,7 @@ class RingRemixRenderer {
   private func setupBuffers() {
     // 创建参数缓冲区
     paramsBuffer = device.makeBuffer(
-      length: MemoryLayout<RingRemixParams>.stride,
+      length: MemoryLayout<RedBlueSwirlParams>.stride,
       options: [.storageModeShared]
     )
   }
@@ -87,8 +87,8 @@ class RingRemixRenderer {
     }
     lastUpdateTime = currentTime
 
-    // 更新时间（减慢到原始速度的 1/8）
-    time += 0.01666667  // 7.5fps * 0.01666667 = 每秒增加约 0.125（原速度的 1/8）
+    // 更新时间（超级慢速度，再降低到 1/8）
+    time += 0.00000102  // 10fps * 0.00000102 = 每秒增加约 0.0000102（超级慢）
   }
 
   func draw(in view: MTKView) {
@@ -111,10 +111,7 @@ class RingRemixRenderer {
       return
     }
 
-    // 每次绘制更新时间
-    time += 0.01666667  // 7.5fps * 0.01666667 = 每秒增加约 0.125（原速度的 1/8）
-
-    // 更新参数
+    // 更新参数（时间已在 updateParticles 中更新）
     updateParams(viewportSize: view.drawableSize)
 
     let renderPassDescriptor = MTLRenderPassDescriptor()
@@ -149,13 +146,16 @@ class RingRemixRenderer {
   private func updateParams(viewportSize: CGSize) {
     guard let paramsBuffer = paramsBuffer else { return }
 
-    var params = RingRemixParams(
+    // 降低渲染分辨率到 40% 以减少 GPU 消耗
+    let scale: Float = 0.4
+    var params = RedBlueSwirlParams(
       time: time,
-      resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height)),
+      resolution: SIMD2<Float>(
+        Float(viewportSize.width) * scale, Float(viewportSize.height) * scale),
       padding: 0
     )
 
     paramsBuffer.contents().copyMemory(
-      from: &params, byteCount: MemoryLayout<RingRemixParams>.stride)
+      from: &params, byteCount: MemoryLayout<RedBlueSwirlParams>.stride)
   }
 }

@@ -138,6 +138,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = CosmicFireworksEffect()
       case "ring_remix":
         newEffect = RingRemixEffect()
+      case "red_blue_swirl":
+        newEffect = RedBlueSwirlEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
