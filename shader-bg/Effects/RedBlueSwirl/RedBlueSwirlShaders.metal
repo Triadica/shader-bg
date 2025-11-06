@@ -6,6 +6,8 @@
 //
 //  Based on: https://www.shadertoy.com/view/MtKBRd
 //  License: CC BY-NC-SA 4.0
+//
+//  Forked from https://www.shadertoy.com/view/3fdGD7
 
 #include <metal_stdlib>
 using namespace metal;
