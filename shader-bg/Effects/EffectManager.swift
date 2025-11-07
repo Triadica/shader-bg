@@ -51,6 +51,7 @@ class EffectManager {
       RedBlueSwirlEffect(),
       SmokeRingEffect(),
       MoonForestEffect(),
+      RainbowRoadEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -115,6 +116,8 @@ class EffectManager {
         defaultIndex = 23
       case "moon":
         defaultIndex = 24
+      case "road":
+        defaultIndex = 25
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
