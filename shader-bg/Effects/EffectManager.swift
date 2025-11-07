@@ -52,6 +52,7 @@ class EffectManager {
       SmokeRingEffect(),
       MoonForestEffect(),
       RainbowRoadEffect(),
+      NewtonCloudEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -60,7 +61,7 @@ class EffectManager {
     }
 
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
-    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma", "warped", "galaxy", "cosmic", "ring", "swirl", "smoke", "moon"
+    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma", "warped", "galaxy", "cosmic", "ring", "swirl", "smoke", "moon", "road", "newton"
     var defaultIndex = 2  // 默认为 Rotating Lorenz
 
     if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
@@ -118,6 +119,8 @@ class EffectManager {
         defaultIndex = 24
       case "road":
         defaultIndex = 25
+      case "newton":
+        defaultIndex = 26
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

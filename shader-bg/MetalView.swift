@@ -146,6 +146,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = MoonForestEffect()
       case "RainbowRoad":
         newEffect = RainbowRoadEffect()
+      case "NewtonCloud":
+        newEffect = NewtonCloudEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
