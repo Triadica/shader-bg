@@ -24,6 +24,7 @@ class EffectManager {
   }
 
   private func registerEffects() {
+    NSLog("[EffectManager] 📋 Registering effects...")
     availableEffects = [
       NoiseHaloEffect(),
       ParticlesInGravityEffect(),
@@ -49,13 +50,20 @@ class EffectManager {
       RingRemixEffect(),
       RedBlueSwirlEffect(),
       SmokeRingEffect(),
+      MoonForestEffect(),
     ]
 
+    NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
+    for (index, effect) in availableEffects.enumerated() {
+      NSLog("[EffectManager]   [\(index)] \(effect.displayName) (\(effect.name))")
+    }
+
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
-    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma", "warped", "galaxy", "cosmic", "ring", "swirl", "smoke"
+    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma", "warped", "galaxy", "cosmic", "ring", "swirl", "smoke", "moon"
     var defaultIndex = 2  // 默认为 Rotating Lorenz
 
     if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
+      NSLog("[EffectManager] 🔍 SHADER_BG_EFFECT = '\(effectEnv)'")
       switch effectEnv.lowercased() {
       case "noise":
         defaultIndex = 0
@@ -105,9 +113,16 @@ class EffectManager {
         defaultIndex = 22
       case "smoke":
         defaultIndex = 23
+      case "moon":
+        defaultIndex = 24
       default:
+        NSLog(
+          "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
         print("Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
       }
+      NSLog("[EffectManager] ➡️ Selected effect index: \(defaultIndex)")
+    } else {
+      NSLog("[EffectManager] ℹ️ No SHADER_BG_EFFECT set, using default index \(defaultIndex)")
     }
 
     // 设置默认效果
@@ -115,6 +130,9 @@ class EffectManager {
       let safeIndex = min(max(defaultIndex, 0), availableEffects.count - 1)
       currentEffect = availableEffects[safeIndex]
       currentEffectIndex = safeIndex
+      NSLog(
+        "[EffectManager] 🎯 Current effect set to: [\(safeIndex)] \(currentEffect?.displayName ?? "nil")"
+      )
     }
   }
 

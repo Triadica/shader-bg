@@ -142,6 +142,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = RedBlueSwirlEffect()
       case "smoke_ring":
         newEffect = SmokeRingEffect()
+      case "MoonForest":
+        newEffect = MoonForestEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
