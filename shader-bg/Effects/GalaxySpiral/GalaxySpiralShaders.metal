@@ -42,7 +42,6 @@ float noise(float2 p) {
   float f = 2.0;
   for (int i = 0; i < 4; i++) {
     p = m2 * p * f + 0.6;
-    f *= 1.0;
     res += sin(p.x + sin(2.0 * p.y));
   }
   return res / 4.0;
