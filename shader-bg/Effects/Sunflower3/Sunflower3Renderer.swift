@@ -1,7 +1,7 @@
 import Metal
 import MetalKit
 
-class ElectricityRenderer {
+class Sunflower3Renderer {
   private var device: MTLDevice
   private var pipelineState: MTLComputePipelineState!
   private var viewportSize: CGSize
@@ -20,8 +20,8 @@ class ElectricityRenderer {
       fatalError("无法创建 Metal library")
     }
 
-    guard let function = library.makeFunction(name: "electricityCompute") else {
-      fatalError("无法找到 electricityCompute 函数")
+    guard let function = library.makeFunction(name: "sunflower3Compute") else {
+      fatalError("无法找到 sunflower3Compute 函数")
     }
 
     do {
@@ -42,14 +42,14 @@ class ElectricityRenderer {
       return
     }
 
-    var data = ElectricityData(
+    var data = Sunflower3Data(
       time: time,
       resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height))
     )
 
     computeEncoder.setComputePipelineState(pipelineState)
     computeEncoder.setTexture(drawable.texture, index: 0)
-    computeEncoder.setBytes(&data, length: MemoryLayout<ElectricityData>.stride, index: 0)
+    computeEncoder.setBytes(&data, length: MemoryLayout<Sunflower3Data>.stride, index: 0)
 
     let threadGroupSize = MTLSize(width: 16, height: 16, depth: 1)
     let threadGroups = MTLSize(

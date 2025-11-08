@@ -161,6 +161,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = HexagonalMandelbrotEffect()
       case "Electricity":
         newEffect = ElectricityEffect()
+      case "Sunflower3":
+        newEffect = Sunflower3Effect()
       default:
         newEffect = NoiseHaloEffect()
       }
