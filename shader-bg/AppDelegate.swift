@@ -334,6 +334,48 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     return targets
   }
 
+  // 快速截取缩略图（使用临时文件但立即删除）
+  private func captureThumbnail(for displayNumber: Int) -> NSImage? {
+    guard displayNumber < wallpaperWindows.count else {
+      NSLog("[SCREENSHOT] 无效的显示器索引: \(displayNumber)")
+      return nil
+    }
+
+    let window = wallpaperWindows[displayNumber]
+    let windowNumber = window.windowNumber
+    
+    // 创建临时文件
+    let tempURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("thumb-\(UUID().uuidString).png")
+    
+    // 使用 screencapture 截取
+    let process = Process()
+    process.launchPath = "/usr/sbin/screencapture"
+    process.arguments = [
+      "-x",  // 不播放截图声音
+      "-t", "png",
+      "-l", String(windowNumber),
+      tempURL.path,
+    ]
+    
+    do {
+      try process.run()
+      process.waitUntilExit()
+      
+      if process.terminationStatus == 0, let image = NSImage(contentsOf: tempURL) {
+        // 立即删除临时文件
+        try? FileManager.default.removeItem(at: tempURL)
+        return image
+      }
+    } catch {
+      NSLog("[SCREENSHOT] 截图失败: \(error)")
+    }
+    
+    // 清理临时文件
+    try? FileManager.default.removeItem(at: tempURL)
+    return nil
+  }
+  
   private func captureDisplay(to destinationURL: URL, displayNumber: Int) -> Bool {
     // 使用窗口ID来截取特定窗口的内容,而不是整个显示器
     guard displayNumber < wallpaperWindows.count else {
@@ -410,6 +452,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   // 为指定效果索引捕获缩略图
+  // 设置渲染完成回调，精确触发截图
+  private func setupRenderCompleteCallback(for index: Int) {
+    // 找到第一个可见的壁纸窗口并设置回调
+    for window in wallpaperWindows {
+      guard window.isVisible else { continue }
+      
+      if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
+         let mtkView = findMTKView(in: hostingView),
+         let delegate = mtkView.delegate as? MetalView.Coordinator {
+        
+        NSLog("[EffectGallery] 🎯 设置渲染完成回调，等待效果 [\(index)] 渲染...")
+        
+        // 设置回调：当渲染了3帧后自动触发截图
+        delegate.onRenderComplete = { [weak self] in
+          NSLog("[EffectGallery] ✅ 效果 [\(index)] 渲染完成，开始截图")
+          self?.captureThumbnailForEffect(at: index)
+        }
+        
+        break
+      }
+    }
+  }
+  
   private func captureThumbnailForEffect(at index: Int) {
     // 双重确认当前显示的确实是目标效果
     guard EffectManager.shared.currentEffectIndex == index else {
@@ -421,36 +486,100 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     guard let screenshotDirectory = screenshotDirectory else { return }
 
-    // 使用效果名称和索引作为临时文件名，确保唯一性
+    // 在主线程标记开始生成缩略图
+    DispatchQueue.main.async { [weak self] in
+      self?.galleryViewModel?.startGeneratingThumbnail(for: index)
+    }
+
     let effectName = EffectManager.shared.availableEffects[index].name
-    let timestamp = Int(Date().timeIntervalSince1970 * 1000)  // 使用毫秒确保唯一性
-    let filename = "temp-thumb-\(index)-\(effectName)-\(timestamp).png"
-    let fileURL = screenshotDirectory.appendingPathComponent(filename)
+    NSLog("[EffectGallery] 📸 开始为效果 [\(index)] \(effectName) 截图和GPU采样（后台执行）...")
 
-    NSLog("[EffectGallery] 📸 开始为效果 [\(index)] \(effectName) 截图...")
+    // 在后台线程执行耗时的GPU采样和截图操作
+    DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+      guard let self = self else { return }
 
-    // 截取第一个屏幕
-    if captureDisplay(to: fileURL, displayNumber: 0) {
-      NSLog("[EffectGallery] ✅ 截图成功: \(filename)")
+      // 采样GPU使用率（减少采样次数和间隔，加快速度）
+      var gpuSamples: [Double] = []
+      NSLog("[EffectGallery] 📊 开始快速采样GPU使用率...")
 
-      // 再次确认索引没有变化（防止在截图过程中切换了效果）
+      for i in 0..<6 {  // 减少到6次采样
+        // 强制触发性能监控更新
+        PerformanceManager.shared.checkResourceUsage()
+
+        let usage = PerformanceManager.shared.lastGPUUsage
+        gpuSamples.append(usage)
+
+        if i < 5 {
+          Thread.sleep(forTimeInterval: 0.3)  // 减少到0.3秒间隔
+        }
+
+        if (i + 1) % 2 == 0 {
+          NSLog("[EffectGallery] 📊 采样进度: \(i + 1)/6, 当前值: %.1f%%", usage)
+        }
+      }
+
+      // 排序并去除最高和最低的1个值，取中间值的平均
+      let sortedSamples = gpuSamples.sorted()
+      let trimmedSamples =
+        sortedSamples.count > 2
+        ? Array(sortedSamples.dropFirst(1).dropLast(1))
+        : sortedSamples
+
+      let avgGPU =
+        trimmedSamples.isEmpty
+        ? 0.0
+        : trimmedSamples.reduce(0, +) / Double(trimmedSamples.count)
+
+      NSLog(
+        "[EffectGallery] 📊 GPU采样完成: 平均值=%.1f%%, 样本数=%d, 范围=[%.1f%% - %.1f%%]",
+        avgGPU, trimmedSamples.count, sortedSamples.first ?? 0, sortedSamples.last ?? 0)
+
+      // 再次确认索引没有变化
       guard EffectManager.shared.currentEffectIndex == index else {
-        NSLog("[EffectGallery] ⚠️ 截图过程中效果已切换，丢弃此截图")
-        try? FileManager.default.removeItem(at: fileURL)
+        NSLog("[EffectGallery] ⚠️ GPU采样期间效果已切换，取消截图")
+        DispatchQueue.main.async { [weak self] in
+          self?.galleryViewModel?.finishGeneratingThumbnail(for: index)
+        }
         return
       }
 
-      // 读取并保存为缩略图
-      if let image = NSImage(contentsOf: fileURL) {
-        galleryViewModel?.updateThumbnail(for: index, with: image)
-        galleryViewModel?.saveThumbnailToFile(for: index, image: image)
-        NSLog("[EffectGallery] 💾 缩略图已保存到文件系统")
-      }
+      // 快速截取缩略图（无需保存临时文件）
+      NSLog("[EffectGallery] 📸 快速截取缩略图...")
+      if let image = self.captureThumbnail(for: 0) {
+        NSLog("[EffectGallery] ✅ 截图成功, GPU: %.1f%%", avgGPU)
 
-      // 删除临时截图文件
-      try? FileManager.default.removeItem(at: fileURL)
-    } else {
-      NSLog("[EffectGallery] ❌ 截图失败，效果索引: \(index)")
+        // 再次确认索引
+        guard EffectManager.shared.currentEffectIndex == index else {
+          NSLog("[EffectGallery] ⚠️ 截图过程中效果已切换，丢弃此截图")
+          DispatchQueue.main.async { [weak self] in
+            self?.galleryViewModel?.finishGeneratingThumbnail(for: index)
+          }
+          return
+        }
+
+        // 在后台处理和保存图片
+        // 切换到主线程更新UI
+        DispatchQueue.main.async { [weak self] in
+          self?.galleryViewModel?.updateThumbnail(for: index, with: image)
+          self?.galleryViewModel?.updateGPUUsage(for: index, usage: avgGPU)
+        }
+
+        // 后台保存文件
+        self.galleryViewModel?.saveThumbnailToFile(for: index, image: image)
+        self.galleryViewModel?.saveGPUUsageToFile(for: index, usage: avgGPU)
+
+        NSLog("[EffectGallery] 💾 缩略图和GPU数据已保存到文件系统")
+
+        // 标记完成
+        DispatchQueue.main.async { [weak self] in
+          self?.galleryViewModel?.finishGeneratingThumbnail(for: index)
+        }
+      } else {
+        NSLog("[EffectGallery] ❌ 截图失败，效果索引: \(index)")
+        DispatchQueue.main.async { [weak self] in
+          self?.galleryViewModel?.finishGeneratingThumbnail(for: index)
+        }
+      }
     }
   }
 
@@ -665,13 +794,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let viewModel = EffectGalleryViewModel()
     viewModel.loadSavedThumbnails()
     viewModel.onEffectSelected = { [weak self] index in
-      self?.switchEffectByIndex(index)
-      // 切换效果后等待足够时间让新效果完全渲染（2秒）
-      // 传递明确的效果索引，避免使用全局状态
-      DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-        self?.captureThumbnailForEffect(at: index)
+      guard let self = self else { return }
+      self.switchEffectByIndex(index)
+
+      // 只有当该效果没有缩略图时才自动生成
+      if viewModel.getThumbnail(for: index) == nil {
+        // 使用渲染完成回调来精确触发截图
+        self.setupRenderCompleteCallback(for: index)
       }
     }
+
+    // 手动刷新缩略图的回调
+    viewModel.onRefreshThumbnail = { [weak self] index in
+      guard let self = self else { return }
+      self.switchEffectByIndex(index)
+      // 使用渲染完成回调来精确触发截图
+      self.setupRenderCompleteCallback(for: index)
+    }
+
     self.galleryViewModel = viewModel
 
     // 创建窗口

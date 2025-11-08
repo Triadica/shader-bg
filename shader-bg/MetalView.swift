@@ -41,6 +41,11 @@ struct MetalView: NSViewRepresentable {
     private var lastDrawableSize: CGSize = .zero
     private let lock = NSLock()
 
+    // 渲染完成回调（用于精确截图时机）
+    var onRenderComplete: (() -> Void)?
+    private var framesRenderedSinceSwitch = 0
+    private let minFramesBeforeCapture = 3  // 切换效果后至少渲染3帧再触发回调
+
     init(_ parent: MetalView) {
       self.parent = parent
       super.init()
@@ -157,6 +162,9 @@ struct MetalView: NSViewRepresentable {
       newEffect.setup(device: device, size: size)
       currentEffect = newEffect
 
+      // 重置帧计数
+      framesRenderedSinceSwitch = 0
+
       print("切换到效果: \(newEffect.displayName), size: \(size)")
     }
 
@@ -213,6 +221,17 @@ struct MetalView: NSViewRepresentable {
       let currentTime = CACurrentMediaTime()
       currentEffect?.update(currentTime: currentTime)
       currentEffect?.draw(in: view)
+      
+      // 渲染完成后的回调处理
+      framesRenderedSinceSwitch += 1
+      if framesRenderedSinceSwitch == minFramesBeforeCapture, let callback = onRenderComplete {
+        // 只触发一次回调
+        onRenderComplete = nil
+        // 在主线程延迟一点点执行，确保drawable已经present
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+          callback()
+        }
+      }
     }
 
     // 安全停止方法：在清理前调用

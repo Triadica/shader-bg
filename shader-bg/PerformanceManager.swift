@@ -24,7 +24,7 @@ class PerformanceManager {
 
   // CPU 和 GPU 监控
   private var lastCPUUsage: Double = 0.0
-  private var lastGPUUsage: Double = 0.0
+  private(set) var lastGPUUsage: Double = 0.0  // 公开读取访问
   private var hasLoggedHighCPU: Bool = false
   private var hasLoggedHighGPU: Bool = false
   private let cpuThreshold: Double = 40.0  // CPU 使用率阈值
@@ -155,7 +155,7 @@ class PerformanceManager {
 
   // MARK: - CPU 和 GPU 监控
 
-  private func checkResourceUsage() {
+  func checkResourceUsage() {
     let cpuUsage = getCPUUsage()
     let gpuUsage = getGPUUsage()
 
