@@ -155,6 +155,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = NewtonCloudEffect()
       case "PoincareHexagons":
         newEffect = PoincareHexagonsEffect()
+      case "PlasmaWaves":
+        newEffect = PlasmaWavesEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
@@ -221,7 +223,7 @@ struct MetalView: NSViewRepresentable {
       let currentTime = CACurrentMediaTime()
       currentEffect?.update(currentTime: currentTime)
       currentEffect?.draw(in: view)
-      
+
       // 渲染完成后的回调处理
       framesRenderedSinceSwitch += 1
       if framesRenderedSinceSwitch == minFramesBeforeCapture, let callback = onRenderComplete {

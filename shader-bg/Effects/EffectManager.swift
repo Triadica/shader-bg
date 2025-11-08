@@ -54,6 +54,7 @@ class EffectManager {
       RainbowRoadEffect(),
       NewtonCloudEffect(),
       PoincareHexagonsEffect(),
+      PlasmaWavesEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -62,7 +63,7 @@ class EffectManager {
     }
 
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
-    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma", "warped", "galaxy", "cosmic", "ring", "swirl", "smoke", "moon", "road", "newton", "poincare"
+    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma", "warped", "galaxy", "cosmic", "ring", "swirl", "smoke", "moon", "road", "newton", "poincare", "waves"
     var defaultIndex = availableEffects.count - 1  // 默认为最后一个效果（方便调试）
 
     if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
@@ -124,6 +125,8 @@ class EffectManager {
         defaultIndex = 26
       case "poincare":
         defaultIndex = 27
+      case "waves":
+        defaultIndex = 28
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

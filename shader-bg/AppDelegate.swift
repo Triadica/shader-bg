@@ -343,11 +343,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     let window = wallpaperWindows[displayNumber]
     let windowNumber = window.windowNumber
-    
+
     // 创建临时文件
     let tempURL = FileManager.default.temporaryDirectory
       .appendingPathComponent("thumb-\(UUID().uuidString).png")
-    
+
     // 使用 screencapture 截取
     let process = Process()
     process.launchPath = "/usr/sbin/screencapture"
@@ -357,11 +357,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       "-l", String(windowNumber),
       tempURL.path,
     ]
-    
+
     do {
       try process.run()
       process.waitUntilExit()
-      
+
       if process.terminationStatus == 0, let image = NSImage(contentsOf: tempURL) {
         // 立即删除临时文件
         try? FileManager.default.removeItem(at: tempURL)
@@ -370,12 +370,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     } catch {
       NSLog("[SCREENSHOT] 截图失败: \(error)")
     }
-    
+
     // 清理临时文件
     try? FileManager.default.removeItem(at: tempURL)
     return nil
   }
-  
+
   private func captureDisplay(to destinationURL: URL, displayNumber: Int) -> Bool {
     // 使用窗口ID来截取特定窗口的内容,而不是整个显示器
     guard displayNumber < wallpaperWindows.count else {
@@ -457,24 +457,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // 找到第一个可见的壁纸窗口并设置回调
     for window in wallpaperWindows {
       guard window.isVisible else { continue }
-      
+
       if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
-         let mtkView = findMTKView(in: hostingView),
-         let delegate = mtkView.delegate as? MetalView.Coordinator {
-        
+        let mtkView = findMTKView(in: hostingView),
+        let delegate = mtkView.delegate as? MetalView.Coordinator
+      {
+
         NSLog("[EffectGallery] 🎯 设置渲染完成回调，等待效果 [\(index)] 渲染...")
-        
+
         // 设置回调：当渲染了3帧后自动触发截图
         delegate.onRenderComplete = { [weak self] in
           NSLog("[EffectGallery] ✅ 效果 [\(index)] 渲染完成，开始截图")
           self?.captureThumbnailForEffect(at: index)
         }
-        
+
         break
       }
     }
   }
-  
+
   private func captureThumbnailForEffect(at index: Int) {
     // 双重确认当前显示的确实是目标效果
     guard EffectManager.shared.currentEffectIndex == index else {

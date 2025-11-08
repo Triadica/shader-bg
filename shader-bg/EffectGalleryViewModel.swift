@@ -99,10 +99,16 @@ class EffectGalleryViewModel: ObservableObject {
   }
 
   private func resizeImage(_ image: NSImage, to targetSize: CGSize) -> NSImage {
-    let newImage = NSImage(size: targetSize)
-    newImage.lockFocus()
+    // 使用 CGImage 进行快速缩放
+    guard let tiffData = image.tiffRepresentation,
+      let bitmapImage = NSBitmapImageRep(data: tiffData),
+      let cgImage = bitmapImage.cgImage
+    else {
+      // 如果快速路径失败，使用原图
+      return image
+    }
 
-    // 保持4:3宽高比，填充整个区域
+    // 计算缩放比例（保持4:3宽高比）
     let imageSize = image.size
     let widthRatio = targetSize.width / imageSize.width
     let heightRatio = targetSize.height / imageSize.height
@@ -111,15 +117,38 @@ class EffectGalleryViewModel: ObservableObject {
     let scaledWidth = imageSize.width * scale
     let scaledHeight = imageSize.height * scale
 
+    // 创建小的位图上下文
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+    guard
+      let context = CGContext(
+        data: nil,
+        width: Int(targetSize.width),
+        height: Int(targetSize.height),
+        bitsPerComponent: 8,
+        bytesPerRow: 0,
+        space: colorSpace,
+        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+      )
+    else {
+      return image
+    }
+
+    // 设置高质量插值
+    context.interpolationQuality = .high
+
+    // 居中绘制
     let x = (targetSize.width - scaledWidth) / 2
     let y = (targetSize.height - scaledHeight) / 2
+    let rect = CGRect(x: x, y: y, width: scaledWidth, height: scaledHeight)
 
-    let rect = NSRect(x: x, y: y, width: scaledWidth, height: scaledHeight)
-    image.draw(
-      in: rect, from: NSRect(origin: .zero, size: imageSize), operation: .copy, fraction: 1.0)
+    context.draw(cgImage, in: rect)
 
-    newImage.unlockFocus()
-    return newImage
+    // 转换回 NSImage
+    if let scaledCGImage = context.makeImage() {
+      return NSImage(cgImage: scaledCGImage, size: targetSize)
+    }
+
+    return image
   }
 
   // 保存缩略图到文件系统
