@@ -59,6 +59,7 @@ class EffectManager {
       ElectricityEffect(),
       Sunflower3Effect(),
       LogZoomFlowerEffect(),
+      TaijiEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -139,6 +140,8 @@ class EffectManager {
         defaultIndex = 31
       case "logzoom", "logzoomflower":
         defaultIndex = 32
+      case "taiji":
+        defaultIndex = 33
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

@@ -165,6 +165,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = Sunflower3Effect()
       case "LogZoomFlower":
         newEffect = LogZoomFlowerEffect()
+      case "Taiji":
+        newEffect = TaijiEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

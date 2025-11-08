@@ -1,4 +1,4 @@
-// Forked from https://www.shadertoy.com/view/wX3SRn
+// Forked from https://www.shadertoy.com/view/33K3DK
 
 #include <metal_stdlib>
 using namespace metal;
