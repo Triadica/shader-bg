@@ -148,6 +148,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = RainbowRoadEffect()
       case "NewtonCloud":
         newEffect = NewtonCloudEffect()
+      case "PoincareHexagons":
+        newEffect = PoincareHexagonsEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

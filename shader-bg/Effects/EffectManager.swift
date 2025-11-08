@@ -3,7 +3,7 @@
 //  shader-bg
 //
 //  Created by chen on 2025/10/28.
-//
+//  Forked from https://www.shadertoy.com/view/NlSyRd
 
 import Foundation
 import MetalKit
@@ -53,6 +53,7 @@ class EffectManager {
       MoonForestEffect(),
       RainbowRoadEffect(),
       NewtonCloudEffect(),
+      PoincareHexagonsEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -61,8 +62,8 @@ class EffectManager {
     }
 
     // 检查环境变量 SHADER_BG_EFFECT 来决定默认效果
-    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma", "warped", "galaxy", "cosmic", "ring", "swirl", "smoke", "moon", "road", "newton"
-    var defaultIndex = 2  // 默认为 Rotating Lorenz
+    // 可选值: "noise", "gravity", "lorenz", "rhombus", "apollian", "clock", "waveform", "vortex", "rainbow", "star", "sonata", "mobius", "bubbles", "glowy", "kali", "stained", "cloud", "plasma", "warped", "galaxy", "cosmic", "ring", "swirl", "smoke", "moon", "road", "newton", "poincare"
+    var defaultIndex = availableEffects.count - 1  // 默认为最后一个效果（方便调试）
 
     if let effectEnv = ProcessInfo.processInfo.environment["SHADER_BG_EFFECT"] {
       NSLog("[EffectManager] 🔍 SHADER_BG_EFFECT = '\(effectEnv)'")
@@ -121,6 +122,8 @@ class EffectManager {
         defaultIndex = 25
       case "newton":
         defaultIndex = 26
+      case "poincare":
+        defaultIndex = 27
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

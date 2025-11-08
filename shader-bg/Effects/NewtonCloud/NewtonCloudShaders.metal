@@ -119,7 +119,7 @@ fragment float4 newtonCloudFragment(VertexOut in [[stage_in]],
 
   // 计算颜色 - 背景黑色，图案浅蓝色/白色
   float c = result * 0.1;
-  
+
   // 浅蓝色到白色的渐变 (R: 0.7, G: 0.85, B: 1.0)
   float3 color = float3(0.7, 0.85, 1.0) * c;
 
