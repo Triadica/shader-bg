@@ -56,6 +56,7 @@ class EffectManager {
       PoincareHexagonsEffect(),
       PlasmaWavesEffect(),
       HexagonalMandelbrotEffect(),
+      ElectricityEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -130,6 +131,8 @@ class EffectManager {
         defaultIndex = 28
       case "hexagonal", "mandelbrot":
         defaultIndex = 29
+      case "electricity":
+        defaultIndex = 30
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

@@ -159,6 +159,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = PlasmaWavesEffect()
       case "HexagonalMandelbrot":
         newEffect = HexagonalMandelbrotEffect()
+      case "Electricity":
+        newEffect = ElectricityEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
