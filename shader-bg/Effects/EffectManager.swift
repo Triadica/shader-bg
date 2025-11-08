@@ -60,6 +60,7 @@ class EffectManager {
       Sunflower3Effect(),
       LogZoomFlowerEffect(),
       TaijiEffect(),
+      JuliaSetEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -142,6 +143,8 @@ class EffectManager {
         defaultIndex = 32
       case "taiji":
         defaultIndex = 33
+      case "julia", "juliaset":
+        defaultIndex = 34
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

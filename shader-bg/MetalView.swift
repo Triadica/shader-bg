@@ -167,6 +167,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = LogZoomFlowerEffect()
       case "Taiji":
         newEffect = TaijiEffect()
+      case "JuliaSet":
+        newEffect = JuliaSetEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
