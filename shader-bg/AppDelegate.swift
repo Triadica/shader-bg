@@ -69,6 +69,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private var isSessionActive = true
   private var pendingSessionResumeWorkItem: DispatchWorkItem?
 
+  // 效果图库相关
+  var galleryWindow: NSWindow?
+  var galleryViewModel: EffectGalleryViewModel?
+
   func applicationDidFinishLaunching(_ notification: Notification) {
     NSApp.setActivationPolicy(.accessory)
     setupScreenshotDirectory()
@@ -389,8 +393,64 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     do {
       try NSWorkspace.shared.setDesktopImageURL(imageURL, for: screen, options: [:])
       NSLog("[SCREENSHOT] ✅ 已设置桌面壁纸: \(imageURL.lastPathComponent) for \(screen.localizedName)")
+
+      // 同时保存为当前效果的缩略图
+      saveThumbnailFromScreenshot(imageURL)
     } catch {
       NSLog("[SCREENSHOT] ❌ 设置桌面壁纸失败: \(error)")
+    }
+  }
+
+  private func saveThumbnailFromScreenshot(_ imageURL: URL) {
+    guard let image = NSImage(contentsOf: imageURL) else { return }
+
+    let currentIndex = EffectManager.shared.currentEffectIndex
+    galleryViewModel?.updateThumbnail(for: currentIndex, with: image)
+    galleryViewModel?.saveThumbnailToFile(for: currentIndex, image: image)
+  }
+
+  // 为指定效果索引捕获缩略图
+  private func captureThumbnailForEffect(at index: Int) {
+    // 双重确认当前显示的确实是目标效果
+    guard EffectManager.shared.currentEffectIndex == index else {
+      NSLog(
+        "[EffectGallery] ⚠️ 跳过截图：当前效果索引(\(EffectManager.shared.currentEffectIndex))与目标索引(\(index))不匹配"
+      )
+      return
+    }
+
+    guard let screenshotDirectory = screenshotDirectory else { return }
+
+    // 使用效果名称和索引作为临时文件名，确保唯一性
+    let effectName = EffectManager.shared.availableEffects[index].name
+    let timestamp = Int(Date().timeIntervalSince1970 * 1000)  // 使用毫秒确保唯一性
+    let filename = "temp-thumb-\(index)-\(effectName)-\(timestamp).png"
+    let fileURL = screenshotDirectory.appendingPathComponent(filename)
+
+    NSLog("[EffectGallery] 📸 开始为效果 [\(index)] \(effectName) 截图...")
+
+    // 截取第一个屏幕
+    if captureDisplay(to: fileURL, displayNumber: 0) {
+      NSLog("[EffectGallery] ✅ 截图成功: \(filename)")
+
+      // 再次确认索引没有变化（防止在截图过程中切换了效果）
+      guard EffectManager.shared.currentEffectIndex == index else {
+        NSLog("[EffectGallery] ⚠️ 截图过程中效果已切换，丢弃此截图")
+        try? FileManager.default.removeItem(at: fileURL)
+        return
+      }
+
+      // 读取并保存为缩略图
+      if let image = NSImage(contentsOf: fileURL) {
+        galleryViewModel?.updateThumbnail(for: index, with: image)
+        galleryViewModel?.saveThumbnailToFile(for: index, image: image)
+        NSLog("[EffectGallery] 💾 缩略图已保存到文件系统")
+      }
+
+      // 删除临时截图文件
+      try? FileManager.default.removeItem(at: fileURL)
+    } else {
+      NSLog("[EffectGallery] ❌ 截图失败，效果索引: \(index)")
     }
   }
 
@@ -548,20 +608,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func updateMenu() {
     let menu = NSMenu()
 
-    // 效果选择项（展开到第一层菜单）
-    let effectManager = EffectManager.shared
+    // 效果图库选项
+    let galleryItem = NSMenuItem(
+      title: "效果图库...",
+      action: #selector(showEffectGallery),
+      keyEquivalent: "e"
+    )
+    galleryItem.target = self
+    menu.addItem(galleryItem)
 
-    for (index, effect) in effectManager.availableEffects.enumerated() {
-      let effectItem = NSMenuItem(
-        title: effect.displayName,
-        action: #selector(switchEffect(_:)),
-        keyEquivalent: ""
-      )
-      effectItem.target = self
-      effectItem.tag = index
-      effectItem.state = index == effectManager.currentEffectIndex ? .on : .off
-      menu.addItem(effectItem)
-    }
+    menu.addItem(NSMenuItem.separator())
+
+    // 显示当前效果名称（只读，不可点击）
+    let currentEffectName = EffectManager.shared.availableEffects[
+      EffectManager.shared.currentEffectIndex
+    ].displayName
+    let currentEffectItem = NSMenuItem(
+      title: "当前: \(currentEffectName)", action: nil, keyEquivalent: "")
+    currentEffectItem.isEnabled = false
+    menu.addItem(currentEffectItem)
 
     menu.addItem(NSMenuItem.separator())
 
@@ -586,6 +651,79 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     menu.addItem(quitItem)
 
     statusItem?.menu = menu
+  }
+
+  @objc func showEffectGallery() {
+    // 如果窗口已经存在，就激活它
+    if let window = galleryWindow, window.isVisible {
+      window.makeKeyAndOrderFront(nil)
+      NSApp.activate(ignoringOtherApps: true)
+      return
+    }
+
+    // 创建 ViewModel
+    let viewModel = EffectGalleryViewModel()
+    viewModel.loadSavedThumbnails()
+    viewModel.onEffectSelected = { [weak self] index in
+      self?.switchEffectByIndex(index)
+      // 切换效果后等待足够时间让新效果完全渲染（2秒）
+      // 传递明确的效果索引，避免使用全局状态
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        self?.captureThumbnailForEffect(at: index)
+      }
+    }
+    self.galleryViewModel = viewModel
+
+    // 创建窗口
+    let contentView = EffectGalleryView(viewModel: viewModel)
+    let hostingController = NSHostingController(rootView: contentView)
+
+    let window = NSWindow(
+      contentRect: NSRect(x: 0, y: 0, width: 1120, height: 600),
+      styleMask: [.titled, .closable, .resizable],
+      backing: .buffered,
+      defer: false
+    )
+    window.title = "Effect Gallery"
+    window.contentViewController = hostingController
+    window.center()
+    window.isReleasedWhenClosed = false
+    window.makeKeyAndOrderFront(nil)
+
+    // 激活应用
+    NSApp.activate(ignoringOtherApps: true)
+
+    self.galleryWindow = window
+  }
+
+  private func switchEffectByIndex(_ index: Int) {
+    // 更新全局效果索引
+    EffectManager.shared.currentEffectIndex = index
+
+    // 为所有窗口切换效果
+    wallpaperWindows.forEach { window in
+      guard window.isVisible else { return }
+
+      if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
+        let mtkView = findMTKView(in: hostingView),
+        let delegate = mtkView.delegate as? MetalView.Coordinator,
+        mtkView.drawableSize.width > 0
+      {
+        delegate.switchToEffect(at: index, size: mtkView.drawableSize)
+      }
+    }
+
+    // 更新菜单选中状态
+    updateMenu()
+
+    // 更新图库的选中状态
+    galleryViewModel?.currentIndex = index
+  }
+
+  private func captureThumbnailForCurrentEffect() {
+    // 简化方案：等待下一次截图完成后自动保存缩略图
+    // 这样更可靠，避免直接从 Metal 纹理读取的复杂性
+    NSLog("[EffectGallery] 将在下一次截图时自动保存缩略图")
   }
 
   @objc func switchEffect(_ sender: NSMenuItem) {
