@@ -195,6 +195,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = RainRipplesEffect()
       case "ZoomedMaze":
         newEffect = ZoomedMazeEffect()
+      case "ColorfulArcs":
+        newEffect = ColorfulArcsEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

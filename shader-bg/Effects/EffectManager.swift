@@ -74,6 +74,7 @@ class EffectManager {
       TorusInteriorEffect(),
       RainRipplesEffect(),
       ZoomedMazeEffect(),
+      ColorfulArcsEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -184,6 +185,8 @@ class EffectManager {
         defaultIndex = 46
       case "zoomedmaze", "zoomed", "maze":
         defaultIndex = 47
+      case "colorfularcs", "colorful", "arcs":
+        defaultIndex = 48
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
