@@ -68,6 +68,7 @@ class EffectManager {
       SpiralStainedGlassEffect(),
       DomainRepetitionEffect(),
       NeonParallaxEffect(),
+      DroppyThingiesEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -166,6 +167,8 @@ class EffectManager {
         defaultIndex = 40
       case "neonparallax", "neon", "parallax":
         defaultIndex = 41
+      case "droppythingies", "droppy", "drops", "thingies":
+        defaultIndex = 42
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

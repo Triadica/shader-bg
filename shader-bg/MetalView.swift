@@ -183,6 +183,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = DomainRepetitionEffect()
       case "NeonParallax":
         newEffect = NeonParallaxEffect()
+      case "DroppyThingies":
+        newEffect = DroppyThingiesEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
