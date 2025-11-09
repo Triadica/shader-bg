@@ -67,6 +67,7 @@ class EffectManager {
       Tesseract4DEffect(),
       SpiralStainedGlassEffect(),
       DomainRepetitionEffect(),
+      NeonParallaxEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -163,6 +164,8 @@ class EffectManager {
         defaultIndex = 39
       case "domainrepetition", "domain", "repetition", "raymarch":
         defaultIndex = 40
+      case "neonparallax", "neon", "parallax":
+        defaultIndex = 41
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

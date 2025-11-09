@@ -181,6 +181,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = SpiralStainedGlassEffect()
       case "DomainRepetition":
         newEffect = DomainRepetitionEffect()
+      case "NeonParallax":
+        newEffect = NeonParallaxEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
