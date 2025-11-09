@@ -27,8 +27,8 @@ static float spiral_noise(float2 p) {
 
 static float4 spiral_stained_glass_effect(float2 fragCoord, float time,
                                           float2 resolution) {
-  // 降低速度到 1/10
-  float slowTime = time * 0.1;
+  // 加速到 4 倍原来的速度 (从 0.1 改为 0.4)
+  float slowTime = time * 0.4;
 
   // Change this value for different orders of symmetry
   const float sym = 5.0;

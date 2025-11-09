@@ -66,6 +66,7 @@ class EffectManager {
       InfiniteRingEffect(),
       Tesseract4DEffect(),
       SpiralStainedGlassEffect(),
+      DomainRepetitionEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -160,6 +161,8 @@ class EffectManager {
         defaultIndex = 38
       case "spiralstainedglass", "spiral", "spiralglass", "stainedglass":
         defaultIndex = 39
+      case "domainrepetition", "domain", "repetition", "raymarch":
+        defaultIndex = 40
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

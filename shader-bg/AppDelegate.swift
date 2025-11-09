@@ -867,6 +867,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // 更新全局效果索引
     EffectManager.shared.currentEffectIndex = index
 
+    let effectName = EffectManager.shared.availableEffects[index].displayName
+    NSLog("[Gallery] 切换到效果 #\(index): \(effectName)")
+
     // 为所有窗口切换效果
     wallpaperWindows.forEach { window in
       guard window.isVisible else { return }
@@ -876,6 +879,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let delegate = mtkView.delegate as? MetalView.Coordinator,
         mtkView.drawableSize.width > 0
       {
+        NSLog("[Gallery] 为窗口切换效果到 #\(index)")
         delegate.switchToEffect(at: index, size: mtkView.drawableSize)
       }
     }

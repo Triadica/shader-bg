@@ -179,6 +179,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = Tesseract4DEffect()
       case "SpiralStainedGlass":
         newEffect = SpiralStainedGlassEffect()
+      case "DomainRepetition":
+        newEffect = DomainRepetitionEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
