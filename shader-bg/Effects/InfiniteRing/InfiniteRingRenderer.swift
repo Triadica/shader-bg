@@ -1,31 +1,36 @@
 import Metal
 import MetalKit
 
-class MovingPixelsRenderer {
+class InfiniteRingRenderer {
   private var device: MTLDevice
   private var pipelineState: MTLComputePipelineState!
   private var viewportSize: CGSize
 
   private var time: Float = 0.0
-  var updateInterval: Double = 1.0 / 10.0  // 降低帧率到 10 FPS
+  var updateInterval: Double = 1.0 / 30.0
 
   init(device: MTLDevice, size: CGSize) {
     self.device = device
     self.viewportSize = size
+    print("🔵 [InfiniteRingRenderer] 初始化，size: \(size)")
     setupPipeline()
   }
 
   private func setupPipeline() {
+    print("🔵 [InfiniteRingRenderer] 开始设置 pipeline...")
     guard let library = device.makeDefaultLibrary() else {
       fatalError("无法创建 Metal library")
     }
 
-    guard let function = library.makeFunction(name: "movingPixelsCompute") else {
-      fatalError("无法找到 movingPixelsCompute 函数")
+    print("🔵 [InfiniteRingRenderer] 查找 infiniteRingCompute 函数...")
+    guard let function = library.makeFunction(name: "infiniteRingCompute") else {
+      fatalError("无法找到 infiniteRingCompute 函数")
     }
+    print("✅ [InfiniteRingRenderer] 找到 infiniteRingCompute 函数")
 
     do {
       pipelineState = try device.makeComputePipelineState(function: function)
+      print("✅ [InfiniteRingRenderer] Pipeline state 创建成功")
     } catch {
       fatalError("无法创建 pipeline state: \(error)")
     }
@@ -42,14 +47,14 @@ class MovingPixelsRenderer {
       return
     }
 
-    var data = MovingPixelsData(
+    var data = InfiniteRingData(
       time: time,
       resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height))
     )
 
     computeEncoder.setComputePipelineState(pipelineState)
     computeEncoder.setTexture(drawable.texture, index: 0)
-    computeEncoder.setBytes(&data, length: MemoryLayout<MovingPixelsData>.stride, index: 0)
+    computeEncoder.setBytes(&data, length: MemoryLayout<InfiniteRingData>.stride, index: 0)
 
     let threadGroupSize = MTLSize(width: 16, height: 16, depth: 1)
     let threadGroups = MTLSize(

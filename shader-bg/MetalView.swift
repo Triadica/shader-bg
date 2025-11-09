@@ -173,6 +173,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = MicrowavesEffect()
       case "MovingPixels":
         newEffect = MovingPixelsEffect()
+      case "InfiniteRing":
+        newEffect = InfiniteRingEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

@@ -63,6 +63,7 @@ class EffectManager {
       JuliaSetEffect(),
       MicrowavesEffect(),
       MovingPixelsEffect(),
+      InfiniteRingEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -151,6 +152,8 @@ class EffectManager {
         defaultIndex = 35
       case "movingpixels", "pixels", "hive":
         defaultIndex = 36
+      case "infiniteering", "infiniring":
+        defaultIndex = 37
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
