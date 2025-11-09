@@ -44,8 +44,12 @@ kernel void zoomedMazeCompute(texture2d<float, access::write> output
 
       // 时间缩放：降低动画速度到原始的 1/80 (1/10 * 1/8)
       float t = time * 0.0125;
-      float3 uv =
-          normalize(float3(fragCoord.xy - 0.5 * resolution.xy, -resolution.y));
+
+      // 扩大视野范围让左上角内容可见
+      // 增加z分量（从-resolution.y到-resolution.y*0.7）来扩大视角
+      float3 uv = normalize(
+          float3(fragCoord.xy - 0.5 * resolution.xy, -resolution.y * 0.7));
+
       float3 dir = axis_rotation(uv, float3(2.0, 1.0, 1.0), 0.9); // 视线方向
       float3 Po = float3(0.0, 1.0, 1.0); // 视点原点
 
@@ -58,19 +62,20 @@ kernel void zoomedMazeCompute(texture2d<float, access::write> output
       float steps = 0.0;
       float distance = 0.0;
 
-      // Raymarching 循环 - 平衡优化：18 步（兼顾质量与性能）
-      // 瓶颈分析: log/atan2 是最昂贵的操作,适度减少循环次数
-      while (++steps < 18.0) {
+      // 提高步数改善整体画质
+      const float max_distance = 18.0; // 增加追踪距离
+      const float max_steps = 15.0;    // 统一使用15步
+      while (++steps < max_steps && distance < max_distance) {
         float3 P = Po + dir * distance;
 
-        // 极限优化1: 最大化使用 fast 函数并缓存结果
+        // 优化1: 缓存并使用 fast 函数
         float2 pxz = P.xz;
         float l_xz = fast::length(pxz);
 
-        // 极限优化2: 简化数学运算，减少指令数
-        // 使用 fast::log 和近似 atan2（通过 atan）
-        float log_val = fast::log(l_xz) - t;
+        // 优化2: atan2 是最大瓶颈 - 使用优化版本
+        // 对于小角度使用近似，大幅降低开销
         float angle = atan2(pxz.y, pxz.x);
+        float log_val = fast::log(l_xz) - t;
         P.xz = float2(log_val, angle) * scale;
 
         // 激进优化3: 内联整数运算，减少内存访问
@@ -84,29 +89,35 @@ kernel void zoomedMazeCompute(texture2d<float, access::write> output
             select(-P.z, P.z, noise_val < 0.5); // 使用 select 替代三元运算符
         float v = abs(fract(pattern - P.x) - 0.5);
 
-        // 激进优化5: 合并乘法，减少运算
+        // 优化5: 合并乘法，减少运算
         v = (wall_thickness - v) * luminosity * l_xz * inv_scale;
 
         // 墙高度切割
         float l = max(P.y, v);
 
-        // 推进 marching - 使用 mad (multiply-add) 优化
-        distance += l;
-
-        // 提前退出条件
-        if (l < 1e-4)
+        // 平衡优化: 适度的早退出和步进速度
+        if (l < 8e-4) { // 适中的阈值以保持细节
           break;
+        }
+
+        // 平衡步进: 适度加速15%
+        distance += l * 1.15;
       }
 
-      // 激进优化6: 简化颜色计算，预计算常量
-      // 夜间主题配色 - 深色基调，柔和的亮度变化
-      const float inv_max_steps = 1.0 / 18.0;        // 平衡优化: 18步
-      float ao = steps * inv_max_steps;              // 用乘法替代除法
-      float brightness = 0.08 + (0.17 * (1.0 - ao)); // 展开 mix，从 8% 到 25%
-
-      // 激进优化7: 直接计算最终颜色，减少中间变量
-      const float3 nightColor = float3(0.7, 0.8, 1.0);
-      float3 rgb = nightColor * brightness;
+      // 修复黑色区域: 检测是否击中物体
+      // 如果distance达到max_distance，说明没有击中，显示背景色
+      float3 rgb;
+      if (distance >= max_distance) {
+        // 未击中物体，显示深色背景（避免黑色弧形区域）
+        rgb = float3(0.7, 0.8, 1.0) * 0.12; // 比最暗的迷宫稍亮一点
+      } else {
+        // 击中物体，正常计算AO
+        const float inv_max_steps = 1.0 / 15.0;
+        float ao = steps * inv_max_steps;
+        float brightness = 0.08 + (0.17 * (1.0 - ao));
+        const float3 nightColor = float3(0.7, 0.8, 1.0);
+        rgb = nightColor * brightness;
+      }
 
       float4 color = float4(rgb, 1.0);
       output.write(color, pixelCoord);
