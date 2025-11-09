@@ -193,6 +193,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = TorusInteriorEffect()
       case "RainRipples":
         newEffect = RainRipplesEffect()
+      case "ZoomedMaze":
+        newEffect = ZoomedMazeEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
