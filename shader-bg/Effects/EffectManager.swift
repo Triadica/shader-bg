@@ -62,6 +62,7 @@ class EffectManager {
       TaijiEffect(),
       JuliaSetEffect(),
       MicrowavesEffect(),
+      MovingPixelsEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -148,6 +149,8 @@ class EffectManager {
         defaultIndex = 34
       case "microwaves", "micro":
         defaultIndex = 35
+      case "movingpixels", "pixels", "hive":
+        defaultIndex = 36
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

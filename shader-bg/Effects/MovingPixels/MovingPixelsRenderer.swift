@@ -1,7 +1,7 @@
 import Metal
 import MetalKit
 
-class MicrowavesRenderer {
+class MovingPixelsRenderer {
   private var device: MTLDevice
   private var pipelineState: MTLComputePipelineState!
   private var viewportSize: CGSize
@@ -20,8 +20,8 @@ class MicrowavesRenderer {
       fatalError("无法创建 Metal library")
     }
 
-    guard let function = library.makeFunction(name: "microwavesCompute") else {
-      fatalError("无法找到 microwavesCompute 函数")
+    guard let function = library.makeFunction(name: "movingPixelsCompute") else {
+      fatalError("无法找到 movingPixelsCompute 函数")
     }
 
     do {
@@ -42,14 +42,14 @@ class MicrowavesRenderer {
       return
     }
 
-    var data = MicrowavesData(
+    var data = MovingPixelsData(
       time: time,
       resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height))
     )
 
     computeEncoder.setComputePipelineState(pipelineState)
     computeEncoder.setTexture(drawable.texture, index: 0)
-    computeEncoder.setBytes(&data, length: MemoryLayout<MicrowavesData>.stride, index: 0)
+    computeEncoder.setBytes(&data, length: MemoryLayout<MovingPixelsData>.stride, index: 0)
 
     let threadGroupSize = MTLSize(width: 16, height: 16, depth: 1)
     let threadGroups = MTLSize(
