@@ -1,7 +1,7 @@
 import Metal
 import MetalKit
 
-class TorusInteriorRenderer {
+class RainRipplesRenderer {
   private var pipelineState: MTLComputePipelineState?
   private var commandQueue: MTLCommandQueue?
 
@@ -9,34 +9,34 @@ class TorusInteriorRenderer {
   private var viewportSize: CGSize = .zero
 
   init(device: MTLDevice) {
-    NSLog("[TorusInteriorRenderer] 🔧 Initializing renderer")
+    NSLog("[RainRipplesRenderer] 🔧 Initializing renderer")
     self.commandQueue = device.makeCommandQueue()
 
     guard let library = device.makeDefaultLibrary() else {
-      NSLog("[TorusInteriorRenderer] ❌ Failed to create Metal library")
+      NSLog("[RainRipplesRenderer] ❌ Failed to create Metal library")
       print("Failed to create Metal library")
       return
     }
-    NSLog("[TorusInteriorRenderer] ✅ Metal library created")
+    NSLog("[RainRipplesRenderer] ✅ Metal library created")
 
-    guard let kernelFunction = library.makeFunction(name: "torusInteriorCompute") else {
-      NSLog("[TorusInteriorRenderer] ❌ Failed to find torusInteriorCompute function")
-      print("Failed to find torusInteriorCompute function")
+    guard let kernelFunction = library.makeFunction(name: "rainRipplesCompute") else {
+      NSLog("[RainRipplesRenderer] ❌ Failed to find rainRipplesCompute function")
+      print("Failed to find rainRipplesCompute function")
       return
     }
-    NSLog("[TorusInteriorRenderer] ✅ Found kernel function: torusInteriorCompute")
+    NSLog("[RainRipplesRenderer] ✅ Found kernel function: rainRipplesCompute")
 
     do {
       pipelineState = try device.makeComputePipelineState(function: kernelFunction)
-      NSLog("[TorusInteriorRenderer] ✅ Compute pipeline state created successfully")
+      NSLog("[RainRipplesRenderer] ✅ Compute pipeline state created successfully")
     } catch {
-      NSLog("[TorusInteriorRenderer] ❌ Failed to create compute pipeline state: \(error)")
+      NSLog("[RainRipplesRenderer] ❌ Failed to create compute pipeline state: \(error)")
       print("Failed to create compute pipeline state: \(error)")
     }
   }
 
   func updateViewportSize(_ size: CGSize) {
-    NSLog("[TorusInteriorRenderer] 📐 Viewport size updated: \(size)")
+    NSLog("[RainRipplesRenderer] 📐 Viewport size updated: \(size)")
     self.viewportSize = size
   }
 
@@ -46,23 +46,23 @@ class TorusInteriorRenderer {
     // 前几帧输出日志
     if drawCount < 3 {
       NSLog(
-        "[TorusInteriorRenderer] 🎨 Draw call #\(drawCount) - viewportSize: \(viewportSize), time: \(time)"
+        "[RainRipplesRenderer] 🎨 Draw call #\(drawCount) - viewportSize: \(viewportSize), time: \(time)"
       )
       drawCount += 1
     }
 
     guard let drawable = view.currentDrawable else {
-      NSLog("[TorusInteriorRenderer] ❌ No drawable available")
+      NSLog("[RainRipplesRenderer] ❌ No drawable available")
       return
     }
 
     guard let pipelineState = pipelineState else {
-      NSLog("[TorusInteriorRenderer] ❌ No pipeline state available")
+      NSLog("[RainRipplesRenderer] ❌ No pipeline state available")
       return
     }
 
     guard let commandQueue = commandQueue else {
-      NSLog("[TorusInteriorRenderer] ❌ No command queue available")
+      NSLog("[RainRipplesRenderer] ❌ No command queue available")
       return
     }
 
@@ -80,18 +80,10 @@ class TorusInteriorRenderer {
     var timeVar = time
     commandEncoder.setBytes(&timeVar, length: MemoryLayout<Float>.stride, index: 0)
 
-    // 降低渲染分辨率以减少 GPU 开销：渲染到 1/2 分辨率
-    let renderScale: CGFloat = 0.5
-    var renderScaleVar = Float(renderScale)
-    commandEncoder.setBytes(&renderScaleVar, length: MemoryLayout<Float>.stride, index: 1)
-
-    let renderWidth = Int(viewportSize.width * renderScale)
-    let renderHeight = Int(viewportSize.height * renderScale)
-
     let threadGroupSize = MTLSize(width: 16, height: 16, depth: 1)
     let threadGroups = MTLSize(
-      width: (renderWidth + threadGroupSize.width - 1) / threadGroupSize.width,
-      height: (renderHeight + threadGroupSize.height - 1) / threadGroupSize.height,
+      width: (Int(viewportSize.width) + threadGroupSize.width - 1) / threadGroupSize.width,
+      height: (Int(viewportSize.height) + threadGroupSize.height - 1) / threadGroupSize.height,
       depth: 1
     )
 

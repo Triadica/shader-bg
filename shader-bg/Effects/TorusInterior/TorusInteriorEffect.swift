@@ -4,8 +4,8 @@ import MetalKit
 class TorusInteriorEffect: VisualEffect {
   var name: String = "TorusInterior"
   var displayName: String = "Torus Interior"
-  var preferredFramesPerSecond: Int = 5   // 进一步降低到 5 FPS (15 FPS 的 1/3)
-  var occludedFramesPerSecond: Int = 3    // 降低到 3 FPS
+  var preferredFramesPerSecond: Int = 5  // 进一步降低到 5 FPS (15 FPS 的 1/3)
+  var occludedFramesPerSecond: Int = 3  // 降低到 3 FPS
 
   private var renderer: TorusInteriorRenderer?
 

@@ -191,6 +191,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = Sunset925Effect()
       case "TorusInterior":
         newEffect = TorusInteriorEffect()
+      case "RainRipples":
+        newEffect = RainRipplesEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
