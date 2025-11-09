@@ -177,6 +177,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = InfiniteRingEffect()
       case "Tesseract4D":
         newEffect = Tesseract4DEffect()
+      case "SpiralStainedGlass":
+        newEffect = SpiralStainedGlassEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

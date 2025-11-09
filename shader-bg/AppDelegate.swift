@@ -207,7 +207,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSLog("[SCREENSHOT] 无法删除旧文件 \(target.fileURL.path): \(error)")
       }
 
-      let displayNumber = target.displayIndex + 1
+      // 使用 target.displayIndex 作为 wallpaperWindows 数组的索引（从 0 开始）
+      let displayNumber = target.displayIndex
 
       if captureDisplay(
         to: target.fileURL,
@@ -341,39 +342,64 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       return nil
     }
 
+    // 直接从 MTKView 读取当前帧的纹理
     let window = wallpaperWindows[displayNumber]
-    let windowNumber = window.windowNumber
-
-    // 创建临时文件
-    let tempURL = FileManager.default.temporaryDirectory
-      .appendingPathComponent("thumb-\(UUID().uuidString).png")
-
-    // 使用 screencapture 截取
-    let process = Process()
-    process.launchPath = "/usr/sbin/screencapture"
-    process.arguments = [
-      "-x",  // 不播放截图声音
-      "-t", "png",
-      "-l", String(windowNumber),
-      tempURL.path,
-    ]
-
-    do {
-      try process.run()
-      process.waitUntilExit()
-
-      if process.terminationStatus == 0, let image = NSImage(contentsOf: tempURL) {
-        // 立即删除临时文件
-        try? FileManager.default.removeItem(at: tempURL)
-        return image
+    if let hostingView = window.contentView as? NSHostingView<WallpaperContentView>,
+      let mtkView = findMTKView(in: hostingView),
+      let drawable = mtkView.currentDrawable
+    {
+      let texture = drawable.texture
+      // 从 Metal 纹理创建 CGImage
+      if let cgImage = createCGImage(from: texture) {
+        let nsImage = NSImage(
+          cgImage: cgImage, size: NSSize(width: texture.width, height: texture.height))
+        NSLog("[SCREENSHOT] ✅ 从 Metal 纹理成功创建缩略图")
+        return nsImage
       }
-    } catch {
-      NSLog("[SCREENSHOT] 截图失败: \(error)")
     }
 
-    // 清理临时文件
-    try? FileManager.default.removeItem(at: tempURL)
+    NSLog("[SCREENSHOT] ❌ 无法从 Metal 纹理创建缩略图")
     return nil
+  }
+
+  // 从 Metal 纹理创建 CGImage
+  private func createCGImage(from texture: MTLTexture) -> CGImage? {
+    let width = texture.width
+    let height = texture.height
+    let bytesPerPixel = 4
+    let bytesPerRow = bytesPerPixel * width
+    let bufferSize = bytesPerRow * height
+
+    // 创建缓冲区来存储像素数据
+    var pixelData = [UInt8](repeating: 0, count: bufferSize)
+
+    // 从纹理读取数据
+    let region = MTLRegionMake2D(0, 0, width, height)
+    texture.getBytes(&pixelData, bytesPerRow: bytesPerRow, from: region, mipmapLevel: 0)
+
+    // 创建 CGImage
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+    let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+
+    guard let dataProvider = CGDataProvider(data: Data(pixelData) as CFData),
+      let cgImage = CGImage(
+        width: width,
+        height: height,
+        bitsPerComponent: 8,
+        bitsPerPixel: 32,
+        bytesPerRow: bytesPerRow,
+        space: colorSpace,
+        bitmapInfo: bitmapInfo,
+        provider: dataProvider,
+        decode: nil,
+        shouldInterpolate: false,
+        intent: .defaultIntent
+      )
+    else {
+      return nil
+    }
+
+    return cgImage
   }
 
   private func captureDisplay(to destinationURL: URL, displayNumber: Int) -> Bool {
@@ -485,7 +511,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       return
     }
 
-    guard let screenshotDirectory = screenshotDirectory else { return }
+    guard screenshotDirectory != nil else { return }
 
     // 在主线程标记开始生成缩略图
     DispatchQueue.main.async { [weak self] in
@@ -684,16 +710,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     print("[清理] 已清空窗口数组")
 
     // 更长的延迟，确保所有资源完全释放，特别是 Coordinator
-    print("[清理] 等待资源释放...")
+    NSLog("[清理] 等待资源释放...")
     usleep(100000)  // 100ms
-    print("[清理] 清理完成")
+    NSLog("[清理] 清理完成")
 
     let screens = NSScreen.screens
-    print("检测到 \(screens.count) 个屏幕")
+    NSLog("[窗口] 检测到 \(screens.count) 个屏幕")
 
     for (index, screen) in screens.enumerated() {
-      print("正在为屏幕 \(index + 1) 设置壁纸窗口...")
-      print("屏幕 \(index + 1) 尺寸: \(screen.frame)")
+      NSLog("[窗口] 正在为屏幕 \(index + 1) 设置壁纸窗口...")
+      NSLog("[窗口] 屏幕 \(index + 1) 尺寸: \(screen.frame)")
 
       let window = WallpaperWindow(
         contentRect: screen.frame,

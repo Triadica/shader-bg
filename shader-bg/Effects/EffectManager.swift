@@ -65,6 +65,7 @@ class EffectManager {
       MovingPixelsEffect(),
       InfiniteRingEffect(),
       Tesseract4DEffect(),
+      SpiralStainedGlassEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -157,6 +158,8 @@ class EffectManager {
         defaultIndex = 37
       case "tesseract", "tesseract4d", "hypercube", "4d":
         defaultIndex = 38
+      case "spiralstainedglass", "spiral", "spiralglass", "stainedglass":
+        defaultIndex = 39
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
