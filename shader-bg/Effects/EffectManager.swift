@@ -69,6 +69,7 @@ class EffectManager {
       DomainRepetitionEffect(),
       NeonParallaxEffect(),
       DroppyThingiesEffect(),
+      FloatingBubblesEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -169,6 +170,8 @@ class EffectManager {
         defaultIndex = 41
       case "droppythingies", "droppy", "drops", "thingies":
         defaultIndex = 42
+      case "floatingbubbles", "floating", "floaty":
+        defaultIndex = 43
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
