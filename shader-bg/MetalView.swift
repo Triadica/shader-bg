@@ -169,6 +169,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = TaijiEffect()
       case "JuliaSet":
         newEffect = JuliaSetEffect()
+      case "Microwaves":
+        newEffect = MicrowavesEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

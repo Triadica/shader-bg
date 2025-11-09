@@ -61,6 +61,7 @@ class EffectManager {
       LogZoomFlowerEffect(),
       TaijiEffect(),
       JuliaSetEffect(),
+      MicrowavesEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -145,6 +146,8 @@ class EffectManager {
         defaultIndex = 33
       case "julia", "juliaset":
         defaultIndex = 34
+      case "microwaves", "micro":
+        defaultIndex = 35
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
