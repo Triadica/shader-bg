@@ -64,6 +64,7 @@ class EffectManager {
       MicrowavesEffect(),
       MovingPixelsEffect(),
       InfiniteRingEffect(),
+      Tesseract4DEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -154,6 +155,8 @@ class EffectManager {
         defaultIndex = 36
       case "infiniteering", "infiniring":
         defaultIndex = 37
+      case "tesseract", "tesseract4d", "hypercube", "4d":
+        defaultIndex = 38
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

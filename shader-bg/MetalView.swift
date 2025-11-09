@@ -175,6 +175,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = MovingPixelsEffect()
       case "InfiniteRing":
         newEffect = InfiniteRingEffect()
+      case "Tesseract4D":
+        newEffect = Tesseract4DEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
