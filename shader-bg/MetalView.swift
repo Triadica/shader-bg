@@ -197,6 +197,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = ZoomedMazeEffect()
       case "ColorfulArcs":
         newEffect = ColorfulArcsEffect()
+      case "Mandala":
+        newEffect = MandalaEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
