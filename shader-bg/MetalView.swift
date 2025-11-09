@@ -187,6 +187,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = DroppyThingiesEffect()
       case "FloatingBubbles":
         newEffect = FloatingBubblesEffect()
+      case "Sunset925":
+        newEffect = Sunset925Effect()
       default:
         newEffect = NoiseHaloEffect()
       }

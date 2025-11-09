@@ -70,6 +70,7 @@ class EffectManager {
       NeonParallaxEffect(),
       DroppyThingiesEffect(),
       FloatingBubblesEffect(),
+      Sunset925Effect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -172,6 +173,8 @@ class EffectManager {
         defaultIndex = 42
       case "floatingbubbles", "floating", "floaty":
         defaultIndex = 43
+      case "sunset925", "sunset", "925":
+        defaultIndex = 44
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
