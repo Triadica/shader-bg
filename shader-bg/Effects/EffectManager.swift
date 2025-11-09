@@ -71,6 +71,7 @@ class EffectManager {
       DroppyThingiesEffect(),
       FloatingBubblesEffect(),
       Sunset925Effect(),
+      TorusInteriorEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -175,6 +176,8 @@ class EffectManager {
         defaultIndex = 43
       case "sunset925", "sunset", "925":
         defaultIndex = 44
+      case "torusinterior", "torus", "interior":
+        defaultIndex = 45
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

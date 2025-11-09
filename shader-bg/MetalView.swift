@@ -189,6 +189,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = FloatingBubblesEffect()
       case "Sunset925":
         newEffect = Sunset925Effect()
+      case "TorusInterior":
+        newEffect = TorusInteriorEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
