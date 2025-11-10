@@ -76,6 +76,7 @@ class EffectManager {
       ZoomedMazeEffect(),
       ColorfulArcsEffect(),
       MandalaEffect(),
+      SineMountainsEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -190,6 +191,8 @@ class EffectManager {
         defaultIndex = 48
       case "mandala":
         defaultIndex = 49
+      case "sinemountains", "sine", "mountains":
+        defaultIndex = 50
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

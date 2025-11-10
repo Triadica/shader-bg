@@ -67,6 +67,7 @@ kernel void mandalaCompute(texture2d<float, access::write> output
   float2 fragCoord = float2(gid);
 
   float2 uv = fragCoord / resolution;
+  uv.y = 1.0 - uv.y; // 翻转 Y 轴以匹配 GLSL 坐标系统
   float2 p = uv - 0.5;
   p.x *= resolution.x / resolution.y;
 
