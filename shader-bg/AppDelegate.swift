@@ -378,8 +378,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     texture.getBytes(&pixelData, bytesPerRow: bytesPerRow, from: region, mipmapLevel: 0)
 
     // 创建 CGImage
+    // Metal 使用 BGRA 格式，需要正确设置 bitmapInfo
     let colorSpace = CGColorSpaceCreateDeviceRGB()
-    let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+    // 使用 CGImageByteOrderInfo.order32Little 表示 BGRA 格式（小端序）
+    // premultipliedFirst 表示 Alpha 在第一个字节（BGRA 中的 A）
+    let bitmapInfo = CGBitmapInfo(
+      rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue
+    )
 
     guard let dataProvider = CGDataProvider(data: Data(pixelData) as CFData),
       let cgImage = CGImage(
