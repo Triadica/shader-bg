@@ -205,6 +205,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = GeodeBGEffect()
       case "butterfly_ai":
         newEffect = ButterflyAIEffect()
+      case "hazy_morning_golf":
+        newEffect = HazyMorningGolfEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
