@@ -1,5 +1,5 @@
 //
-//  SupahRelaxEffect.swift
+//  SurahRelaxEffect.swift
 //  shader-bg
 //
 //  Created on 2025-11-12.
@@ -7,14 +7,14 @@
 
 import MetalKit
 
-class SupahRelaxEffect: VisualEffect {
-  var name: String { "supah_relax" }
-  var displayName: String { "Supah Relax" }
+class SurahRelaxEffect: VisualEffect {
+  var name: String { "surah_relax" }
+  var displayName: String { "Surah Relax" }
 
-  private var renderer: SupahRelaxRenderer?
+  private var renderer: SurahRelaxRenderer?
 
   func setup(device: MTLDevice, size: CGSize) {
-    renderer = SupahRelaxRenderer(device: device, size: size)
+    renderer = SurahRelaxRenderer(device: device, size: size)
   }
 
   func update(currentTime: CFTimeInterval) {

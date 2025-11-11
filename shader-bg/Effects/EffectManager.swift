@@ -80,7 +80,7 @@ class EffectManager {
       GeodeBGEffect(),
       ButterflyAIEffect(),
       HazyMorningGolfEffect(),
-      SupahRelaxEffect(),
+      SurahRelaxEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -203,7 +203,7 @@ class EffectManager {
         defaultIndex = 52
       case "hazymorninggolf", "hazy", "morning", "golf":
         defaultIndex = 53
-      case "supahrelax", "supah", "relax":
+      case "surahrelax", "surah", "relax":
         defaultIndex = 54
       default:
         NSLog(

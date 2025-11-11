@@ -1,16 +1,16 @@
 //
-//  SupahRelaxShaders.metal
+//  SurahRelaxShaders.metal
 //  shader-bg
 //
 //  Created on 2025-11-12.
-//  Supah Relax - Wavy gradient bars with relaxing motion
-//  Speed reduced to 1/8 of original
-//  Fored from https://www.shadertoy.com/view/NtSBR3
+//  Surah Relax - Wavy gradient bars with relaxing motion
+//  Speed reduced to 1/32 of original
+//  Forked from https://www.shadertoy.com/view/NtSBR3
 
 #include <metal_stdlib>
 using namespace metal;
 
-struct SupahRelaxParams {
+struct SurahRelaxParams {
   float time;
   float2 resolution;
   float padding;
@@ -22,7 +22,7 @@ struct VertexOut {
 };
 
 // Vertex shader for full-screen triangle
-vertex VertexOut supahRelaxVertex(uint vertexID [[vertex_id]]) {
+vertex VertexOut surahRelaxVertex(uint vertexID [[vertex_id]]) {
   VertexOut out;
   float2 positions[3] = {float2(-1.0, -1.0), float2(3.0, -1.0),
                          float2(-1.0, 3.0)};
@@ -32,12 +32,12 @@ vertex VertexOut supahRelaxVertex(uint vertexID [[vertex_id]]) {
 }
 
 // Helper function: creates horizontal bar
-float supahRelax_bar(float2 uv, float start, float height) {
+float surahRelax_bar(float2 uv, float start, float height) {
   return step(uv.y, height + start) - step(uv.y, start);
 }
 
-fragment float4 supahRelaxFragment(VertexOut in [[stage_in]],
-                                   constant SupahRelaxParams &params
+fragment float4 surahRelaxFragment(VertexOut in [[stage_in]],
+                                   constant SurahRelaxParams &params
                                    [[buffer(0)]]) {
   float2 iResolution = params.resolution;
   float iTime = params.time;
@@ -55,7 +55,7 @@ fragment float4 supahRelaxFragment(VertexOut in [[stage_in]],
 
     // Add colored bar with gradient
     col += float3(0.1 + i * 0.005, i * 0.1, 0.003) *
-           supahRelax_bar(uv, i + 0.1, i + 1.0);
+           surahRelax_bar(uv, i + 0.1, i + 1.0);
   }
 
   // Add blue channel modulation with time

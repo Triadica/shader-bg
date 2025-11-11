@@ -207,8 +207,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = ButterflyAIEffect()
       case "hazy_morning_golf":
         newEffect = HazyMorningGolfEffect()
-      case "supah_relax":
-        newEffect = SupahRelaxEffect()
+      case "surah_relax":
+        newEffect = SurahRelaxEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

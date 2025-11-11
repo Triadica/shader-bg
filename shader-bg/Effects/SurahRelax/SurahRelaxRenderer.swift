@@ -1,5 +1,5 @@
 //
-//  SupahRelaxRenderer.swift
+//  SurahRelaxRenderer.swift
 //  shader-bg
 //
 //  Created on 2025-11-12.
@@ -9,7 +9,7 @@ import Metal
 import MetalKit
 import simd
 
-class SupahRelaxRenderer {
+class SurahRelaxRenderer {
   let device: MTLDevice
   let commandQueue: MTLCommandQueue
 
@@ -41,8 +41,8 @@ class SupahRelaxRenderer {
       fatalError("Failed to create Metal library")
     }
 
-    let vertexFunction = library.makeFunction(name: "supahRelaxVertex")
-    let fragmentFunction = library.makeFunction(name: "supahRelaxFragment")
+    let vertexFunction = library.makeFunction(name: "surahRelaxVertex")
+    let fragmentFunction = library.makeFunction(name: "surahRelaxFragment")
 
     let pipelineDescriptor = MTLRenderPipelineDescriptor()
     pipelineDescriptor.vertexFunction = vertexFunction
@@ -68,7 +68,7 @@ class SupahRelaxRenderer {
   private func setupBuffers() {
     // 创建参数缓冲区
     paramsBuffer = device.makeBuffer(
-      length: MemoryLayout<SupahRelaxParams>.stride,
+      length: MemoryLayout<SurahRelaxParams>.stride,
       options: [.storageModeShared]
     )
   }
@@ -132,13 +132,13 @@ class SupahRelaxRenderer {
   private func updateParams(viewportSize: CGSize) {
     guard let paramsBuffer = paramsBuffer else { return }
 
-    var params = SupahRelaxParams(
+    var params = SurahRelaxParams(
       time: time,
       resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height)),
       padding: 0
     )
 
     paramsBuffer.contents().copyMemory(
-      from: &params, byteCount: MemoryLayout<SupahRelaxParams>.stride)
+      from: &params, byteCount: MemoryLayout<SurahRelaxParams>.stride)
   }
 }
