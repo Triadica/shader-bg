@@ -5,38 +5,15 @@ struct EffectGalleryView: View {
   @ObservedObject var viewModel: EffectGalleryViewModel
   @Environment(\.dismiss) var dismiss
 
-  // 固定8列，卡片更小更紧凑
+  // 使用自适应网格，根据窗口宽度自动调整列数
+  // minimum: 130 表示每个卡片最小宽度为 130
+  // maximum: 130 表示每个卡片最大宽度也为 130，这样卡片大小固定，只调整数量
   let columns = [
-    GridItem(.fixed(130), spacing: 10),
-    GridItem(.fixed(130), spacing: 10),
-    GridItem(.fixed(130), spacing: 10),
-    GridItem(.fixed(130), spacing: 10),
-    GridItem(.fixed(130), spacing: 10),
-    GridItem(.fixed(130), spacing: 10),
-    GridItem(.fixed(130), spacing: 10),
-    GridItem(.fixed(130), spacing: 10),
+    GridItem(.adaptive(minimum: 130, maximum: 130), spacing: 10)
   ]
 
   var body: some View {
     VStack(spacing: 0) {
-      // 自定义标题栏
-      HStack {
-        Text("Effect Gallery")
-          .font(.title2)
-          .fontWeight(.semibold)
-
-        Spacer()
-
-        Button("Close") {
-          dismiss()
-        }
-        .keyboardShortcut(.escape, modifiers: [])
-      }
-      .padding()
-      .background(Color(NSColor.windowBackgroundColor))
-
-      Divider()
-
       // 网格内容
       ScrollView {
         LazyVGrid(columns: columns, spacing: 12, pinnedViews: []) {
@@ -60,7 +37,7 @@ struct EffectGalleryView: View {
         .padding(16)
       }
     }
-    .frame(minWidth: 1120, minHeight: 600)
+    .frame(minWidth: 960, maxWidth: .infinity, minHeight: 600, maxHeight: .infinity)
   }
 }
 

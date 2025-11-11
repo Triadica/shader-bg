@@ -383,7 +383,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // 使用 CGImageByteOrderInfo.order32Little 表示 BGRA 格式（小端序）
     // premultipliedFirst 表示 Alpha 在第一个字节（BGRA 中的 A）
     let bitmapInfo = CGBitmapInfo(
-      rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue
+      rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue
+        | CGImageByteOrderInfo.order32Little.rawValue
     )
 
     guard let dataProvider = CGDataProvider(data: Data(pixelData) as CFData),
@@ -851,7 +852,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let hostingController = NSHostingController(rootView: contentView)
 
     let window = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 1120, height: 600),
+      contentRect: NSRect(x: 0, y: 0, width: 1120, height: 700),
       styleMask: [.titled, .closable, .resizable],
       backing: .buffered,
       defer: false
@@ -860,6 +861,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     window.contentViewController = hostingController
     window.center()
     window.isReleasedWhenClosed = false
+
+    // 设置窗口尺寸约束，允许更灵活的缩放
+    window.minSize = NSSize(width: 800, height: 800)
+    window.maxSize = NSSize(
+      width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+
+    // 确保 NSHostingController 不会限制窗口大小
+    hostingController.sizingOptions = [.minSize, .maxSize]
+
+    // 添加 ESC 键关闭窗口的功能
+    NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak window] event in
+      if event.keyCode == 53 && window?.isKeyWindow == true {  // 53 是 ESC 键的 keyCode
+        window?.close()
+        return nil
+      }
+      return event
+    }
+
     window.makeKeyAndOrderFront(nil)
 
     // 激活应用
