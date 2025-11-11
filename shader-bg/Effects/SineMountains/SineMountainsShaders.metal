@@ -125,8 +125,11 @@ float shape(float2 uv, int N, float radius_in, float radius_out, float zoom,
   float rx = TWO_PI / float(N);
   float d = cos(floor(0.5 + a / rx) * rx - a) * length(uv);
   float width = (2.0 + 1.2 * zoom) / resolution.y;
-  float color = smoothstep(0.44, 0.44 + width, abs(d - radius_in) + radius_out);
-  return (1.0 - color);
+
+  // This is a direct translation of the original GLSL logic:
+  // `1.0 - smoothstep(radius_in, radius_in + width, d - radius_out)`
+  // When `radius_in` is negative (e.g., -0.38), this creates a filled shape.
+  return 1.0 - smoothstep(radius_in, radius_in + width, d - radius_out);
 }
 
 float msine(float2 uv) {
@@ -210,18 +213,18 @@ float treex(float2 uv, float iTime, float2 resolution) {
 float layer_bghills(float2 uv, float iTime, float2 resolution) {
   uv.x += iTime / 35.0;
   float hillHeight = msine(uv / 0.38 - 0.038) * 10.0 + uv.y * 10.0 + 1.6;
-  
+
   // 原始 GLSL: smoothstep(0.5 + 20/res, 0.5, hillHeight)
   // 当 edge0 > edge1 时，GLSL 的 smoothstep 行为：
   //   - hillHeight <= edge1 (0.5) → 返回 1.0
   //   - hillHeight >= edge0 (0.5 + 20/res) → 返回 0.0
   //   - 中间平滑插值从 1.0 到 0.0
-  // 
+  //
   // Metal 实现：手动计算 clamp((edge1 - hillHeight)/(edge1 - edge0), 0, 1)
   float edge0 = 0.5 + 20.0 / resolution.y;
   float edge1 = 0.5;
   float t = clamp((hillHeight - edge1) / (edge0 - edge1), 0.0, 1.0);
-  float d = 1.0 - (t * t * (3.0 - 2.0 * t));  // smoothstep 的插值公式
+  float d = 1.0 - (t * t * (3.0 - 2.0 * t)); // smoothstep 的插值公式
   return d;
 }
 
@@ -269,18 +272,18 @@ float layer_bghills2(float2 uv, float iTime, float2 resolution) {
   uv.x += iTime / 45.0;
   float hillHeight =
       0.2 * msine2((uv * 10.0) / 0.38 - 0.038) + uv.y * 11.0 + 0.86;
-  
+
   // 原始 GLSL: smoothstep(-0.1555 + 8/res, -0.1555, hillHeight)
   // 当 edge0 > edge1 时，GLSL 的 smoothstep 行为：
   //   - hillHeight <= edge1 (-0.1555) → 返回 1.0
   //   - hillHeight >= edge0 (-0.1555 + 8/res) → 返回 0.0
   //   - 中间平滑插值从 1.0 到 0.0
-  // 
+  //
   // Metal 实现：手动计算
   float edge0 = -0.1555 + 8.0 / resolution.y;
   float edge1 = -0.1555;
   float t = clamp((hillHeight - edge1) / (edge0 - edge1), 0.0, 1.0);
-  float d = 1.0 - (t * t * (3.0 - 2.0 * t));  // smoothstep 的插值公式
+  float d = 1.0 - (t * t * (3.0 - 2.0 * t)); // smoothstep 的插值公式
   return d;
 }
 

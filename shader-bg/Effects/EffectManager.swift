@@ -77,6 +77,7 @@ class EffectManager {
       ColorfulArcsEffect(),
       MandalaEffect(),
       SineMountainsEffect(),
+      GeodeBGEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -193,6 +194,8 @@ class EffectManager {
         defaultIndex = 49
       case "sinemountains", "sine", "mountains":
         defaultIndex = 50
+      case "geodebg", "geode", "waves":
+        defaultIndex = 51
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
