@@ -209,6 +209,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = HazyMorningGolfEffect()
       case "surah_relax":
         newEffect = SurahRelaxEffect()
+      case "korotkoe":
+        newEffect = KorotkoeEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

@@ -81,6 +81,7 @@ class EffectManager {
       ButterflyAIEffect(),
       HazyMorningGolfEffect(),
       SurahRelaxEffect(),
+      KorotkoeEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -205,6 +206,8 @@ class EffectManager {
         defaultIndex = 53
       case "surahrelax", "surah", "relax":
         defaultIndex = 54
+      case "korotkoe":
+        defaultIndex = 55
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
