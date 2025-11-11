@@ -203,6 +203,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = SineMountainsEffect()
       case "geode_bg":
         newEffect = GeodeBGEffect()
+      case "butterfly_ai":
+        newEffect = ButterflyAIEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

@@ -78,6 +78,7 @@ class EffectManager {
       MandalaEffect(),
       SineMountainsEffect(),
       GeodeBGEffect(),
+      ButterflyAIEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -196,6 +197,8 @@ class EffectManager {
         defaultIndex = 50
       case "geodebg", "geode", "waves":
         defaultIndex = 51
+      case "butterflyai", "butterfly", "ai":
+        defaultIndex = 52
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
