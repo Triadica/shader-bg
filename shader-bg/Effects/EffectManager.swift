@@ -87,6 +87,7 @@ class EffectManager {
       SinsAndStepsEffect(),
       HyperbolicRingsEffect(),
       ShootingStarsEffect(),
+      EventHorizonEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -223,6 +224,8 @@ class EffectManager {
         defaultIndex = 59
       case "shootingstars", "shooting", "stars":
         defaultIndex = 60
+      case "eventhorizon", "event", "horizon", "blackhole":
+        defaultIndex = 61
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

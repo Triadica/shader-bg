@@ -221,6 +221,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = HyperbolicRingsEffect()
       case "shooting_stars":
         newEffect = ShootingStarsEffect()
+      case "event_horizon":
+        newEffect = EventHorizonEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
