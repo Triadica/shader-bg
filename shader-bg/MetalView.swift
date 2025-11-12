@@ -219,6 +219,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = SinsAndStepsEffect()
       case "hyperbolic_rings":
         newEffect = HyperbolicRingsEffect()
+      case "shooting_stars":
+        newEffect = ShootingStarsEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

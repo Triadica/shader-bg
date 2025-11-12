@@ -86,6 +86,7 @@ class EffectManager {
       SpiralForWindowsEffect(),
       SinsAndStepsEffect(),
       HyperbolicRingsEffect(),
+      ShootingStarsEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -220,6 +221,8 @@ class EffectManager {
         defaultIndex = 58
       case "hyperbolicrings", "hyperbolic", "rings":
         defaultIndex = 59
+      case "shootingstars", "shooting", "stars":
+        defaultIndex = 60
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
