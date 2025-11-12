@@ -88,6 +88,7 @@ class EffectManager {
       HyperbolicRingsEffect(),
       ShootingStarsEffect(),
       EventHorizonEffect(),
+      GoldenJuliaEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -226,6 +227,8 @@ class EffectManager {
         defaultIndex = 60
       case "eventhorizon", "event", "horizon", "blackhole":
         defaultIndex = 61
+      case "goldenjulia", "golden", "julia":
+        defaultIndex = 62
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

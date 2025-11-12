@@ -223,6 +223,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = ShootingStarsEffect()
       case "event_horizon":
         newEffect = EventHorizonEffect()
+      case "golden_julia":
+        newEffect = GoldenJuliaEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
