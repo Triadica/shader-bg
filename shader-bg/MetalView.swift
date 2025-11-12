@@ -217,6 +217,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = SpiralForWindowsEffect()
       case "sins_and_steps":
         newEffect = SinsAndStepsEffect()
+      case "hyperbolic_rings":
+        newEffect = HyperbolicRingsEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
