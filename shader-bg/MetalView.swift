@@ -225,6 +225,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = EventHorizonEffect()
       case "golden_julia":
         newEffect = GoldenJuliaEffect()
+      case "moon_tree":
+        newEffect = MoonTreeEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

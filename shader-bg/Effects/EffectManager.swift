@@ -89,6 +89,7 @@ class EffectManager {
       ShootingStarsEffect(),
       EventHorizonEffect(),
       GoldenJuliaEffect(),
+      MoonTreeEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -229,6 +230,8 @@ class EffectManager {
         defaultIndex = 61
       case "goldenjulia", "golden", "julia":
         defaultIndex = 62
+      case "moontree", "moon", "tree", "moonforest":
+        defaultIndex = 63
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

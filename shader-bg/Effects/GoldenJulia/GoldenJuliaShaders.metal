@@ -9,7 +9,8 @@
 #include <metal_stdlib>
 using namespace metal;
 
-#define Iterations 150
+// 降低迭代次数以提升性能（从 150 降到 60）
+#define Iterations 60
 
 struct GoldenJuliaParams {
   float time;
@@ -41,30 +42,26 @@ float goldenJulia_metaline(float2 p, float2 o, float thick, float2 l) {
   return thick / dot(po, float2(l.x, l.y));
 }
 
-// 朱利亚集计算
+// 优化的朱利亚集计算 - 简化逻辑以提升性能
 float goldenJulia_getJulia(float2 coord, int iter, float time, float seuilInf,
                            float seuilSup) {
   float2 uvt = coord;
   float lX = -0.78;
   float lY = time * 0.115;
   float julia = 0.0;
-  float x = 0.0;
-  float y = 0.0;
-  float j = 0.0;
 
-  for (int i = 0; i < Iterations; i++) {
-    if (i == iter)
-      break;
+  for (int i = 0; i < iter; i++) {
+    float x = (uvt.x * uvt.x - uvt.y * uvt.y) + lX;
+    float y = (uvt.y * uvt.x + uvt.x * uvt.y) + lY;
+    uvt = float2(x, y);
 
-    x = (uvt.x * uvt.x - uvt.y * uvt.y) + lX;
-    y = (uvt.y * uvt.x + uvt.x * uvt.y) + lY;
-    uvt.x = x;
-    uvt.y = y;
-
-    // x 和 y 是标量，使用直接乘法而不是 dot
-    j = mix(julia, length(uvt) / (x * y), 1.0);
-    if (j >= seuilInf && j <= seuilSup) {
-      julia = j;
+    // 简化计算，避免不必要的 mix
+    float xy = x * y;
+    if (xy != 0.0) { // 避免除以零
+      float j = length(uvt) / xy;
+      if (j >= seuilInf && j <= seuilSup) {
+        julia = j;
+      }
     }
   }
 
@@ -112,7 +109,7 @@ fragment float4 goldenJuliaFragment(VertexOut in [[stage_in]],
     ratioTime = params.mouse.x / params.resolution.x * 2.0 - 1.0;
   }
 
-  int nIter = int(floor(float(Iterations) * ratioIter));
+  int nIter = Iterations; // 使用完整迭代次数（GLSL 原版不动态调整）
   float julia = goldenJulia_getJulia(uv, nIter, ratioTime, 0.2, 8.5);
 
   // 颜色计算
