@@ -84,6 +84,7 @@ class EffectManager {
       KorotkoeEffect(),
       PetalSphereEffect(),
       SpiralForWindowsEffect(),
+      SinsAndStepsEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -214,6 +215,8 @@ class EffectManager {
         defaultIndex = 56
       case "spiralforwindows", "spiral", "windows":
         defaultIndex = 57
+      case "sinsandsteps", "sins", "steps":
+        defaultIndex = 58
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

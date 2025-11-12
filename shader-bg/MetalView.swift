@@ -215,6 +215,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = PetalSphereEffect()
       case "spiral_for_windows":
         newEffect = SpiralForWindowsEffect()
+      case "sins_and_steps":
+        newEffect = SinsAndStepsEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
