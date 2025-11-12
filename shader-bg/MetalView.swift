@@ -213,6 +213,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = KorotkoeEffect()
       case "petal_sphere":
         newEffect = PetalSphereEffect()
+      case "spiral_for_windows":
+        newEffect = SpiralForWindowsEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
