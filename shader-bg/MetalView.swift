@@ -211,6 +211,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = SurahRelaxEffect()
       case "korotkoe":
         newEffect = KorotkoeEffect()
+      case "petal_sphere":
+        newEffect = PetalSphereEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
