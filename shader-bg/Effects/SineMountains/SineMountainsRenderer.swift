@@ -47,7 +47,7 @@ class SineMountainsRenderer {
     commandEncoder.setComputePipelineState(pipelineState)
     commandEncoder.setTexture(drawable.texture, index: 0)
 
-    var time = Float(Date().timeIntervalSince(startTime))
+    var time = Float(Date().timeIntervalSince(startTime)) * 0.25  // 降低速度到 1/4
     commandEncoder.setBytes(&time, length: MemoryLayout<Float>.stride, index: 0)
 
     let threadGroupSize = MTLSize(width: 16, height: 16, depth: 1)

@@ -227,6 +227,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = GoldenJuliaEffect()
       case "moon_tree":
         newEffect = MoonTreeEffect()
+      case "year_of_truchets":
+        newEffect = YearOfTruchetsEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

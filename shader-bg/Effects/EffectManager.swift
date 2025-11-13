@@ -90,6 +90,7 @@ class EffectManager {
       EventHorizonEffect(),
       GoldenJuliaEffect(),
       MoonTreeEffect(),
+      YearOfTruchetsEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -232,6 +233,8 @@ class EffectManager {
         defaultIndex = 62
       case "moontree", "moon", "tree", "moonforest":
         defaultIndex = 63
+      case "yearoftruchets", "truchets", "truchet", "year":
+        defaultIndex = 64
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

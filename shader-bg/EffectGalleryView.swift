@@ -37,7 +37,7 @@ struct EffectGalleryView: View {
         .padding(16)
       }
     }
-    .frame(minWidth: 960, maxWidth: .infinity, minHeight: 600, maxHeight: .infinity)
+    .frame(minWidth: 400, maxWidth: .infinity, minHeight: 300, maxHeight: .infinity)
   }
 }
 

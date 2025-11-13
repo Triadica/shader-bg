@@ -863,7 +863,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     window.isReleasedWhenClosed = false
 
     // 设置窗口尺寸约束，允许更灵活的缩放
-    window.minSize = NSSize(width: 800, height: 800)
+    window.minSize = NSSize(width: 300, height: 300)
     window.maxSize = NSSize(
       width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
 
