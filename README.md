@@ -6,6 +6,8 @@
 
 - 🎨 **多种视觉效果**
 
+  - Noise Halo（噪声光环，默认）
+  - Liquid Tunnel（流体隧道）
   - Particles in Gravity（粒子引力系统）
   - Rotating Lorenz（旋转的 Lorenz 吸引子）
 
@@ -14,6 +16,7 @@
   - 根据桌面可见性自动调整更新频率
   - 桌面可见时：30 FPS（高性能）
   - 窗口遮挡时：10 FPS（低功耗）
+  - 每个效果都经过优化，即使在 5K 分辨率下也能流畅运行
 
 - 🖥️ **多屏幕支持**
 
@@ -23,6 +26,7 @@
 - 💫 **GPU 加速**
   - 使用 Metal Compute Shader 进行粒子物理计算
   - Fragment Shader 实现高效渲染
+  - Raymarching 技术实现 3D 效果
 
 ## 系统要求
 
@@ -70,6 +74,40 @@
 
 从 [Releases](https://github.com/Triadica/shader-bg/releases) 页面下载最新的 `.app` 文件，拖放到应用程序文件夹即可。
 
+## Xcode 15 / macOS 14 兼容说明
+
+本项目原始工程（`shader-bg.xcodeproj`）面向 Xcode 17+ 与 macOS 15.6+。如果你暂时无法升级环境，可使用仓库内的兼容工程 `shader-bg-xcode15.xcodeproj` 在 Xcode 15 与 macOS 14.2+ 上本地构建与运行。
+
+### 如何构建（Xcode 15）
+
+```zsh
+# 打开工程
+open shader-bg-xcode15.xcodeproj
+
+# 或命令行构建 Release 版本
+xcodebuild -project shader-bg-xcode15.xcodeproj -scheme shader-bg -configuration Release build
+```
+
+### 如何运行
+
+- 从应用程序文件夹（若已拷贝进去）：
+
+  ```zsh
+  open -n -a "shader-bg"
+  ```
+
+- 直接从 DerivedData 启动构建产物：
+
+  ```zsh
+  open "$(/usr/bin/find ~/Library/Developer/Xcode/DerivedData -path "*shader-bg-xcode15*/Build/Products/Release/shader-bg.app" -print -quit)"
+  ```
+
+### 注意事项
+
+- 该兼容工程将部署目标设置为 macOS 14.2，适配旧系统运行；
+- 本地构建（开发调试）默认关闭代码签名与公证，仅用于本机使用；
+- 功能与主工程保持一致；如需打包发布，建议使用主工程（Xcode 17+/macOS 15.6+）进行签名、公证与分发。
+
 ## 使用方法
 
 ### 启动应用
@@ -77,6 +115,35 @@
 1. 打开 `shader-bg.app`
 2. 应用会在后台运行，菜单栏会出现 ✨ 图标
 3. 桌面会自动显示默认的粒子引力效果
+
+#### 在 macOS 15 使用命令行启动
+
+如果你习惯用终端启动或刚从 Xcode 构建完成，可以用以下方式启动（默认 zsh）：
+
+- 已安装到应用程序文件夹：
+
+  ```zsh
+  open -n -a "shader-bg"
+  ```
+
+- 刚用原始工程（适配 Xcode 17+/macOS 15）构建的 Release 包：
+
+  ```zsh
+  open "$(/usr/bin/find ~/Library/Developer/Xcode/DerivedData -path "*shader-bg*/Build/Products/Release/shader-bg.app" -print -quit)"
+  ```
+
+- 如果你使用了兼容 Xcode 15 的辅助工程（本仓库提供的备用方案）：
+
+  ```zsh
+  open "$(/usr/bin/find ~/Library/Developer/Xcode/DerivedData -path "*shader-bg-xcode15*/Build/Products/Release/shader-bg.app" -print -quit)"
+  ```
+
+提示：想要“重启”应用，可以先结束再启动：
+
+```zsh
+pkill -x shader-bg || true
+open -n -a "shader-bg"
+```
 
 ### 菜单功能
 

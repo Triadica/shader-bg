@@ -7,6 +7,7 @@
 
 import Cocoa
 import Foundation
+import IOKit.ps
 
 // 性能管理器 - 根据桌面可见性动态调整更新频率
 class PerformanceManager {
@@ -19,6 +20,15 @@ class PerformanceManager {
 
   private(set) var isDesktopVisible: Bool = true
   private var checkTimer: Timer?
+  private var resourceCheckTimer: Timer?
+
+  // CPU 和 GPU 监控
+  private var lastCPUUsage: Double = 0.0
+  private(set) var lastGPUUsage: Double = 0.0  // 公开读取访问
+  private var hasLoggedHighCPU: Bool = false
+  private var hasLoggedHighGPU: Bool = false
+  private let cpuThreshold: Double = 40.0  // CPU 使用率阈值
+  private let gpuThreshold: Double = 40.0  // GPU 使用率阈值
 
   var onPerformanceModeChanged: ((Double) -> Void)?
 
@@ -32,8 +42,15 @@ class PerformanceManager {
       self?.checkDesktopVisibility()
     }
 
+    // 每 5 秒检测一次 CPU 和 GPU 占用
+    resourceCheckTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) {
+      [weak self] _ in
+      self?.checkResourceUsage()
+    }
+
     // 立即检测一次
     checkDesktopVisibility()
+    checkResourceUsage()
 
     // 监听应用激活/停用事件
     NSWorkspace.shared.notificationCenter.addObserver(
@@ -63,7 +80,7 @@ class PerformanceManager {
 
   private func isDesktopCurrentlyVisible() -> Bool {
     // 方法1: 检查是否有全屏或大窗口覆盖桌面
-    guard let screens = NSScreen.screens as? [NSScreen] else { return true }
+    let screens = NSScreen.screens
 
     // 获取所有窗口信息
     let windowList =
@@ -136,9 +153,127 @@ class PerformanceManager {
     }
   }
 
+  // MARK: - CPU 和 GPU 监控
+
+  func checkResourceUsage() {
+    let cpuUsage = getCPUUsage()
+    let gpuUsage = getGPUUsage()
+
+    lastCPUUsage = cpuUsage
+    lastGPUUsage = gpuUsage
+
+    // 检查 CPU 占用
+    if cpuUsage > cpuThreshold {
+      if !hasLoggedHighCPU {
+        hasLoggedHighCPU = true
+        NSLog("[性能监控] ⚠️ CPU 占用率较高: %.1f%% (阈值: %.0f%%)", cpuUsage, cpuThreshold)
+      }
+    } else {
+      hasLoggedHighCPU = false
+    }
+
+    // 检查 GPU 占用
+    if gpuUsage > gpuThreshold {
+      if !hasLoggedHighGPU {
+        hasLoggedHighGPU = true
+        NSLog("[性能监控] ⚠️ GPU 占用率较高: %.1f%% (阈值: %.0f%%)", gpuUsage, gpuThreshold)
+      }
+    } else {
+      hasLoggedHighGPU = false
+    }
+  }
+
+  private func getCPUUsage() -> Double {
+    var totalUsageOfCPU: Double = 0.0
+    var threadsList: thread_act_array_t?
+    var threadsCount = mach_msg_type_number_t(0)
+    let threadsResult = withUnsafeMutablePointer(to: &threadsList) {
+      $0.withMemoryRebound(to: thread_act_array_t?.self, capacity: 1) {
+        task_threads(mach_task_self_, $0, &threadsCount)
+      }
+    }
+
+    if threadsResult == KERN_SUCCESS, let threadsList = threadsList {
+      for index in 0..<threadsCount {
+        var threadInfo = thread_basic_info()
+        var threadInfoCount = mach_msg_type_number_t(THREAD_INFO_MAX)
+        let infoResult = withUnsafeMutablePointer(to: &threadInfo) {
+          $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
+            thread_info(
+              threadsList[Int(index)], thread_flavor_t(THREAD_BASIC_INFO), $0, &threadInfoCount)
+          }
+        }
+
+        guard infoResult == KERN_SUCCESS else {
+          break
+        }
+
+        let threadBasicInfo = threadInfo as thread_basic_info
+        if threadBasicInfo.flags & TH_FLAGS_IDLE == 0 {
+          totalUsageOfCPU += (Double(threadBasicInfo.cpu_usage) / Double(TH_USAGE_SCALE)) * 100.0
+        }
+      }
+
+      vm_deallocate(
+        mach_task_self_, vm_address_t(UInt(bitPattern: threadsList)),
+        vm_size_t(Int(threadsCount) * MemoryLayout<thread_t>.stride))
+    }
+
+    return totalUsageOfCPU
+  }
+
+  private func getGPUUsage() -> Double {
+    // Metal GPU 占用率检测
+    // 注意：精确的 GPU 占用率需要使用 IOKit 或其他系统 API
+    // 这里提供一个简化版本，基于系统电源状态
+
+    // 尝试通过 IOKit 获取 GPU 信息
+    let matching = IOServiceMatching("IOAccelerator")
+    var iterator: io_iterator_t = 0
+
+    let result = IOServiceGetMatchingServices(kIOMainPortDefault, matching, &iterator)
+    guard result == KERN_SUCCESS else {
+      return 0.0
+    }
+
+    defer {
+      IOObjectRelease(iterator)
+    }
+
+    var gpuUsage: Double = 0.0
+    var service = IOIteratorNext(iterator)
+
+    while service != 0 {
+      defer {
+        IOObjectRelease(service)
+        service = IOIteratorNext(iterator)
+      }
+
+      // 尝试获取 GPU 性能状态
+      var props: Unmanaged<CFMutableDictionary>?
+      let propsResult = IORegistryEntryCreateCFProperties(service, &props, kCFAllocatorDefault, 0)
+
+      if propsResult == KERN_SUCCESS, let properties = props?.takeRetainedValue() as? [String: Any]
+      {
+        // 查找 GPU 利用率相关属性
+        if let perfStats = properties["PerformanceStatistics"] as? [String: Any] {
+          if let deviceUtil = perfStats["Device Utilization %"] as? Double {
+            gpuUsage = max(gpuUsage, deviceUtil)
+          } else if let util = perfStats["Utilization %"] as? Double {
+            gpuUsage = max(gpuUsage, util)
+          }
+        }
+      }
+    }
+
+    return gpuUsage
+  }
+
   func stopMonitoring() {
     checkTimer?.invalidate()
     checkTimer = nil
+    resourceCheckTimer?.invalidate()
+    resourceCheckTimer = nil
     NSWorkspace.shared.notificationCenter.removeObserver(self)
   }
 
