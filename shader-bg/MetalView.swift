@@ -231,6 +231,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = YearOfTruchetsEffect()
       case "newton_basins":
         newEffect = NewtonBasinsEffect()
+      case "mobius_knot":
+        newEffect = MobiusKnotEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

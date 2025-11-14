@@ -92,6 +92,7 @@ class EffectManager {
       MoonTreeEffect(),
       YearOfTruchetsEffect(),
       NewtonBasinsEffect(),
+      MobiusKnotEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -238,6 +239,8 @@ class EffectManager {
         defaultIndex = 64
       case "newtonbasins", "basins", "newtonfractal":
         defaultIndex = 65
+      case "mobiusknot", "mobius", "knot", "cosmicknot":
+        defaultIndex = 66
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
