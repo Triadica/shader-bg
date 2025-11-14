@@ -93,6 +93,7 @@ class EffectManager {
       YearOfTruchetsEffect(),
       NewtonBasinsEffect(),
       MobiusKnotEffect(),
+      PixellatedRainEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -241,6 +242,8 @@ class EffectManager {
         defaultIndex = 65
       case "mobiusknot", "mobius", "knot", "cosmicknot":
         defaultIndex = 66
+      case "pixellatedrain", "pixelrain", "rain", "matrixrain":
+        defaultIndex = 67
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

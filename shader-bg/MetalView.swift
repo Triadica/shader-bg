@@ -233,6 +233,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = NewtonBasinsEffect()
       case "mobius_knot":
         newEffect = MobiusKnotEffect()
+      case "pixellated_rain":
+        newEffect = PixellatedRainEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
