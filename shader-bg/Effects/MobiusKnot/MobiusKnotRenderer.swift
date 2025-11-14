@@ -64,9 +64,9 @@ class MobiusKnotRenderer {
 
     renderEncoder.setRenderPipelineState(pipelineState)
 
-    // 动画速度减少到 1/8
+    // 动画速度减少到 1/32 (1/8 * 1/4)
     var params = MobiusKnotData()
-    params.time = Float(Date().timeIntervalSince(startTime)) * 0.125  // 1/8 速度
+    params.time = Float(Date().timeIntervalSince(startTime)) * 0.03125  // 1/32 速度
     params.resolution = SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height))
 
     renderEncoder.setFragmentBytes(&params, length: MemoryLayout<MobiusKnotData>.stride, index: 0)

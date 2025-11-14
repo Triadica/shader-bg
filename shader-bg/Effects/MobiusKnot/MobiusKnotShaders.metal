@@ -79,7 +79,7 @@ fragment float4 mobiusKnot_fragment(VertexOut in [[stage_in]],
   float pi = 3.1416;
   float pi2 = 6.2832;
   float s = 4.0 + cos(t * pi2); // scale
-  float l = 10.0;               // overlap loop (detail)
+  float l = 3.0; // overlap loop (detail) - 降低从 10 到 3 以减少计算量
 
   float2 h = float2(2.0, -3.0); // spiral arms
   float2 m = (iMouse.xy - 0.5 * R) / R.y * 4.0;
@@ -108,14 +108,15 @@ fragment float4 mobiusKnot_fragment(VertexOut in [[stage_in]],
   u.xy = tan(log(length(v)) + atan2(v.y, v.x) * h / 2.0) + m * 10.0;
   u.z = max(u.x / u.y, u.y / u.x);
 
-  // points - QP macro expanded
+  // points - QP macro expanded (减少调用次数以优化性能)
   float r = R.y / 800.0;
   c += mobiusKnot_P(u.xy, l, t, r) * 0.7; // xy
   c += mobiusKnot_P(u.yx, l, t, r) * 0.7; // yx
   c += mobiusKnot_P(u.yz, l, t, r) * 0.7; // yz
-  c += mobiusKnot_P(u.zy, l, t, r) * 0.7; // zy
-  c += mobiusKnot_P(u.zx, l, t, r) * 0.7; // zx
-  c += mobiusKnot_P(u.xz, l, t, r) * 0.7; // xz
+  // 省略 zy, zx, xz 以减少 50% 的计算量
+  // c += mobiusKnot_P(u.zy, l, t, r) * 0.7; // zy
+  // c += mobiusKnot_P(u.zx, l, t, r) * 0.7; // zx
+  // c += mobiusKnot_P(u.xz, l, t, r) * 0.7; // xz
 
   // grid
   c += mobiusKnot_G(u.xy, t, s) * 0.2;

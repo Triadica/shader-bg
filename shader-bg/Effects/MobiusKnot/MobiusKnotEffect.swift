@@ -12,8 +12,8 @@ import MetalKit
 class MobiusKnotEffect: VisualEffect {
   var name: String = "mobius_knot"
   var displayName: String = "Mobius Knot"
-  var preferredFramesPerSecond: Int = 20
-  var occludedFramesPerSecond: Int = 10
+  var preferredFramesPerSecond: Int = 1  // 降低到 1/32: 20/8/4 ≈ 0.625, 取 1
+  var occludedFramesPerSecond: Int = 1  // 降低到 1/32: 10/8/4 ≈ 0.3125, 取 1
 
   private var renderer: MobiusKnotRenderer?
 
