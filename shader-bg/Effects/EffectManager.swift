@@ -95,6 +95,7 @@ class EffectManager {
       MobiusKnotEffect(),
       PixellatedRainEffect(),
       SinMoveEffect(),
+      WorldTreeEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -247,6 +248,8 @@ class EffectManager {
         defaultIndex = 67
       case "sinmove", "sinwave", "sinwaves", "wavemove":
         defaultIndex = 68
+      case "worldtree", "tree", "world", "magictree":
+        defaultIndex = 69
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")

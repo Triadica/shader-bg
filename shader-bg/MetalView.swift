@@ -237,6 +237,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = PixellatedRainEffect()
       case "sin_move":
         newEffect = SinMoveEffect()
+      case "world_tree":
+        newEffect = WorldTreeEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
