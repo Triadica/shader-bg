@@ -261,12 +261,16 @@ git add .
 git commit -m "Release v1.0.0"
 git push origin main
 
-# 2. 创建版本 tag（会自动触发构建）
+# 2. 创建并推送版本 tag
 git tag v1.0.0
 git push origin v1.0.0
 
-# 3. 等待 GitHub Actions 完成（约 5-10 分钟）
-# 4. 访问 Releases 页面查看自动生成的发布文件
+# 3. 在 GitHub 上创建 Release（这会触发自动构建）
+#    访问: https://github.com/YOUR_USERNAME/shader-bg/releases
+#    点击 "Create a new release" → 选择 tag → 点击 "Publish release"
+
+# 4. 等待 GitHub Actions 完成（约 5-10 分钟）
+# 5. DMG 文件会自动上传到 Release 页面
 ```
 
 发布的文件包括：

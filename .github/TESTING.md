@@ -15,6 +15,7 @@
 ```
 
 **检查项：**
+
 - [ ] 构建成功（BUILD SUCCEEDED）
 - [ ] 生成的 .app 可以正常启动
 - [ ] DMG 文件可以正常挂载
@@ -31,6 +32,7 @@ actionlint .github/workflows/release.yml
 ```
 
 **检查项：**
+
 - [ ] 没有语法错误
 - [ ] 所有 action 版本是最新的
 - [ ] 环境变量正确引用
@@ -85,6 +87,7 @@ open /Applications/shader-bg.app
 ```
 
 **检查项：**
+
 - [ ] ZIP 文件可以正常解压
 - [ ] DMG 文件可以正常挂载
 - [ ] Applications 符号链接存在且有效
@@ -108,12 +111,14 @@ open /Applications/shader-bg.app
 **症状：** "Build Release" 步骤失败
 
 **排查：**
+
 1. 查看 Actions 日志中的完整错误信息
 2. 在本地运行相同的 xcodebuild 命令
 3. 检查是否有未提交的文件
 4. 确认 Xcode 版本兼容性
 
 **解决：**
+
 ```bash
 # 在本地测试
 xcodebuild \
@@ -128,11 +133,13 @@ xcodebuild \
 **症状：** "Create DMG" 步骤失败
 
 **排查：**
+
 1. 检查 APP_PATH 是否正确
 2. 确认 logo 文件存在（如果使用）
 3. 检查磁盘空间
 
 **解决：**
+
 ```bash
 # 手动测试 DMG 创建
 ./scripts/build-release.sh
@@ -143,11 +150,13 @@ xcodebuild \
 **症状：** "Create GitHub Release" 或 "Upload Artifacts" 失败
 
 **排查：**
+
 1. 检查 GITHUB_TOKEN 权限
 2. 确认文件路径正确
 3. 检查文件是否生成
 
 **解决：**
+
 - 确保仓库设置中 Actions 有写权限
 - Settings → Actions → General → Workflow permissions → Read and write
 
@@ -158,6 +167,7 @@ xcodebuild \
 **这是正常的！** 因为应用未签名。
 
 **解决：**
+
 ```bash
 # 方法 1：移除隔离属性
 xattr -cr /Applications/shader-bg.app
@@ -171,26 +181,30 @@ xattr -cr /Applications/shader-bg.app
 第一次使用 GitHub Actions 发布时：
 
 1. **使用测试 tag**
+
    ```bash
    git tag v0.0.1-test
    git push origin v0.0.1-test
    ```
 
 2. **仔细检查所有输出**
+
    - Actions 日志
    - 生成的文件
    - Release 页面
 
 3. **测试下载和安装**
+
    - 在干净的环境测试
    - 验证所有功能
 
 4. **成功后再发布正式版本**
+
    ```bash
    # 删除测试版本
    git tag -d v0.0.1-test
    git push origin :refs/tags/v0.0.1-test
-   
+
    # 创建正式版本
    git tag v1.0.0
    git push origin v1.0.0
@@ -249,6 +263,7 @@ git push origin v1.0.0
 发布流程稳定后，可以考虑：
 
 1. **添加自动化测试**
+
    ```yaml
    - name: Run Tests
      run: xcodebuild test -scheme shader-bg

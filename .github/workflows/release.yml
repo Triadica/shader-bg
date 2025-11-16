@@ -1,9 +1,8 @@
 name: Build and Release
 
 on:
-  push:
-    tags:
-      - 'v*'  # 当推送 v* 格式的 tag 时触发（如 v1.0.0）
+  release:
+    types: [created]  # 当创建 Release 时触发（无论是手动创建还是通过 API）
 
 jobs:
   build-and-release:
@@ -18,12 +17,15 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - name: Get version from tag
+      - name: Get version from release
         id: get_version
         run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
+          # 从 release tag 获取版本号（去掉 v 前缀）
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}"
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "Building version: $VERSION"
+          echo "Release name: ${{ github.event.release.name }}"
 
       - name: Build Release
         run: |

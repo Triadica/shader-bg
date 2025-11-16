@@ -2,7 +2,7 @@
 
 ## 📋 概述
 
-本项目使用 GitHub Actions 自动构建和发布 DMG 安装包。当推送 tag 时会自动触发构建流程。
+本项目使用 GitHub Actions 自动构建和发布 DMG 安装包。当在 GitHub 上创建 Release 时会自动触发构建流程。
 
 ## 🚀 使用方法
 
@@ -22,19 +22,31 @@
    # 创建 tag（版本号格式：v主版本.次版本.修订号）
    git tag v1.0.0
 
-   # 推送 tag 到 GitHub（这会触发 Actions）
+   # 推送 tag 到 GitHub
    git push origin v1.0.0
    ```
 
-3. **等待自动构建**
+3. **在 GitHub 上创建 Release（这会触发自动构建）**
 
-   - 访问 GitHub 仓库的 Actions 页面
+   - 访问仓库的 Releases 页面：`https://github.com/YOUR_USERNAME/shader-bg/releases`
+   - 点击 "Create a new release" 按钮
+   - **Choose a tag**: 选择刚推送的 tag（v1.0.0）
+   - **Release title**: 输入标题，如 "Shader Background v1.0.0"
+   - **Description**: 填写更新说明（可选，构建完成后会自动追加 DMG 文件）
+   - 点击 "Publish release" 按钮
+   - **这会立即触发 GitHub Actions 自动构建**
+
+4. **等待自动构建**
+
+   - 创建 Release 后，自动跳转到 Actions 页面或手动访问
    - 查看 "Build and Release" 工作流运行状态
    - 通常需要 5-10 分钟完成
+   - 构建成功后，DMG 文件会自动上传到 Release 中
 
-4. **下载发布文件**
-   - 构建完成后，访问 Releases 页面
-   - 下载 DMG 或压缩包
+5. **验证发布**
+   - 返回 Releases 页面
+   - 刷新后可以看到自动上传的 DMG 文件
+   - 下载并测试
 
 ## 📦 发布文件说明
 
@@ -51,16 +63,22 @@
 
 ```yaml
 on:
-  push:
-    tags:
-      - "v*" # 匹配所有 v 开头的 tag，如 v1.0.0, v2.1.3
+  release:
+    types: [created]  # 当在 GitHub 上创建 Release 时触发
 ```
+
+**优势**：
+- ✅ 可以先推送 tag，准备好后再创建 Release
+- ✅ 创建 Release 时可以填写详细说明
+- ✅ 更精确的控制发布时机
+- ✅ 避免误触发（只推送 tag 不会触发构建）
+- ✅ 可以创建草稿 Release 预览
 
 ### 构建步骤
 
 1. **Checkout Code** - 检出代码
 2. **Setup Xcode** - 设置 Xcode 环境（使用最新稳定版）
-3. **Get Version** - 从 tag 提取版本号
+3. **Get Version** - 从 Release tag 提取版本号
 4. **Build Release** - 编译 Release 版本
    - 使用 xcodebuild
    - 禁用代码签名（适用于开源项目）
