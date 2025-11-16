@@ -94,6 +94,7 @@ class EffectManager {
       NewtonBasinsEffect(),
       MobiusKnotEffect(),
       PixellatedRainEffect(),
+      SinMoveEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -244,6 +245,8 @@ class EffectManager {
         defaultIndex = 66
       case "pixellatedrain", "pixelrain", "rain", "matrixrain":
         defaultIndex = 67
+      case "sinmove", "sinwave", "sinwaves", "wavemove":
+        defaultIndex = 68
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
