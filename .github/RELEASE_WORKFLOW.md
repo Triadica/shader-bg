@@ -64,10 +64,11 @@
 ```yaml
 on:
   release:
-    types: [created]  # 当在 GitHub 上创建 Release 时触发
+    types: [created] # 当在 GitHub 上创建 Release 时触发
 ```
 
 **优势**：
+
 - ✅ 可以先推送 tag，准备好后再创建 Release
 - ✅ 创建 Release 时可以填写详细说明
 - ✅ 更精确的控制发布时机
