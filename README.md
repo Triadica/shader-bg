@@ -70,9 +70,36 @@
    cp -r ~/Library/Developer/Xcode/DerivedData/shader-bg-*/Build/Products/Release/shader-bg.app /Applications/
    ```
 
-### 方式二：直接下载（未来提供）
+### 方式二：使用自动化构建脚本
 
-从 [Releases](https://github.com/Triadica/shader-bg/releases) 页面下载最新的 `.app` 文件，拖放到应用程序文件夹即可。
+本项目提供了自动化构建脚本，可以快速生成 Release 版本和 DMG 安装包：
+
+```bash
+# 快速构建（仅生成 .app）
+./scripts/quick-build.sh
+
+# 完整构建（生成 .app 和 .dmg）
+./scripts/build-release.sh
+```
+
+详见 [RELEASE_BUILD.md](RELEASE_BUILD.md) 了解构建系统的完整说明。
+
+### 方式三：下载预编译版本
+
+从 [Releases](https://github.com/Triadica/shader-bg/releases) 页面下载最新的 DMG 文件：
+
+1. 下载 `shader-bg-vX.X.X.dmg.zip`
+2. 解压得到 DMG 文件
+3. 双击 DMG 挂载
+4. 拖放 `shader-bg.app` 到应用程序文件夹
+
+**首次打开提示**：如果遇到"无法打开，因为它来自身份不明的开发者"，运行：
+
+```bash
+xattr -cr /Applications/shader-bg.app
+```
+
+或右键点击应用，按住 Option 键，选择"打开"。
 
 ## Xcode 15 / macOS 14 兼容说明
 
@@ -223,6 +250,51 @@ log stream --predicate 'subsystem == "com.cirru.bg.shader-bg"' --level debug
 ```
 
 或直接在 Xcode 控制台查看输出。
+
+### 发布新版本
+
+本项目使用 GitHub Actions 自动构建和发布。创建新版本的步骤：
+
+```bash
+# 1. 确保所有更改已提交
+git add .
+git commit -m "Release v1.0.0"
+git push origin main
+
+# 2. 创建版本 tag（会自动触发构建）
+git tag v1.0.0
+git push origin v1.0.0
+
+# 3. 等待 GitHub Actions 完成（约 5-10 分钟）
+# 4. 访问 Releases 页面查看自动生成的发布文件
+```
+
+发布的文件包括：
+
+- `shader-bg-vX.X.X.dmg` - DMG 安装包（~1MB）
+- `shader-bg-vX.X.X.dmg.zip` - 压缩的 DMG（更小）
+
+详细说明请参考 [GitHub Actions Release Workflow](.github/RELEASE_WORKFLOW.md)。
+
+### 本地构建脚本
+
+项目提供了两个构建脚本：
+
+1. **快速构建**（测试用）
+
+   ```bash
+   ./scripts/quick-build.sh
+   ```
+
+   生成 Release 版本的 .app，显示安装路径
+
+2. **完整构建**（发布用）
+   ```bash
+   ./scripts/build-release.sh
+   ```
+   生成 .app 和 DMG 安装包，保存到 `release/` 目录
+
+更多详情请查看 [RELEASE_BUILD.md](RELEASE_BUILD.md) 和 [scripts/README.md](scripts/README.md)。
 
 ## 贡献
 
