@@ -241,6 +241,8 @@ struct MetalView: NSViewRepresentable {
         newEffect = WorldTreeEffect()
       case "sun_water":
         newEffect = SunWaterEffect()
+      case "mountain_waves":
+        newEffect = MountainWavesEffect()
       default:
         newEffect = NoiseHaloEffect()
       }

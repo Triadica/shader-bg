@@ -97,6 +97,7 @@ class EffectManager {
       SinMoveEffect(),
       WorldTreeEffect(),
       SunWaterEffect(),
+      MountainWavesEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -253,6 +254,8 @@ class EffectManager {
         defaultIndex = 69
       case "sunwater", "sun", "water", "sunset", "sunwaves":
         defaultIndex = 70
+      case "mountainwaves", "mountain", "mountains", "mountainwave":
+        defaultIndex = 71
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
