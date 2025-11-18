@@ -42,30 +42,41 @@ fragment float4 mountainWaves_fragment(VertexOut in [[stage_in]],
   float k = iResolution.y;
   U /= k;
 
-  float i = -8.0;
+  const float time2 = iTime * 2.0;
+  const float4 colorPhaseOffset = float4(0.0, 1.0, 1.0, 0.0);
+  const float cContributionThreshold = 5e-4;
+  const float intensityThreshold = 1e-4;
 
-  // 循环 29 次，对应 GLSL 的 while(i++ < 15.)
-  // i 先递增：从 -14 开始到 14 结束，共 29 次
+  float i = -7.0;
+
+  // 循环上限 15 次，根据当前权重阈值自动提前退出以节省 GPU 开销
   for (int loop = 0; loop < 15; loop++) {
     i += 1.0;
 
-    float c = exp(-0.1 * i * i);
+    float i2 = i * i;
+    float c = exp(-0.1 * i2);
+    float heightDecay = exp(-0.01 * i2);
 
     // #define S sin(iTime
     // S*2.+i*2. 表示 sin(iTime*2.+i*2.)
-    float S_amp = sin(iTime * 2.0 + i * 2.0);
+    float phase2 = time2 + i * 2.0;
+    float S_amp = sin(phase2);
 
     // S*2. + U.x / (.2-.1*c) + i*4. 表示 sin(iTime*2. + U.x / (.2-.1*c) + i*4.)
-    float S_wave = sin(iTime * 2.0 + U.x / (0.2 - 0.1 * c) + i * 4.0);
+    float denom = 0.2 - 0.1 * c;
+    float invDenom = 1.0 / denom;
+    float S_wave = sin(time2 + U.x * invDenom + i * 4.0);
 
     // S+i+vec4(0,1,1,0) 表示为向量分量引入相位偏移
-    float4 colorPhase = sin(float4(iTime + i) + float4(0.0, 1.0, 1.0, 0.0));
+    float4 colorPhase = sin(float4(iTime + i) + colorPhaseOffset);
 
     // 计算 y 值
-    float y = (0.08 + 0.02 * S_amp) * exp(-0.01 * i * i) * S_wave - i / 20.0 +
-              0.5 - U.y;
+    float y =
+        (0.08 + 0.02 * S_amp) * heightDecay * S_wave - i / 20.0 + 0.5 - U.y;
 
-    float intensity = max(0.0, 1.0 - exp(-y * k * c));
+    float expArg = -y * k * c;
+    expArg = clamp(expArg, -20.0, 5.0);
+    float intensity = max(0.0, 1.0 - exp(expArg));
 
     // 计算颜色贡献
     // 原始 GLSL: O += max(0., 1.-exp(-y*k*c)) * (tanh(40.*y) * (.5 + .4 *
@@ -76,6 +87,10 @@ fragment float4 mountainWaves_fragment(VertexOut in [[stage_in]],
     float4 baseColor = 0.5 + 0.4 * colorPhase;
     float4 blendedColor = tanh(40.0 * y) * baseColor;
     O += intensity * (blendedColor - O);
+
+    if (c < cContributionThreshold && intensity < intensityThreshold) {
+      break;
+    }
   }
 
   // 原始 GLSL 会直接在 0~1 范围内输出颜色，为了恢复原有的高饱和度效果，
