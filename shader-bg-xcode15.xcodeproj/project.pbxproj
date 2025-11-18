@@ -1,0 +1,797 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B00000012000000100000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000001 /* AppDelegate.swift */; };
+		B00000012000000100000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000002 /* ContentView.swift */; };
+		B00000012000000100000003 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000003 /* MetalView.swift */; };
+		B00000012000000100000004 /* PerformanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000004 /* PerformanceManager.swift */; };
+		B00000012000000100000005 /* WallpaperContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000005 /* WallpaperContentView.swift */; };
+		B00000012000000100000006 /* WallpaperWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000006 /* WallpaperWindow.swift */; };
+		B00000012000000100000007 /* shaderBgApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000007 /* shaderBgApp.swift */; };
+		B00000012000000100000008 /* EffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000008 /* EffectManager.swift */; };
+		B00000012000000100000009 /* EffectProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000009 /* EffectProtocol.swift */; };
+		B0000001200000010000000A /* ParticlesInGravityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000200000010000000A /* ParticlesInGravityData.swift */; };
+		B0000001200000010000000B /* ParticlesInGravityEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000200000010000000B /* ParticlesInGravityEffect.swift */; };
+		B0000001200000010000000C /* ParticlesInGravityRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000200000010000000C /* ParticlesInGravityRenderer.swift */; };
+		B0000001200000010000000D /* ParticlesInGravityShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = B0000000200000010000000D /* ParticlesInGravityShaders.metal */; };
+		B0000001200000010000000E /* RotatingLorenzData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000200000010000000E /* RotatingLorenzData.swift */; };
+		B0000001200000010000000F /* RotatingLorenzEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000200000010000000F /* RotatingLorenzEffect.swift */; };
+		B00000012000000100000010 /* RotatingLorenzRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000010 /* RotatingLorenzRenderer.swift */; };
+		B00000012000000100000011 /* RotatingLorenzShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = B00000002000000100000011 /* RotatingLorenzShaders.metal */; };
+		C00000012000000100000001 /* LiquidTunnelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000001 /* LiquidTunnelData.swift */; };
+		C00000012000000100000002 /* LiquidTunnelEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000002 /* LiquidTunnelEffect.swift */; };
+		C00000012000000100000003 /* LiquidTunnelRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000003 /* LiquidTunnelRenderer.swift */; };
+		C00000012000000100000004 /* LiquidTunnelShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000004 /* LiquidTunnelShaders.metal */; };
+		C00000012000000100000005 /* NoiseHaloData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000005 /* NoiseHaloData.swift */; };
+		C00000012000000100000006 /* NoiseHaloEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000006 /* NoiseHaloEffect.swift */; };
+		C00000012000000100000007 /* NoiseHaloRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000007 /* NoiseHaloRenderer.swift */; };
+		C00000012000000100000008 /* NoiseHaloShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000008 /* NoiseHaloShaders.metal */; };
+		C00000012000000100000009 /* RhombusData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000002000000100000009 /* RhombusData.swift */; };
+		C0000001200000010000000A /* RhombusEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0000000200000010000000A /* RhombusEffect.swift */; };
+		C0000001200000010000000B /* RhombusRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0000000200000010000000B /* RhombusRenderer.swift */; };
+		C0000001200000010000000C /* RhombusShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0000000200000010000000C /* RhombusShaders.metal */; };
+		D00000012000000100000001 /* ApollianTwistData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000001 /* ApollianTwistData.swift */; };
+		D00000012000000100000002 /* ApollianTwistEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000002 /* ApollianTwistEffect.swift */; };
+		D00000012000000100000003 /* ApollianTwistRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000003 /* ApollianTwistRenderer.swift */; };
+		D00000012000000100000004 /* ApollianTwistShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = D00000002000000100000004 /* ApollianTwistShaders.metal */; };
+		E00000012000000100000001 /* ClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00000002000000100000001 /* ClockData.swift */; };
+		E00000012000000100000002 /* ClockEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00000002000000100000002 /* ClockEffect.swift */; };
+		E00000012000000100000003 /* ClockRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00000002000000100000003 /* ClockRenderer.swift */; };
+		E00000012000000100000004 /* ClockShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E00000002000000100000004 /* ClockShaders.metal */; };
+		F1B00012000000100000001 /* BubblesUnderwaterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A00002000000100000001 /* BubblesUnderwaterData.swift */; };
+		F1B00012000000100000002 /* BubblesUnderwaterEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A00002000000100000002 /* BubblesUnderwaterEffect.swift */; };
+		F1B00012000000100000003 /* BubblesUnderwaterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A00002000000100000003 /* BubblesUnderwaterRenderer.swift */; };
+		F1B00012000000100000004 /* BubblesUnderwaterShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F1A00002000000100000004 /* BubblesUnderwaterShaders.metal */; };
+		F2B00012000000100000001 /* GlowyOrbData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A00002000000100000001 /* GlowyOrbData.swift */; };
+		F2B00012000000100000002 /* GlowyOrbEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A00002000000100000002 /* GlowyOrbEffect.swift */; };
+		F2B00012000000100000003 /* GlowyOrbRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A00002000000100000003 /* GlowyOrbRenderer.swift */; };
+		F2B00012000000100000004 /* GlowyOrbShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F2A00002000000100000004 /* GlowyOrbShaders.metal */; };
+		F3B00012000000100000001 /* MobiusFlowData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A00002000000100000001 /* MobiusFlowData.swift */; };
+		F3B00012000000100000002 /* MobiusFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A00002000000100000002 /* MobiusFlowEffect.swift */; };
+		F3B00012000000100000003 /* MobiusFlowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A00002000000100000003 /* MobiusFlowRenderer.swift */; };
+		F3B00012000000100000004 /* MobiusFlowShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F3A00002000000100000004 /* MobiusFlowShaders.metal */; };
+		F4B00012000000100000001 /* RainbowTwisterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A00002000000100000001 /* RainbowTwisterData.swift */; };
+		F4B00012000000100000002 /* RainbowTwisterEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A00002000000100000002 /* RainbowTwisterEffect.swift */; };
+		F4B00012000000100000003 /* RainbowTwisterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A00002000000100000003 /* RainbowTwisterRenderer.swift */; };
+		F4B00012000000100000004 /* RainbowTwisterShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F4A00002000000100000004 /* RainbowTwisterShaders.metal */; };
+		F5B00012000000100000001 /* SonataData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A00002000000100000001 /* SonataData.swift */; };
+		F5B00012000000100000002 /* SonataEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A00002000000100000002 /* SonataEffect.swift */; };
+		F5B00012000000100000003 /* SonataRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A00002000000100000003 /* SonataRenderer.swift */; };
+		F5B00012000000100000004 /* SonataShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F5A00002000000100000004 /* SonataShaders.metal */; };
+		F6B00012000000100000001 /* StarTravellingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A00002000000100000001 /* StarTravellingData.swift */; };
+		F6B00012000000100000002 /* StarTravellingEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A00002000000100000002 /* StarTravellingEffect.swift */; };
+		F6B00012000000100000003 /* StarTravellingRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A00002000000100000003 /* StarTravellingRenderer.swift */; };
+		F6B00012000000100000004 /* StarTravellingShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F6A00002000000100000004 /* StarTravellingShaders.metal */; };
+		F7B00012000000100000001 /* VortexStreetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A00002000000100000001 /* VortexStreetData.swift */; };
+		F7B00012000000100000002 /* VortexStreetEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A00002000000100000002 /* VortexStreetEffect.swift */; };
+		F7B00012000000100000003 /* VortexStreetRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A00002000000100000003 /* VortexStreetRenderer.swift */; };
+		F7B00012000000100000004 /* VortexStreetShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F7A00002000000100000004 /* VortexStreetShaders.metal */; };
+		F8B00012000000100000001 /* WaveformData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A00002000000100000001 /* WaveformData.swift */; };
+		F8B00012000000100000002 /* WaveformEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A00002000000100000002 /* WaveformEffect.swift */; };
+		F8B00012000000100000003 /* WaveformRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A00002000000100000003 /* WaveformRenderer.swift */; };
+		F8B00012000000100000004 /* WaveformShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F8A00002000000100000004 /* WaveformShaders.metal */; };
+		F9B00012000000100000001 /* CityOfKaliData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00002000000100000001 /* CityOfKaliData.swift */; };
+		F9B00012000000100000002 /* CityOfKaliEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00002000000100000002 /* CityOfKaliEffect.swift */; };
+		F9B00012000000100000003 /* CityOfKaliRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A00002000000100000003 /* CityOfKaliRenderer.swift */; };
+		F9B00012000000100000004 /* CityOfKaliShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F9A00002000000100000004 /* CityOfKaliShaders.metal */; };
+		FAB00012000000100000001 /* GalaxySpiralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA00002000000100000001 /* GalaxySpiralData.swift */; };
+		FAB00012000000100000002 /* GalaxySpiralEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA00002000000100000002 /* GalaxySpiralEffect.swift */; };
+		FAB00012000000100000003 /* GalaxySpiralRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA00002000000100000003 /* GalaxySpiralRenderer.swift */; };
+		FAB00012000000100000004 /* GalaxySpiralShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FAA00002000000100000004 /* GalaxySpiralShaders.metal */; };
+		FBB00012000000100000001 /* SimplePlasmaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA00002000000100000001 /* SimplePlasmaData.swift */; };
+		FBB00012000000100000002 /* SimplePlasmaEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA00002000000100000002 /* SimplePlasmaEffect.swift */; };
+		FBB00012000000100000003 /* SimplePlasmaRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA00002000000100000003 /* SimplePlasmaRenderer.swift */; };
+		FBB00012000000100000004 /* SimplePlasmaShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FBA00002000000100000004 /* SimplePlasmaShaders.metal */; };
+		FCB00012000000100000001 /* StainedLightsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA00002000000100000001 /* StainedLightsData.swift */; };
+		FCB00012000000100000002 /* StainedLightsEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA00002000000100000002 /* StainedLightsEffect.swift */; };
+		FCB00012000000100000003 /* StainedLightsRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA00002000000100000003 /* StainedLightsRenderer.swift */; };
+		FCB00012000000100000004 /* StainedLightsShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FCA00002000000100000004 /* StainedLightsShaders.metal */; };
+		FDB00012000000100000001 /* ToonedCloudData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA00002000000100000001 /* ToonedCloudData.swift */; };
+		FDB00012000000100000002 /* ToonedCloudEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA00002000000100000002 /* ToonedCloudEffect.swift */; };
+		FDB00012000000100000003 /* ToonedCloudRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA00002000000100000003 /* ToonedCloudRenderer.swift */; };
+		FDB00012000000100000004 /* ToonedCloudShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FDA00002000000100000004 /* ToonedCloudShaders.metal */; };
+		FEB00012000000100000001 /* WarpedStringsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA00002000000100000001 /* WarpedStringsData.swift */; };
+		FEB00012000000100000002 /* WarpedStringsEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA00002000000100000002 /* WarpedStringsEffect.swift */; };
+		FEB00012000000100000003 /* WarpedStringsRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA00002000000100000003 /* WarpedStringsRenderer.swift */; };
+		FEB00012000000100000004 /* WarpedStringsShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = FEA00002000000100000004 /* WarpedStringsShaders.metal */; };
+		B00000013000000100000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000003000000100000001 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B00000002000000100000001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B00000002000000100000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B00000002000000100000003 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
+		B00000002000000100000004 /* PerformanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceManager.swift; sourceTree = "<group>"; };
+		B00000002000000100000005 /* WallpaperContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperContentView.swift; sourceTree = "<group>"; };
+		B00000002000000100000006 /* WallpaperWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperWindow.swift; sourceTree = "<group>"; };
+		B00000002000000100000007 /* shaderBgApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shaderBgApp.swift; sourceTree = "<group>"; };
+		B00000002000000100000008 /* EffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectManager.swift; sourceTree = "<group>"; };
+		B00000002000000100000009 /* EffectProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectProtocol.swift; sourceTree = "<group>"; };
+		B0000000200000010000000A /* ParticlesInGravityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticlesInGravityData.swift; sourceTree = "<group>"; };
+		B0000000200000010000000B /* ParticlesInGravityEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticlesInGravityEffect.swift; sourceTree = "<group>"; };
+		B0000000200000010000000C /* ParticlesInGravityRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticlesInGravityRenderer.swift; sourceTree = "<group>"; };
+		B0000000200000010000000D /* ParticlesInGravityShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ParticlesInGravityShaders.metal; sourceTree = "<group>"; };
+		B0000000200000010000000E /* RotatingLorenzData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingLorenzData.swift; sourceTree = "<group>"; };
+		B0000000200000010000000F /* RotatingLorenzEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingLorenzEffect.swift; sourceTree = "<group>"; };
+		B00000002000000100000010 /* RotatingLorenzRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingLorenzRenderer.swift; sourceTree = "<group>"; };
+		B00000002000000100000011 /* RotatingLorenzShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = RotatingLorenzShaders.metal; sourceTree = "<group>"; };
+		C00000002000000100000001 /* LiquidTunnelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidTunnelData.swift; sourceTree = "<group>"; };
+		C00000002000000100000002 /* LiquidTunnelEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidTunnelEffect.swift; sourceTree = "<group>"; };
+		C00000002000000100000003 /* LiquidTunnelRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidTunnelRenderer.swift; sourceTree = "<group>"; };
+		C00000002000000100000004 /* LiquidTunnelShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = LiquidTunnelShaders.metal; sourceTree = "<group>"; };
+		C00000002000000100000005 /* NoiseHaloData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseHaloData.swift; sourceTree = "<group>"; };
+		C00000002000000100000006 /* NoiseHaloEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseHaloEffect.swift; sourceTree = "<group>"; };
+		C00000002000000100000007 /* NoiseHaloRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseHaloRenderer.swift; sourceTree = "<group>"; };
+		C00000002000000100000008 /* NoiseHaloShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = NoiseHaloShaders.metal; sourceTree = "<group>"; };
+		C00000002000000100000009 /* RhombusData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhombusData.swift; sourceTree = "<group>"; };
+		C0000000200000010000000A /* RhombusEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhombusEffect.swift; sourceTree = "<group>"; };
+		C0000000200000010000000B /* RhombusRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhombusRenderer.swift; sourceTree = "<group>"; };
+		C0000000200000010000000C /* RhombusShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = RhombusShaders.metal; sourceTree = "<group>"; };
+		D00000002000000100000001 /* ApollianTwistData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApollianTwistData.swift; sourceTree = "<group>"; };
+		D00000002000000100000002 /* ApollianTwistEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApollianTwistEffect.swift; sourceTree = "<group>"; };
+		D00000002000000100000003 /* ApollianTwistRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApollianTwistRenderer.swift; sourceTree = "<group>"; };
+		D00000002000000100000004 /* ApollianTwistShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ApollianTwistShaders.metal; sourceTree = "<group>"; };
+		E00000002000000100000001 /* ClockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockData.swift; sourceTree = "<group>"; };
+		E00000002000000100000002 /* ClockEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockEffect.swift; sourceTree = "<group>"; };
+		E00000002000000100000003 /* ClockRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockRenderer.swift; sourceTree = "<group>"; };
+		E00000002000000100000004 /* ClockShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ClockShaders.metal; sourceTree = "<group>"; };
+		F1A00002000000100000001 /* BubblesUnderwaterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblesUnderwaterData.swift; sourceTree = "<group>"; };
+		F1A00002000000100000002 /* BubblesUnderwaterEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblesUnderwaterEffect.swift; sourceTree = "<group>"; };
+		F1A00002000000100000003 /* BubblesUnderwaterRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblesUnderwaterRenderer.swift; sourceTree = "<group>"; };
+		F1A00002000000100000004 /* BubblesUnderwaterShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BubblesUnderwaterShaders.metal; sourceTree = "<group>"; };
+		F2A00002000000100000001 /* GlowyOrbData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowyOrbData.swift; sourceTree = "<group>"; };
+		F2A00002000000100000002 /* GlowyOrbEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowyOrbEffect.swift; sourceTree = "<group>"; };
+		F2A00002000000100000003 /* GlowyOrbRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowyOrbRenderer.swift; sourceTree = "<group>"; };
+		F2A00002000000100000004 /* GlowyOrbShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GlowyOrbShaders.metal; sourceTree = "<group>"; };
+		F3A00002000000100000001 /* MobiusFlowData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobiusFlowData.swift; sourceTree = "<group>"; };
+		F3A00002000000100000002 /* MobiusFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobiusFlowEffect.swift; sourceTree = "<group>"; };
+		F3A00002000000100000003 /* MobiusFlowRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobiusFlowRenderer.swift; sourceTree = "<group>"; };
+		F3A00002000000100000004 /* MobiusFlowShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MobiusFlowShaders.metal; sourceTree = "<group>"; };
+		F4A00002000000100000001 /* RainbowTwisterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RainbowTwisterData.swift; sourceTree = "<group>"; };
+		F4A00002000000100000002 /* RainbowTwisterEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RainbowTwisterEffect.swift; sourceTree = "<group>"; };
+		F4A00002000000100000003 /* RainbowTwisterRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RainbowTwisterRenderer.swift; sourceTree = "<group>"; };
+		F4A00002000000100000004 /* RainbowTwisterShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = RainbowTwisterShaders.metal; sourceTree = "<group>"; };
+		F5A00002000000100000001 /* SonataData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonataData.swift; sourceTree = "<group>"; };
+		F5A00002000000100000002 /* SonataEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonataEffect.swift; sourceTree = "<group>"; };
+		F5A00002000000100000003 /* SonataRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonataRenderer.swift; sourceTree = "<group>"; };
+		F5A00002000000100000004 /* SonataShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SonataShaders.metal; sourceTree = "<group>"; };
+		F6A00002000000100000001 /* StarTravellingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarTravellingData.swift; sourceTree = "<group>"; };
+		F6A00002000000100000002 /* StarTravellingEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarTravellingEffect.swift; sourceTree = "<group>"; };
+		F6A00002000000100000003 /* StarTravellingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarTravellingRenderer.swift; sourceTree = "<group>"; };
+		F6A00002000000100000004 /* StarTravellingShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = StarTravellingShaders.metal; sourceTree = "<group>"; };
+		F7A00002000000100000001 /* VortexStreetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VortexStreetData.swift; sourceTree = "<group>"; };
+		F7A00002000000100000002 /* VortexStreetEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VortexStreetEffect.swift; sourceTree = "<group>"; };
+		F7A00002000000100000003 /* VortexStreetRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VortexStreetRenderer.swift; sourceTree = "<group>"; };
+		F7A00002000000100000004 /* VortexStreetShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = VortexStreetShaders.metal; sourceTree = "<group>"; };
+		F8A00002000000100000001 /* WaveformData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformData.swift; sourceTree = "<group>"; };
+		F8A00002000000100000002 /* WaveformEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformEffect.swift; sourceTree = "<group>"; };
+		F8A00002000000100000003 /* WaveformRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformRenderer.swift; sourceTree = "<group>"; };
+		F8A00002000000100000004 /* WaveformShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = WaveformShaders.metal; sourceTree = "<group>"; };
+		F9A00002000000100000001 /* CityOfKaliData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityOfKaliData.swift; sourceTree = "<group>"; };
+		F9A00002000000100000002 /* CityOfKaliEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityOfKaliEffect.swift; sourceTree = "<group>"; };
+		F9A00002000000100000003 /* CityOfKaliRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityOfKaliRenderer.swift; sourceTree = "<group>"; };
+		F9A00002000000100000004 /* CityOfKaliShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = CityOfKaliShaders.metal; sourceTree = "<group>"; };
+		FAA00002000000100000001 /* GalaxySpiralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxySpiralData.swift; sourceTree = "<group>"; };
+		FAA00002000000100000002 /* GalaxySpiralEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxySpiralEffect.swift; sourceTree = "<group>"; };
+		FAA00002000000100000003 /* GalaxySpiralRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxySpiralRenderer.swift; sourceTree = "<group>"; };
+		FAA00002000000100000004 /* GalaxySpiralShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GalaxySpiralShaders.metal; sourceTree = "<group>"; };
+		FBA00002000000100000001 /* SimplePlasmaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePlasmaData.swift; sourceTree = "<group>"; };
+		FBA00002000000100000002 /* SimplePlasmaEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePlasmaEffect.swift; sourceTree = "<group>"; };
+		FBA00002000000100000003 /* SimplePlasmaRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePlasmaRenderer.swift; sourceTree = "<group>"; };
+		FBA00002000000100000004 /* SimplePlasmaShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SimplePlasmaShaders.metal; sourceTree = "<group>"; };
+		FCA00002000000100000001 /* StainedLightsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StainedLightsData.swift; sourceTree = "<group>"; };
+		FCA00002000000100000002 /* StainedLightsEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StainedLightsEffect.swift; sourceTree = "<group>"; };
+		FCA00002000000100000003 /* StainedLightsRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StainedLightsRenderer.swift; sourceTree = "<group>"; };
+		FCA00002000000100000004 /* StainedLightsShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = StainedLightsShaders.metal; sourceTree = "<group>"; };
+		FDA00002000000100000001 /* ToonedCloudData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToonedCloudData.swift; sourceTree = "<group>"; };
+		FDA00002000000100000002 /* ToonedCloudEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToonedCloudEffect.swift; sourceTree = "<group>"; };
+		FDA00002000000100000003 /* ToonedCloudRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToonedCloudRenderer.swift; sourceTree = "<group>"; };
+		FDA00002000000100000004 /* ToonedCloudShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ToonedCloudShaders.metal; sourceTree = "<group>"; };
+		FEA00002000000100000001 /* WarpedStringsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarpedStringsData.swift; sourceTree = "<group>"; };
+		FEA00002000000100000002 /* WarpedStringsEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarpedStringsEffect.swift; sourceTree = "<group>"; };
+		FEA00002000000100000003 /* WarpedStringsRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarpedStringsRenderer.swift; sourceTree = "<group>"; };
+		FEA00002000000100000004 /* WarpedStringsShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = WarpedStringsShaders.metal; sourceTree = "<group>"; };
+		B00000003000000100000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B00000004000000100000001 /* shader-bg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "shader-bg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B00000005000000100000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B00000006000000100000001 = {
+			isa = PBXGroup;
+			children = (
+				B00000007000000100000001 /* shader-bg */,
+				B00000008000000100000001 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B00000007000000100000001 /* shader-bg */ = {
+			isa = PBXGroup;
+			children = (
+				B00000002000000100000007 /* shaderBgApp.swift */,
+				B00000002000000100000001 /* AppDelegate.swift */,
+				B00000002000000100000002 /* ContentView.swift */,
+				B00000002000000100000003 /* MetalView.swift */,
+				B00000002000000100000004 /* PerformanceManager.swift */,
+				B00000002000000100000005 /* WallpaperContentView.swift */,
+				B00000002000000100000006 /* WallpaperWindow.swift */,
+				B00000009000000100000001 /* Effects */,
+				B00000003000000100000001 /* Assets.xcassets */,
+			);
+			path = shader-bg;
+			sourceTree = "<group>";
+		};
+		B00000009000000100000001 /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+				B00000002000000100000009 /* EffectProtocol.swift */,
+				B00000002000000100000008 /* EffectManager.swift */,
+				B0000000A000000100000001 /* ParticlesInGravity */,
+				B0000000B000000100000001 /* RotatingLorenz */,
+				C0000000A000000100000002 /* LiquidTunnel */,
+				C0000000A000000100000003 /* NoiseHalo */,
+				C0000000A000000100000004 /* Rhombus */,
+				D0000000A000000100000001 /* ApollianTwist */,
+				E0000000A000000100000001 /* Clock */,
+				F8C0000A000000100000001 /* Waveform */,
+				F7C0000A000000100000001 /* VortexStreet */,
+				F4C0000A000000100000001 /* RainbowTwister */,
+				F6C0000A000000100000001 /* StarTravelling */,
+				F5C0000A000000100000001 /* Sonata */,
+				F3C0000A000000100000001 /* MobiusFlow */,
+				F1C0000A000000100000001 /* BubblesUnderwater */,
+				F2C0000A000000100000001 /* GlowyOrb */,
+				F9C0000A000000100000001 /* CityOfKali */,
+				FAC0000A000000100000001 /* GalaxySpiral */,
+				FBC0000A000000100000001 /* SimplePlasma */,
+				FCC0000A000000100000001 /* StainedLights */,
+				FDC0000A000000100000001 /* ToonedCloud */,
+				FEC0000A000000100000001 /* WarpedStrings */,
+			);
+			path = Effects;
+			sourceTree = "<group>";
+		};
+		E0000000A000000100000001 /* Clock */ = {
+			isa = PBXGroup;
+			children = (
+				E00000002000000100000002 /* ClockEffect.swift */,
+				E00000002000000100000003 /* ClockRenderer.swift */,
+				E00000002000000100000001 /* ClockData.swift */,
+				E00000002000000100000004 /* ClockShaders.metal */,
+			);
+			path = Clock;
+			sourceTree = "<group>";
+		};
+		F8C0000A000000100000001 /* Waveform */ = {
+			isa = PBXGroup;
+			children = (
+				F8A00002000000100000002 /* WaveformEffect.swift */,
+				F8A00002000000100000003 /* WaveformRenderer.swift */,
+				F8A00002000000100000001 /* WaveformData.swift */,
+				F8A00002000000100000004 /* WaveformShaders.metal */,
+			);
+			path = Waveform;
+			sourceTree = "<group>";
+		};
+		F7C0000A000000100000001 /* VortexStreet */ = {
+			isa = PBXGroup;
+			children = (
+				F7A00002000000100000002 /* VortexStreetEffect.swift */,
+				F7A00002000000100000003 /* VortexStreetRenderer.swift */,
+				F7A00002000000100000001 /* VortexStreetData.swift */,
+				F7A00002000000100000004 /* VortexStreetShaders.metal */,
+			);
+			path = VortexStreet;
+			sourceTree = "<group>";
+		};
+		F4C0000A000000100000001 /* RainbowTwister */ = {
+			isa = PBXGroup;
+			children = (
+				F4A00002000000100000002 /* RainbowTwisterEffect.swift */,
+				F4A00002000000100000003 /* RainbowTwisterRenderer.swift */,
+				F4A00002000000100000001 /* RainbowTwisterData.swift */,
+				F4A00002000000100000004 /* RainbowTwisterShaders.metal */,
+			);
+			path = RainbowTwister;
+			sourceTree = "<group>";
+		};
+		F6C0000A000000100000001 /* StarTravelling */ = {
+			isa = PBXGroup;
+			children = (
+				F6A00002000000100000002 /* StarTravellingEffect.swift */,
+				F6A00002000000100000003 /* StarTravellingRenderer.swift */,
+				F6A00002000000100000001 /* StarTravellingData.swift */,
+				F6A00002000000100000004 /* StarTravellingShaders.metal */,
+			);
+			path = StarTravelling;
+			sourceTree = "<group>";
+		};
+		F5C0000A000000100000001 /* Sonata */ = {
+			isa = PBXGroup;
+			children = (
+				F5A00002000000100000002 /* SonataEffect.swift */,
+				F5A00002000000100000003 /* SonataRenderer.swift */,
+				F5A00002000000100000001 /* SonataData.swift */,
+				F5A00002000000100000004 /* SonataShaders.metal */,
+			);
+			path = Sonata;
+			sourceTree = "<group>";
+		};
+		F3C0000A000000100000001 /* MobiusFlow */ = {
+			isa = PBXGroup;
+			children = (
+				F3A00002000000100000002 /* MobiusFlowEffect.swift */,
+				F3A00002000000100000003 /* MobiusFlowRenderer.swift */,
+				F3A00002000000100000001 /* MobiusFlowData.swift */,
+				F3A00002000000100000004 /* MobiusFlowShaders.metal */,
+			);
+			path = MobiusFlow;
+			sourceTree = "<group>";
+		};
+		F1C0000A000000100000001 /* BubblesUnderwater */ = {
+			isa = PBXGroup;
+			children = (
+				F1A00002000000100000002 /* BubblesUnderwaterEffect.swift */,
+				F1A00002000000100000003 /* BubblesUnderwaterRenderer.swift */,
+				F1A00002000000100000001 /* BubblesUnderwaterData.swift */,
+				F1A00002000000100000004 /* BubblesUnderwaterShaders.metal */,
+			);
+			path = BubblesUnderwater;
+			sourceTree = "<group>";
+		};
+		F2C0000A000000100000001 /* GlowyOrb */ = {
+			isa = PBXGroup;
+			children = (
+				F2A00002000000100000002 /* GlowyOrbEffect.swift */,
+				F2A00002000000100000003 /* GlowyOrbRenderer.swift */,
+				F2A00002000000100000001 /* GlowyOrbData.swift */,
+				F2A00002000000100000004 /* GlowyOrbShaders.metal */,
+			);
+			path = GlowyOrb;
+			sourceTree = "<group>";
+		};
+		F9C0000A000000100000001 /* CityOfKali */ = {
+			isa = PBXGroup;
+			children = (
+				F9A00002000000100000002 /* CityOfKaliEffect.swift */,
+				F9A00002000000100000003 /* CityOfKaliRenderer.swift */,
+				F9A00002000000100000001 /* CityOfKaliData.swift */,
+				F9A00002000000100000004 /* CityOfKaliShaders.metal */,
+			);
+			path = CityOfKali;
+			sourceTree = "<group>";
+		};
+		FAC0000A000000100000001 /* GalaxySpiral */ = {
+			isa = PBXGroup;
+			children = (
+				FAA00002000000100000002 /* GalaxySpiralEffect.swift */,
+				FAA00002000000100000003 /* GalaxySpiralRenderer.swift */,
+				FAA00002000000100000001 /* GalaxySpiralData.swift */,
+				FAA00002000000100000004 /* GalaxySpiralShaders.metal */,
+			);
+			path = GalaxySpiral;
+			sourceTree = "<group>";
+		};
+		FBC0000A000000100000001 /* SimplePlasma */ = {
+			isa = PBXGroup;
+			children = (
+				FBA00002000000100000002 /* SimplePlasmaEffect.swift */,
+				FBA00002000000100000003 /* SimplePlasmaRenderer.swift */,
+				FBA00002000000100000001 /* SimplePlasmaData.swift */,
+				FBA00002000000100000004 /* SimplePlasmaShaders.metal */,
+			);
+			path = SimplePlasma;
+			sourceTree = "<group>";
+		};
+		FCC0000A000000100000001 /* StainedLights */ = {
+			isa = PBXGroup;
+			children = (
+				FCA00002000000100000002 /* StainedLightsEffect.swift */,
+				FCA00002000000100000003 /* StainedLightsRenderer.swift */,
+				FCA00002000000100000001 /* StainedLightsData.swift */,
+				FCA00002000000100000004 /* StainedLightsShaders.metal */,
+			);
+			path = StainedLights;
+			sourceTree = "<group>";
+		};
+		FDC0000A000000100000001 /* ToonedCloud */ = {
+			isa = PBXGroup;
+			children = (
+				FDA00002000000100000002 /* ToonedCloudEffect.swift */,
+				FDA00002000000100000003 /* ToonedCloudRenderer.swift */,
+				FDA00002000000100000001 /* ToonedCloudData.swift */,
+				FDA00002000000100000004 /* ToonedCloudShaders.metal */,
+			);
+			path = ToonedCloud;
+			sourceTree = "<group>";
+		};
+		FEC0000A000000100000001 /* WarpedStrings */ = {
+			isa = PBXGroup;
+			children = (
+				FEA00002000000100000002 /* WarpedStringsEffect.swift */,
+				FEA00002000000100000003 /* WarpedStringsRenderer.swift */,
+				FEA00002000000100000001 /* WarpedStringsData.swift */,
+				FEA00002000000100000004 /* WarpedStringsShaders.metal */,
+			);
+			path = WarpedStrings;
+			sourceTree = "<group>";
+		};
+		D0000000A000000100000001 /* ApollianTwist */ = {
+			isa = PBXGroup;
+			children = (
+				D00000002000000100000001 /* ApollianTwistData.swift */,
+				D00000002000000100000002 /* ApollianTwistEffect.swift */,
+				D00000002000000100000003 /* ApollianTwistRenderer.swift */,
+				D00000002000000100000004 /* ApollianTwistShaders.metal */,
+			);
+			path = ApollianTwist;
+			sourceTree = "<group>";
+		};
+		C0000000A000000100000002 /* LiquidTunnel */ = {
+			isa = PBXGroup;
+			children = (
+				C00000002000000100000001 /* LiquidTunnelData.swift */,
+				C00000002000000100000002 /* LiquidTunnelEffect.swift */,
+				C00000002000000100000003 /* LiquidTunnelRenderer.swift */,
+				C00000002000000100000004 /* LiquidTunnelShaders.metal */,
+			);
+			path = LiquidTunnel;
+			sourceTree = "<group>";
+		};
+		C0000000A000000100000003 /* NoiseHalo */ = {
+			isa = PBXGroup;
+			children = (
+				C00000002000000100000005 /* NoiseHaloData.swift */,
+				C00000002000000100000006 /* NoiseHaloEffect.swift */,
+				C00000002000000100000007 /* NoiseHaloRenderer.swift */,
+				C00000002000000100000008 /* NoiseHaloShaders.metal */,
+			);
+			path = NoiseHalo;
+			sourceTree = "<group>";
+		};
+		C0000000A000000100000004 /* Rhombus */ = {
+			isa = PBXGroup;
+			children = (
+				C00000002000000100000009 /* RhombusData.swift */,
+				C0000000200000010000000A /* RhombusEffect.swift */,
+				C0000000200000010000000B /* RhombusRenderer.swift */,
+				C0000000200000010000000C /* RhombusShaders.metal */,
+			);
+			path = Rhombus;
+			sourceTree = "<group>";
+		};
+		B0000000A000000100000001 /* ParticlesInGravity */ = {
+			isa = PBXGroup;
+			children = (
+				B0000000200000010000000B /* ParticlesInGravityEffect.swift */,
+				B0000000200000010000000C /* ParticlesInGravityRenderer.swift */,
+				B0000000200000010000000A /* ParticlesInGravityData.swift */,
+				B0000000200000010000000D /* ParticlesInGravityShaders.metal */,
+			);
+			path = ParticlesInGravity;
+			sourceTree = "<group>";
+		};
+		B0000000B000000100000001 /* RotatingLorenz */ = {
+			isa = PBXGroup;
+			children = (
+				B0000000200000010000000F /* RotatingLorenzEffect.swift */,
+				B00000002000000100000010 /* RotatingLorenzRenderer.swift */,
+				B0000000200000010000000E /* RotatingLorenzData.swift */,
+				B00000002000000100000011 /* RotatingLorenzShaders.metal */,
+			);
+			path = RotatingLorenz;
+			sourceTree = "<group>";
+		};
+		B00000008000000100000001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B00000004000000100000001 /* shader-bg.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B0000000C000000100000001 /* shader-bg */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B00000015000000100000001 /* Build configuration list for PBXNativeTarget "shader-bg" */;
+			buildPhases = (
+				B0000000D000000100000001 /* Sources */,
+				B00000005000000100000001 /* Frameworks */,
+				B0000000E000000100000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "shader-bg";
+			productName = "shader-bg";
+			productReference = B00000004000000100000001 /* shader-bg.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B0000000F000000100000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				ORGANIZATIONNAME = Triadica;
+			};
+			buildConfigurationList = B00000014000000100000001 /* Build configuration list for PBXProject "shader-bg-xcode15" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B00000006000000100000001;
+			productRefGroup = B00000008000000100000001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B0000000C000000100000001 /* shader-bg */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B0000000E000000100000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B00000013000000100000001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B0000000D000000100000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B00000012000000100000001 /* AppDelegate.swift in Sources */,
+				B00000012000000100000002 /* ContentView.swift in Sources */,
+				B00000012000000100000003 /* MetalView.swift in Sources */,
+				B00000012000000100000004 /* PerformanceManager.swift in Sources */,
+				B00000012000000100000005 /* WallpaperContentView.swift in Sources */,
+				B00000012000000100000006 /* WallpaperWindow.swift in Sources */,
+				B00000012000000100000007 /* shaderBgApp.swift in Sources */,
+				B00000012000000100000009 /* EffectProtocol.swift in Sources */,
+				B00000012000000100000008 /* EffectManager.swift in Sources */,
+				B0000001200000010000000B /* ParticlesInGravityEffect.swift in Sources */,
+				B0000001200000010000000C /* ParticlesInGravityRenderer.swift in Sources */,
+				B0000001200000010000000A /* ParticlesInGravityData.swift in Sources */,
+				B0000001200000010000000D /* ParticlesInGravityShaders.metal in Sources */,
+				B0000001200000010000000F /* RotatingLorenzEffect.swift in Sources */,
+				B00000012000000100000010 /* RotatingLorenzRenderer.swift in Sources */,
+				B0000001200000010000000E /* RotatingLorenzData.swift in Sources */,
+				B00000012000000100000011 /* RotatingLorenzShaders.metal in Sources */,
+				C00000012000000100000001 /* LiquidTunnelData.swift in Sources */,
+				C00000012000000100000002 /* LiquidTunnelEffect.swift in Sources */,
+				C00000012000000100000003 /* LiquidTunnelRenderer.swift in Sources */,
+				C00000012000000100000004 /* LiquidTunnelShaders.metal in Sources */,
+				C00000012000000100000005 /* NoiseHaloData.swift in Sources */,
+				C00000012000000100000006 /* NoiseHaloEffect.swift in Sources */,
+				C00000012000000100000007 /* NoiseHaloRenderer.swift in Sources */,
+				C00000012000000100000008 /* NoiseHaloShaders.metal in Sources */,
+				C00000012000000100000009 /* RhombusData.swift in Sources */,
+				C0000001200000010000000A /* RhombusEffect.swift in Sources */,
+				C0000001200000010000000B /* RhombusRenderer.swift in Sources */,
+				C0000001200000010000000C /* RhombusShaders.metal in Sources */,
+				D00000012000000100000001 /* ApollianTwistData.swift in Sources */,
+				D00000012000000100000002 /* ApollianTwistEffect.swift in Sources */,
+				D00000012000000100000003 /* ApollianTwistRenderer.swift in Sources */,
+				D00000012000000100000004 /* ApollianTwistShaders.metal in Sources */,
+				E00000012000000100000002 /* ClockEffect.swift in Sources */,
+				E00000012000000100000003 /* ClockRenderer.swift in Sources */,
+				E00000012000000100000001 /* ClockData.swift in Sources */,
+				E00000012000000100000004 /* ClockShaders.metal in Sources */,
+				F8B00012000000100000002 /* WaveformEffect.swift in Sources */,
+				F8B00012000000100000003 /* WaveformRenderer.swift in Sources */,
+				F8B00012000000100000001 /* WaveformData.swift in Sources */,
+				F8B00012000000100000004 /* WaveformShaders.metal in Sources */,
+				F7B00012000000100000002 /* VortexStreetEffect.swift in Sources */,
+				F7B00012000000100000003 /* VortexStreetRenderer.swift in Sources */,
+				F7B00012000000100000001 /* VortexStreetData.swift in Sources */,
+				F7B00012000000100000004 /* VortexStreetShaders.metal in Sources */,
+				F4B00012000000100000002 /* RainbowTwisterEffect.swift in Sources */,
+				F4B00012000000100000003 /* RainbowTwisterRenderer.swift in Sources */,
+				F4B00012000000100000001 /* RainbowTwisterData.swift in Sources */,
+				F4B00012000000100000004 /* RainbowTwisterShaders.metal in Sources */,
+				F6B00012000000100000002 /* StarTravellingEffect.swift in Sources */,
+				F6B00012000000100000003 /* StarTravellingRenderer.swift in Sources */,
+				F6B00012000000100000001 /* StarTravellingData.swift in Sources */,
+				F6B00012000000100000004 /* StarTravellingShaders.metal in Sources */,
+				F5B00012000000100000002 /* SonataEffect.swift in Sources */,
+				F5B00012000000100000003 /* SonataRenderer.swift in Sources */,
+				F5B00012000000100000001 /* SonataData.swift in Sources */,
+				F5B00012000000100000004 /* SonataShaders.metal in Sources */,
+				F3B00012000000100000002 /* MobiusFlowEffect.swift in Sources */,
+				F3B00012000000100000003 /* MobiusFlowRenderer.swift in Sources */,
+				F3B00012000000100000001 /* MobiusFlowData.swift in Sources */,
+				F3B00012000000100000004 /* MobiusFlowShaders.metal in Sources */,
+				F1B00012000000100000002 /* BubblesUnderwaterEffect.swift in Sources */,
+				F1B00012000000100000003 /* BubblesUnderwaterRenderer.swift in Sources */,
+				F1B00012000000100000001 /* BubblesUnderwaterData.swift in Sources */,
+				F1B00012000000100000004 /* BubblesUnderwaterShaders.metal in Sources */,
+				F2B00012000000100000002 /* GlowyOrbEffect.swift in Sources */,
+				F2B00012000000100000003 /* GlowyOrbRenderer.swift in Sources */,
+				F2B00012000000100000001 /* GlowyOrbData.swift in Sources */,
+				F2B00012000000100000004 /* GlowyOrbShaders.metal in Sources */,
+				F9B00012000000100000002 /* CityOfKaliEffect.swift in Sources */,
+				F9B00012000000100000003 /* CityOfKaliRenderer.swift in Sources */,
+				F9B00012000000100000001 /* CityOfKaliData.swift in Sources */,
+				F9B00012000000100000004 /* CityOfKaliShaders.metal in Sources */,
+				FAB00012000000100000002 /* GalaxySpiralEffect.swift in Sources */,
+				FAB00012000000100000003 /* GalaxySpiralRenderer.swift in Sources */,
+				FAB00012000000100000001 /* GalaxySpiralData.swift in Sources */,
+				FAB00012000000100000004 /* GalaxySpiralShaders.metal in Sources */,
+				FBB00012000000100000002 /* SimplePlasmaEffect.swift in Sources */,
+				FBB00012000000100000003 /* SimplePlasmaRenderer.swift in Sources */,
+				FBB00012000000100000001 /* SimplePlasmaData.swift in Sources */,
+				FBB00012000000100000004 /* SimplePlasmaShaders.metal in Sources */,
+				FCB00012000000100000002 /* StainedLightsEffect.swift in Sources */,
+				FCB00012000000100000003 /* StainedLightsRenderer.swift in Sources */,
+				FCB00012000000100000001 /* StainedLightsData.swift in Sources */,
+				FCB00012000000100000004 /* StainedLightsShaders.metal in Sources */,
+				FDB00012000000100000002 /* ToonedCloudEffect.swift in Sources */,
+				FDB00012000000100000003 /* ToonedCloudRenderer.swift in Sources */,
+				FDB00012000000100000001 /* ToonedCloudData.swift in Sources */,
+				FDB00012000000100000004 /* ToonedCloudShaders.metal in Sources */,
+				FEB00012000000100000002 /* WarpedStringsEffect.swift in Sources */,
+				FEB00012000000100000003 /* WarpedStringsRenderer.swift in Sources */,
+				FEB00012000000100000001 /* WarpedStringsData.swift in Sources */,
+				FEB00012000000100000004 /* WarpedStringsShaders.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B00000010000000100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B00000011000000100000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B00000016000000100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cirru.bg.shader-bg";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B00000017000000100000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cirru.bg.shader-bg";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B00000014000000100000001 /* Build configuration list for PBXProject "shader-bg-xcode15" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B00000010000000100000001 /* Debug */,
+				B00000011000000100000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B00000015000000100000001 /* Build configuration list for PBXNativeTarget "shader-bg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B00000016000000100000001 /* Debug */,
+				B00000017000000100000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B0000000F000000100000001 /* Project object */;
+}

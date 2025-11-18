@@ -1,0 +1,65 @@
+import Metal
+import MetalKit
+
+class MandalaRenderer {
+  private var device: MTLDevice
+  private var commandQueue: MTLCommandQueue
+  private var pipelineState: MTLComputePipelineState
+  private var startTime: Date = Date()
+  private var viewportSize: CGSize = .zero
+
+  init?(device: MTLDevice) {
+    self.device = device
+
+    guard let queue = device.makeCommandQueue() else {
+      NSLog("[MandalaRenderer] ❌ Failed to create command queue")
+      return nil
+    }
+    self.commandQueue = queue
+
+    do {
+      let library = device.makeDefaultLibrary()
+      guard let kernelFunction = library?.makeFunction(name: "mandalaCompute") else {
+        NSLog("[MandalaRenderer] ❌ Failed to find mandalaCompute function")
+        return nil
+      }
+
+      self.pipelineState = try device.makeComputePipelineState(function: kernelFunction)
+      NSLog("[MandalaRenderer] ✅ Pipeline state created successfully")
+    } catch {
+      NSLog("[MandalaRenderer] ❌ Failed to create compute pipeline state: \(error)")
+      return nil
+    }
+  }
+
+  func updateViewportSize(_ size: CGSize) {
+    viewportSize = size
+  }
+
+  func draw(in view: MTKView) {
+    guard let drawable = view.currentDrawable,
+      let commandBuffer = commandQueue.makeCommandBuffer(),
+      let commandEncoder = commandBuffer.makeComputeCommandEncoder()
+    else {
+      return
+    }
+
+    commandEncoder.setComputePipelineState(pipelineState)
+    commandEncoder.setTexture(drawable.texture, index: 0)
+
+    var time = Float(Date().timeIntervalSince(startTime))
+    commandEncoder.setBytes(&time, length: MemoryLayout<Float>.stride, index: 0)
+
+    let threadGroupSize = MTLSize(width: 16, height: 16, depth: 1)
+    let threadGroups = MTLSize(
+      width: (drawable.texture.width + threadGroupSize.width - 1) / threadGroupSize.width,
+      height: (drawable.texture.height + threadGroupSize.height - 1) / threadGroupSize.height,
+      depth: 1)
+
+    commandEncoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
+    commandEncoder.endEncoding()
+
+    commandBuffer.present(drawable)
+    commandBuffer.commit()
+  }
+}

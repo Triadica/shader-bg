@@ -1,0 +1,35 @@
+//
+//  EventHorizonEffect.swift
+//  shader-bg
+//
+//  Created by GitHub Copilot on 2025/11/13.
+//
+
+import MetalKit
+
+class EventHorizonEffect: VisualEffect {
+  var name: String { "event_horizon" }
+  var displayName: String { "Event Horizon Telescope" }
+
+  private var renderer: EventHorizonRenderer?
+
+  func setup(device: MTLDevice, size: CGSize) {
+    renderer = EventHorizonRenderer(device: device, size: size)
+  }
+
+  func update(currentTime: CFTimeInterval) {
+    renderer?.updateParticles(currentTime: currentTime)
+  }
+
+  func draw(in view: MTKView) {
+    renderer?.draw(in: view)
+  }
+
+  func updateViewportSize(_ size: CGSize) {
+    renderer?.viewportSize = size
+  }
+
+  func setUpdateRate(_ rate: Double) {
+    renderer?.updateInterval = 1.0 / rate
+  }
+}
