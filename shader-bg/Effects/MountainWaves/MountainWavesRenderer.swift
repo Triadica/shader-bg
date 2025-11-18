@@ -5,6 +5,7 @@ import MetalKit
 class MountainWavesRenderer {
   private var device: MTLDevice
   private var pipelineState: MTLRenderPipelineState
+  private var commandQueue: MTLCommandQueue
   private var startTime: Date = Date()
   private var viewportSize: CGSize = .zero
 
@@ -26,6 +27,11 @@ class MountainWavesRenderer {
       pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
 
       self.pipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
+      guard let commandQueue = device.makeCommandQueue() else {
+        NSLog("[MountainWavesRenderer] ❌ Failed to create command queue")
+        return nil
+      }
+      self.commandQueue = commandQueue
       NSLog("[MountainWavesRenderer] ✅ Pipeline state created successfully")
     } catch {
       NSLog("[MountainWavesRenderer] ❌ Failed to create render pipeline state: \(error)")
@@ -41,7 +47,6 @@ class MountainWavesRenderer {
 
   func draw(in view: MTKView) {
     guard let drawable = view.currentDrawable,
-      let commandQueue = device.makeCommandQueue(),
       let commandBuffer = commandQueue.makeCommandBuffer(),
       let renderPassDescriptor = view.currentRenderPassDescriptor,
       let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
@@ -51,9 +56,9 @@ class MountainWavesRenderer {
 
     renderEncoder.setRenderPipelineState(pipelineState)
 
-    // 减慢速度到 0.125x (约 1/8)
+    // 再次放慢速度到 0.0625x (约 1/16)，让动画更平缓
     var params = MountainWavesData(
-      time: Float(Date().timeIntervalSince(startTime)) * 0.125,
+      time: Float(Date().timeIntervalSince(startTime)) * 0.0625,
       resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height)),
       mouse: SIMD2<Float>(0.5, 0.5),
       padding: 0.0

@@ -42,10 +42,11 @@ fragment float4 mountainWaves_fragment(VertexOut in [[stage_in]],
   float k = iResolution.y;
   U /= k;
 
-  float i = -15.0;
+  float i = -8.0;
 
-  // 循环 30 次 (i 从 -15 递增到 15)
-  for (int loop = 0; loop < 30; loop++) {
+  // 循环 29 次，对应 GLSL 的 while(i++ < 15.)
+  // i 先递增：从 -14 开始到 14 结束，共 29 次
+  for (int loop = 0; loop < 15; loop++) {
     i += 1.0;
 
     float c = exp(-0.1 * i * i);
@@ -77,8 +78,15 @@ fragment float4 mountainWaves_fragment(VertexOut in [[stage_in]],
     O += intensity * (blendedColor - O);
   }
 
-  // 将结果重新映射到 [0, 1]，保留正负波形信息同时避免黑带
-  float4 finalColor = clamp(0.55 + 0.45 * O, 0.0, 1.0);
+  // 原始 GLSL 会直接在 0~1 范围内输出颜色，为了恢复原有的高饱和度效果，
+  // 这里先做一次安全的 clamp，再对颜色与亮度之间的差异做一次放大。
+  float3 color = clamp(O.xyz, 0.0, 1.0);
+  float luminance = dot(color, float3(0.299, 0.587, 0.114));
+  const float saturationBoost = 1.35;
+  float3 luminanceColor = float3(luminance);
+  color = clamp(luminanceColor + (color - luminanceColor) * saturationBoost,
+                0.0, 1.0);
+  color = pow(color, float3(0.9));
 
-  return float4(finalColor.rgb, 1.0);
+  return float4(color, 1.0);
 }
