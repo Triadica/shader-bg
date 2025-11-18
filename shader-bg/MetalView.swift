@@ -73,19 +73,19 @@ struct MetalView: NSViewRepresentable {
       print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 被释放")
     }
 
-    func initializeEffect(device: MTLDevice, size: CGSize) {
+    func initializeEffect(device: MTLDevice, size: CGSize, view: MTKView) {
       guard currentEffect == nil, size.width > 0, size.height > 0 else { return }
 
       self.device = device
 
       // 根据全局 EffectManager 的当前索引创建对应的效果
       let effectIndex = EffectManager.shared.currentEffectIndex
-      switchToEffect(at: effectIndex, size: size)
+      switchToEffect(at: effectIndex, size: size, view: view)
 
       print("效果已初始化: \(currentEffect?.displayName ?? "unknown"), size: \(size)")
     }
 
-    func switchToEffect(at index: Int, size: CGSize) {
+    func switchToEffect(at index: Int, size: CGSize, view: MTKView? = nil) {
       guard let device = self.device, size.width > 0, size.height > 0 else { return }
 
       let availableEffects = EffectManager.shared.availableEffects
@@ -250,6 +250,14 @@ struct MetalView: NSViewRepresentable {
       newEffect.setup(device: device, size: size)
       currentEffect = newEffect
 
+      // 应用效果的帧率设置到 MTKView
+      if let mtkView = view {
+        if mtkView.preferredFramesPerSecond != newEffect.preferredFramesPerSecond {
+          mtkView.preferredFramesPerSecond = newEffect.preferredFramesPerSecond
+          print("设置帧率: \(newEffect.preferredFramesPerSecond) FPS")
+        }
+      }
+
       // 重置帧计数
       framesRenderedSinceSwitch = 0
 
@@ -262,7 +270,7 @@ struct MetalView: NSViewRepresentable {
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
       if currentEffect == nil, let device = view.device {
-        initializeEffect(device: device, size: size)
+        initializeEffect(device: device, size: size, view: view)
         lastDrawableSize = size
         return
       }
@@ -300,7 +308,7 @@ struct MetalView: NSViewRepresentable {
 
       // 确保效果已初始化
       if currentEffect == nil, let device = view.device, view.drawableSize.width > 0 {
-        initializeEffect(device: device, size: view.drawableSize)
+        initializeEffect(device: device, size: view.drawableSize, view: view)
       }
 
       // 安全检查：如果 coordinator 正在被释放，立即返回

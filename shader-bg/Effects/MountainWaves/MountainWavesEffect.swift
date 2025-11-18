@@ -5,7 +5,7 @@ import MetalKit
 class MountainWavesEffect: VisualEffect {
   let name = "mountain_waves"
   let displayName = "Mountain Waves"
-  let preferredFramesPerSecond = 4
+  let preferredFramesPerSecond = 8
   let occludedFramesPerSecond = 2
 
   private var renderer: MountainWavesRenderer?

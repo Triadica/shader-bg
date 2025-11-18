@@ -56,9 +56,9 @@ class MountainWavesRenderer {
 
     renderEncoder.setRenderPipelineState(pipelineState)
 
-    // 再次放慢速度到 0.0625x (约 1/16)，让动画更平缓
+    // 放慢速度到 0.015625x (约 1/64)，让动画更平缓
     var params = MountainWavesData(
-      time: Float(Date().timeIntervalSince(startTime)) * 0.0625,
+      time: Float(Date().timeIntervalSince(startTime)) * 0.015625,
       resolution: SIMD2<Float>(Float(viewportSize.width), Float(viewportSize.height)),
       mouse: SIMD2<Float>(0.5, 0.5),
       padding: 0.0
