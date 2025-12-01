@@ -17,6 +17,7 @@ struct MetalView: NSViewRepresentable {
     mtkView.preferredFramesPerSecond = 60
     mtkView.enableSetNeedsDisplay = false
     mtkView.isPaused = false
+    mtkView.autoResizeDrawable = true
 
     // 启用混合以支持透明度
     mtkView.framebufferOnly = false
@@ -37,31 +38,54 @@ struct MetalView: NSViewRepresentable {
     private var currentEffect: VisualEffect?
     private var device: MTLDevice?
     private var isActive = true
+    private var lastDrawableSize: CGSize = .zero
+    private let lock = NSLock()
+
+    // 渲染完成回调（用于精确截图时机）
+    var onRenderComplete: (() -> Void)?
+    private var framesRenderedSinceSwitch = 0
+    private let minFramesBeforeCapture = 3  // 切换效果后至少渲染3帧再触发回调
 
     init(_ parent: MetalView) {
       self.parent = parent
       super.init()
+      print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 已创建")
     }
 
     deinit {
+      print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 开始释放...")
+
+      lock.lock()
       isActive = false
+      print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 已标记为不活跃")
+
+      // 清理效果前先等待一小段时间，确保没有正在进行的绘制
+      let effect = currentEffect
       currentEffect = nil
-      print("Coordinator 被释放")
+      lock.unlock()
+
+      // 短暂等待，确保所有绘制操作完成
+      usleep(10000)  // 10ms
+
+      // 在锁外释放效果，避免死锁
+      _ = effect
+
+      print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 被释放")
     }
 
-    func initializeEffect(device: MTLDevice, size: CGSize) {
+    func initializeEffect(device: MTLDevice, size: CGSize, view: MTKView) {
       guard currentEffect == nil, size.width > 0, size.height > 0 else { return }
 
       self.device = device
 
       // 根据全局 EffectManager 的当前索引创建对应的效果
       let effectIndex = EffectManager.shared.currentEffectIndex
-      switchToEffect(at: effectIndex, size: size)
+      switchToEffect(at: effectIndex, size: size, view: view)
 
       print("效果已初始化: \(currentEffect?.displayName ?? "unknown"), size: \(size)")
     }
 
-    func switchToEffect(at index: Int, size: CGSize) {
+    func switchToEffect(at index: Int, size: CGSize, view: MTKView? = nil) {
       guard let device = self.device, size.width > 0, size.height > 0 else { return }
 
       let availableEffects = EffectManager.shared.availableEffects
@@ -75,16 +99,167 @@ struct MetalView: NSViewRepresentable {
       // 创建新的效果实例
       let newEffect: VisualEffect
       switch effectType.name {
+      case "noise_halo":
+        newEffect = NoiseHaloEffect()
       case "particles_in_gravity":
         newEffect = ParticlesInGravityEffect()
       case "rotating_lorenz":
         newEffect = RotatingLorenzEffect()
+      case "rhombus":
+        newEffect = RhombusEffect()
+      case "apollian_twist":
+        newEffect = ApollianTwistEffect()
+      case "clock":
+        newEffect = ClockEffect()
+      case "waveform":
+        newEffect = WaveformEffect()
+      case "vortex_street":
+        newEffect = VortexStreetEffect()
+      case "rainbow_twister":
+        newEffect = RainbowTwisterEffect()
+      case "star_travelling":
+        newEffect = StarTravellingEffect()
+      case "sonata":
+        newEffect = SonataEffect()
+      case "mobius_flow":
+        newEffect = MobiusFlowEffect()
+      case "bubbles":
+        newEffect = BubblesUnderwaterEffect()
+      case "glowy_orb":
+        newEffect = GlowyOrbEffect()
+      case "city_of_kali":
+        newEffect = CityOfKaliEffect()
+      case "stained_lights":
+        newEffect = StainedLightsEffect()
+      case "tooned_cloud":
+        newEffect = ToonedCloudEffect()
+      case "simple_plasma":
+        newEffect = SimplePlasmaEffect()
+      case "warped_strings":
+        newEffect = WarpedStringsEffect()
+      case "galaxy_spiral":
+        newEffect = GalaxySpiralEffect()
+      case "cosmic_fireworks":
+        newEffect = CosmicFireworksEffect()
+      case "ring_remix":
+        newEffect = RingRemixEffect()
+      case "red_blue_swirl":
+        newEffect = RedBlueSwirlEffect()
+      case "smoke_ring":
+        newEffect = SmokeRingEffect()
+      case "MoonForest":
+        newEffect = MoonForestEffect()
+      case "RainbowRoad":
+        newEffect = RainbowRoadEffect()
+      case "NewtonCloud":
+        newEffect = NewtonCloudEffect()
+      case "PoincareHexagons":
+        newEffect = PoincareHexagonsEffect()
+      case "PlasmaWaves":
+        newEffect = PlasmaWavesEffect()
+      case "HexagonalMandelbrot":
+        newEffect = HexagonalMandelbrotEffect()
+      case "Electricity":
+        newEffect = ElectricityEffect()
+      case "Sunflower3":
+        newEffect = Sunflower3Effect()
+      case "LogZoomFlower":
+        newEffect = LogZoomFlowerEffect()
+      case "Taiji":
+        newEffect = TaijiEffect()
+      case "JuliaSet":
+        newEffect = JuliaSetEffect()
+      case "Microwaves":
+        newEffect = MicrowavesEffect()
+      case "MovingPixels":
+        newEffect = MovingPixelsEffect()
+      case "InfiniteRing":
+        newEffect = InfiniteRingEffect()
+      case "Tesseract4D":
+        newEffect = Tesseract4DEffect()
+      case "SpiralStainedGlass":
+        newEffect = SpiralStainedGlassEffect()
+      case "DomainRepetition":
+        newEffect = DomainRepetitionEffect()
+      case "NeonParallax":
+        newEffect = NeonParallaxEffect()
+      case "DroppyThingies":
+        newEffect = DroppyThingiesEffect()
+      case "FloatingBubbles":
+        newEffect = FloatingBubblesEffect()
+      case "Sunset925":
+        newEffect = Sunset925Effect()
+      case "TorusInterior":
+        newEffect = TorusInteriorEffect()
+      case "RainRipples":
+        newEffect = RainRipplesEffect()
+      case "ZoomedMaze":
+        newEffect = ZoomedMazeEffect()
+      case "ColorfulArcs":
+        newEffect = ColorfulArcsEffect()
+      case "Mandala":
+        newEffect = MandalaEffect()
+      case "SineMountains":
+        newEffect = SineMountainsEffect()
+      case "geode_bg":
+        newEffect = GeodeBGEffect()
+      case "butterfly_ai":
+        newEffect = ButterflyAIEffect()
+      case "hazy_morning_golf":
+        newEffect = HazyMorningGolfEffect()
+      case "surah_relax":
+        newEffect = SurahRelaxEffect()
+      case "korotkoe":
+        newEffect = KorotkoeEffect()
+      case "petal_sphere":
+        newEffect = PetalSphereEffect()
+      case "spiral_for_windows":
+        newEffect = SpiralForWindowsEffect()
+      case "sins_and_steps":
+        newEffect = SinsAndStepsEffect()
+      case "hyperbolic_rings":
+        newEffect = HyperbolicRingsEffect()
+      case "shooting_stars":
+        newEffect = ShootingStarsEffect()
+      case "event_horizon":
+        newEffect = EventHorizonEffect()
+      case "golden_julia":
+        newEffect = GoldenJuliaEffect()
+      case "moon_tree":
+        newEffect = MoonTreeEffect()
+      case "year_of_truchets":
+        newEffect = YearOfTruchetsEffect()
+      case "newton_basins":
+        newEffect = NewtonBasinsEffect()
+      case "mobius_knot":
+        newEffect = MobiusKnotEffect()
+      case "pixellated_rain":
+        newEffect = PixellatedRainEffect()
+      case "sin_move":
+        newEffect = SinMoveEffect()
+      case "world_tree":
+        newEffect = WorldTreeEffect()
+      case "sun_water":
+        newEffect = SunWaterEffect()
+      case "mountain_waves":
+        newEffect = MountainWavesEffect()
       default:
-        newEffect = ParticlesInGravityEffect()
+        newEffect = NoiseHaloEffect()
       }
 
       newEffect.setup(device: device, size: size)
       currentEffect = newEffect
+
+      // 应用效果的帧率设置到 MTKView
+      if let mtkView = view {
+        if mtkView.preferredFramesPerSecond != newEffect.preferredFramesPerSecond {
+          mtkView.preferredFramesPerSecond = newEffect.preferredFramesPerSecond
+          print("设置帧率: \(newEffect.preferredFramesPerSecond) FPS")
+        }
+      }
+
+      // 重置帧计数
+      framesRenderedSinceSwitch = 0
 
       print("切换到效果: \(newEffect.displayName), size: \(size)")
     }
@@ -95,25 +270,79 @@ struct MetalView: NSViewRepresentable {
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
       if currentEffect == nil, let device = view.device {
-        initializeEffect(device: device, size: size)
+        initializeEffect(device: device, size: size, view: view)
+        lastDrawableSize = size
+        return
+      }
+
+      // 判断是否为“显著尺寸变化”：尺寸变化超过 2pt 或者宽高比明显变化
+      let wDelta = abs(size.width - lastDrawableSize.width)
+      let hDelta = abs(size.height - lastDrawableSize.height)
+      let ratioOld =
+        (lastDrawableSize.width > 0 && lastDrawableSize.height > 0)
+        ? (lastDrawableSize.width / lastDrawableSize.height) : 0
+      let ratioNew = (size.width > 0 && size.height > 0) ? (size.width / size.height) : 0
+      let ratioDelta = abs(ratioNew - ratioOld)
+
+      if (wDelta > 2 || hDelta > 2) || ratioDelta > 0.01 {
+        currentEffect?.handleSignificantResize(to: size)
       } else {
         currentEffect?.updateViewportSize(size)
       }
+
+      lastDrawableSize = size
     }
 
     func draw(in view: MTKView) {
-      guard isActive else { return }
+      // 尝试获取锁，如果无法获取则直接返回，避免阻塞
+      guard lock.try() else {
+        print("[DRAW] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 锁繁忙，跳过此帧")
+        return
+      }
+      defer { lock.unlock() }
+
+      guard isActive else {
+        print("[DRAW] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 不活跃，跳过绘制")
+        return
+      }
 
       // 确保效果已初始化
       if currentEffect == nil, let device = view.device, view.drawableSize.width > 0 {
-        initializeEffect(device: device, size: view.drawableSize)
+        initializeEffect(device: device, size: view.drawableSize, view: view)
       }
 
-      guard currentEffect != nil else { return }
+      // 安全检查：如果 coordinator 正在被释放，立即返回
+      guard currentEffect != nil, isActive else { return }
 
       let currentTime = CACurrentMediaTime()
       currentEffect?.update(currentTime: currentTime)
       currentEffect?.draw(in: view)
+
+      // 渲染完成后的回调处理
+      framesRenderedSinceSwitch += 1
+      if framesRenderedSinceSwitch == minFramesBeforeCapture, let callback = onRenderComplete {
+        // 只触发一次回调
+        onRenderComplete = nil
+        // 在主线程延迟一点点执行，确保drawable已经present
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+          callback()
+        }
+      }
+    }
+
+    // 安全停止方法：在清理前调用
+    func safeStop() {
+      print("[STOP] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 开始安全停止...")
+      lock.lock()
+      isActive = false
+
+      // 清理当前效果
+      currentEffect = nil
+      lock.unlock()
+
+      // 等待可能正在进行的绘制完成
+      usleep(50000)  // 50ms - 增加等待时间
+      print("[STOP] Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 已停止")
     }
   }
 }
