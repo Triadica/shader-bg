@@ -735,7 +735,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         screen: screen
       )
 
-      let contentView = WallpaperContentView()
+      // 创建内容视图，传入屏幕索引
+      let contentView = WallpaperContentView(screenIndex: index)
       let hostingView = NSHostingView(rootView: contentView)
       window.contentView = hostingView
 
