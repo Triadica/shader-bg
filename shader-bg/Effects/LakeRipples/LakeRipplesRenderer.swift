@@ -76,6 +76,9 @@ class LakeRipplesRenderer {
   private var drawCount: Int = 0
 
   func draw(in view: MTKView) {
+    // 保护: 检查视图尺寸有效
+    guard viewportSize.width > 0, viewportSize.height > 0 else { return }
+    
     // 前几帧输出日志
     if drawCount < 3 {
       NSLog(
@@ -85,17 +88,14 @@ class LakeRipplesRenderer {
     }
 
     guard let drawable = view.currentDrawable else {
-      NSLog("[LakeRipplesRenderer] ❌ No drawable available")
       return
     }
 
     guard let pipelineState = pipelineState else {
-      NSLog("[LakeRipplesRenderer] ❌ No pipeline state available")
       return
     }
 
     guard let commandQueue = commandQueue else {
-      NSLog("[LakeRipplesRenderer] ❌ No command queue available")
       return
     }
 

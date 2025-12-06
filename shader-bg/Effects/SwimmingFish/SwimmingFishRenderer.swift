@@ -196,6 +196,9 @@ class SwimmingFishRenderer {
   }
 
   func draw(in view: MTKView) {
+    // 保护: 检查视图尺寸有效
+    guard viewportSize.width > 0, viewportSize.height > 0 else { return }
+    
     guard let drawable = view.currentDrawable,
           let pipelineState = pipelineState,
           let commandQueue = commandQueue,
