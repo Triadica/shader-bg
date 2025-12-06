@@ -23,6 +23,8 @@ struct EffectGalleryView: View {
               thumbnail: viewModel.getThumbnail(for: index),
               isSelected: index == viewModel.currentIndex,
               isGenerating: viewModel.generatingThumbnails.contains(index),
+              isLoadingFromCDN: viewModel.loadingFromCDN.contains(index),
+              hasLocalThumbnail: viewModel.hasLocalThumbnailFor(index: index),
               gpuUsageText: viewModel.getGPUUsageText(for: index),
               onRefresh: {
                 viewModel.refreshThumbnail(for: index)
@@ -46,6 +48,8 @@ struct EffectThumbnailView: View {
   let thumbnail: NSImage?
   let isSelected: Bool
   let isGenerating: Bool  // 是否正在生成缩略图
+  let isLoadingFromCDN: Bool  // 是否正在从 CDN 加载
+  let hasLocalThumbnail: Bool  // 是否有本地缩略图
   let gpuUsageText: String?  // GPU开销文本
   let onRefresh: () -> Void  // 刷新回调
 
@@ -64,6 +68,22 @@ struct EffectThumbnailView: View {
               .foregroundColor(.white.opacity(0.6))
               .font(.system(size: 9))
           )
+      } else if isLoadingFromCDN {
+        // 从 CDN 加载中：显示浅蓝色渐变
+        LinearGradient(
+          gradient: Gradient(colors: [
+            Color(red: 0.6, green: 0.8, blue: 1.0),
+            Color(red: 0.4, green: 0.6, blue: 0.9),
+          ]),
+          startPoint: .topLeading,
+          endPoint: .bottomTrailing
+        )
+        .frame(width: 130, height: 98)
+        .overlay(
+          Text("Loading...")
+            .foregroundColor(.white.opacity(0.8))
+            .font(.system(size: 9))
+        )
       } else if let thumbnail = thumbnail {
         Image(nsImage: thumbnail)
           .resizable()
@@ -82,7 +102,7 @@ struct EffectThumbnailView: View {
       }
 
       // 刷新按钮（右上角，仅在有缩略图且悬停时显示）
-      if thumbnail != nil && !isGenerating {
+      if thumbnail != nil && !isGenerating && !isLoadingFromCDN {
         VStack {
           HStack {
             Spacer()
