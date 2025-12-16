@@ -735,7 +735,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         screen: screen
       )
 
-      let contentView = WallpaperContentView()
+      // 创建内容视图，传入屏幕索引
+      let contentView = WallpaperContentView(screenIndex: index)
       let hostingView = NSHostingView(rootView: contentView)
       window.contentView = hostingView
 
@@ -840,9 +841,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // 手动刷新缩略图的回调
     viewModel.onRefreshThumbnail = { [weak self] index in
       guard let self = self else { return }
-      self.switchEffectByIndex(index)
-      // 使用渲染完成回调来精确触发截图
-      self.setupRenderCompleteCallback(for: index)
+
+      // 检查当前是否已经是该效果
+      if EffectManager.shared.currentEffectIndex == index {
+        // 已经是当前效果，直接截图，不需要切换（保持当前状态）
+        NSLog("[EffectGallery] 🔄 刷新当前效果 #\(index) 的缩略图（保持状态）")
+        self.captureThumbnailForEffect(at: index)
+      } else {
+        // 需要切换到该效果
+        self.switchEffectByIndex(index)
+        // 使用渲染完成回调来精确触发截图
+        self.setupRenderCompleteCallback(for: index)
+      }
     }
 
     self.galleryViewModel = viewModel

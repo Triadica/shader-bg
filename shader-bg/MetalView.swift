@@ -9,6 +9,9 @@ import MetalKit
 import SwiftUI
 
 struct MetalView: NSViewRepresentable {
+  /// 显示器索引（用于多显示器场景）
+  var screenIndex: Int = -1
+  
   func makeNSView(context: Context) -> MTKView {
     let mtkView = MTKView()
     mtkView.device = MTLCreateSystemDefaultDevice()
@@ -29,11 +32,13 @@ struct MetalView: NSViewRepresentable {
   }
 
   func makeCoordinator() -> Coordinator {
-    Coordinator(self)
+    Coordinator(self, screenIndex: screenIndex)
   }
 
   class Coordinator: NSObject, MTKViewDelegate {
     var parent: MetalView
+    /// 当前显示器索引
+    var screenIndex: Int
     // 每个 MetalView 都有自己的效果实例，而不是共享
     private var currentEffect: VisualEffect?
     private var device: MTLDevice?
@@ -46,8 +51,9 @@ struct MetalView: NSViewRepresentable {
     private var framesRenderedSinceSwitch = 0
     private let minFramesBeforeCapture = 3  // 切换效果后至少渲染3帧再触发回调
 
-    init(_ parent: MetalView) {
+    init(_ parent: MetalView, screenIndex: Int = -1) {
       self.parent = parent
+      self.screenIndex = screenIndex
       super.init()
       print("Coordinator [\(Unmanaged.passUnretained(self).toOpaque())] 已创建")
     }
@@ -97,7 +103,7 @@ struct MetalView: NSViewRepresentable {
       currentEffect = nil
 
       // 创建新的效果实例
-      let newEffect: VisualEffect
+      var newEffect: VisualEffect
       switch effectType.name {
       case "noise_halo":
         newEffect = NoiseHaloEffect()
@@ -243,10 +249,17 @@ struct MetalView: NSViewRepresentable {
         newEffect = SunWaterEffect()
       case "mountain_waves":
         newEffect = MountainWavesEffect()
+      case "lake_ripples":
+        newEffect = LakeRipplesEffect()
+      case "swimming_fish":
+        newEffect = SwimmingFishEffect()
       default:
         newEffect = NoiseHaloEffect()
       }
 
+      // 设置效果的显示器索引
+      newEffect.screenIndex = screenIndex
+      
       newEffect.setup(device: device, size: size)
       currentEffect = newEffect
 

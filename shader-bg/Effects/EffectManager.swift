@@ -98,6 +98,8 @@ class EffectManager {
       WorldTreeEffect(),
       SunWaterEffect(),
       MountainWavesEffect(),
+      LakeRipplesEffect(),
+      SwimmingFishEffect(),
     ]
 
     NSLog("[EffectManager] ✅ Registered \(availableEffects.count) effects")
@@ -256,6 +258,8 @@ class EffectManager {
         defaultIndex = 70
       case "mountainwaves", "mountain", "mountains", "mountainwave":
         defaultIndex = 71
+      case "lakeripples", "lake", "ripples", "interactive":
+        defaultIndex = 72
       default:
         NSLog(
           "[EffectManager] ⚠️ Unknown SHADER_BG_EFFECT value: \(effectEnv), using default (lorenz)")
