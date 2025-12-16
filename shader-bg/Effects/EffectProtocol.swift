@@ -18,7 +18,7 @@ protocol VisualEffect {
 
   // 帧率配置：被遮挡状态下的首选帧率（默认 30fps，节省资源）
   var occludedFramesPerSecond: Int { get }
-  
+
   // 显示器索引（用于多显示器场景，可选实现）
   var screenIndex: Int { get set }
 
@@ -42,10 +42,10 @@ extension VisualEffect {
   // 默认帧率配置
   var preferredFramesPerSecond: Int { 60 }
   var occludedFramesPerSecond: Int { 30 }
-  
+
   // 默认显示器索引（-1 表示不区分显示器）
   var screenIndex: Int {
     get { -1 }
-    set { } // 默认不做任何事
+    set {}  // 默认不做任何事
   }
 }

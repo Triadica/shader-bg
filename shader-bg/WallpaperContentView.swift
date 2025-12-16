@@ -10,7 +10,7 @@ import SwiftUI
 struct WallpaperContentView: View {
   /// 显示器索引（用于多显示器场景）
   var screenIndex: Int = -1
-  
+
   var body: some View {
     GeometryReader { geometry in
       MetalView(screenIndex: screenIndex)

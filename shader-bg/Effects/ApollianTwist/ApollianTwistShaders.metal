@@ -87,7 +87,7 @@ float3 color(float2 p, constant ApollianTwistParams &params) {
 
   const float3 lp1 = float3(0.5, lh, 0.5);
   const float3 lp2 = float3(-0.5, lh, 0.5);
-
+  
   float d = df(p, params);
 
   float b = -0.125;

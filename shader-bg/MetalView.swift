@@ -11,7 +11,7 @@ import SwiftUI
 struct MetalView: NSViewRepresentable {
   /// 显示器索引（用于多显示器场景）
   var screenIndex: Int = -1
-  
+
   func makeNSView(context: Context) -> MTKView {
     let mtkView = MTKView()
     mtkView.device = MTLCreateSystemDefaultDevice()
@@ -259,7 +259,7 @@ struct MetalView: NSViewRepresentable {
 
       // 设置效果的显示器索引
       newEffect.screenIndex = screenIndex
-      
+
       newEffect.setup(device: device, size: size)
       currentEffect = newEffect
 

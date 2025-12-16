@@ -13,18 +13,20 @@ class LakeRipplesEffect: VisualEffect {
   var displayName: String = "Lake Ripples (Interactive)"
   var preferredFramesPerSecond: Int = 20
   var occludedFramesPerSecond: Int = 10
-  
+
   /// 当前效果所在的显示器索引
   var screenIndex: Int = -1
 
   private var renderer: LakeRipplesRenderer?
 
   func setup(device: MTLDevice, size: CGSize) {
-    NSLog("[LakeRipplesEffect] 🎬 Setting up Lake Ripples effect with size: \(size), screen: \(screenIndex)")
+    NSLog(
+      "[LakeRipplesEffect] 🎬 Setting up Lake Ripples effect with size: \(size), screen: \(screenIndex)"
+    )
     renderer = LakeRipplesRenderer(device: device)
     renderer?.screenIndex = screenIndex
     renderer?.updateViewportSize(size)
-    
+
     // 启动输入事件监听
     InputEventManager.shared.startListening()
   }
@@ -52,7 +54,7 @@ class LakeRipplesEffect: VisualEffect {
   func setUpdateRate(_ rate: Double) {
     // 不需要实现
   }
-  
+
   deinit {
     // 注意：不在这里停止监听，因为其他效果可能也需要
     // InputEventManager.shared.stopListening()

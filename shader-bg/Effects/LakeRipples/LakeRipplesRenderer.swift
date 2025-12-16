@@ -14,10 +14,10 @@ class LakeRipplesRenderer {
 
   private var time: Float = 0.0
   private var viewportSize: CGSize = .zero
-  
+
   /// 当前渲染器所在的显示器索引
   var screenIndex: Int = -1
-  
+
   private var inputData: ShaderInputData = ShaderInputData(
     from: InputState(
       hasMouseActivity: false,
@@ -66,7 +66,7 @@ class LakeRipplesRenderer {
     // 只获取当前显示器的输入状态
     let inputState = InputEventManager.shared.getInputState(forScreen: screenIndex)
     inputData = ShaderInputData(from: inputState, currentTime: currentTime)
-    
+
     // 调试日志
     if inputData.rippleCount > 0 {
       NSLog("[LakeRipplesRenderer] 屏幕\(screenIndex) 涟漪数量: \(inputData.rippleCount)")
@@ -78,7 +78,7 @@ class LakeRipplesRenderer {
   func draw(in view: MTKView) {
     // 保护: 检查视图尺寸有效
     guard viewportSize.width > 0, viewportSize.height > 0 else { return }
-    
+
     // 前几帧输出日志
     if drawCount < 3 {
       NSLog(
@@ -112,7 +112,7 @@ class LakeRipplesRenderer {
 
     var timeVar = time
     commandEncoder.setBytes(&timeVar, length: MemoryLayout<Float>.stride, index: 0)
-    
+
     // 传递输入数据到 shader
     var inputDataCopy = inputData
     commandEncoder.setBytes(&inputDataCopy, length: MemoryLayout<ShaderInputData>.stride, index: 1)

@@ -13,7 +13,7 @@ class SwimmingFishEffect: VisualEffect {
   var displayName: String = "Swimming Fish (Interactive)"
   var preferredFramesPerSecond: Int = 12
   var occludedFramesPerSecond: Int = 4
-  
+
   var screenIndex: Int = -1
 
   private var renderer: SwimmingFishRenderer?
@@ -23,7 +23,7 @@ class SwimmingFishEffect: VisualEffect {
     renderer = SwimmingFishRenderer(device: device)
     renderer?.screenIndex = screenIndex
     renderer?.updateViewportSize(size)
-    
+
     InputEventManager.shared.startListening()
   }
 
